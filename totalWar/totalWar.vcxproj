@@ -179,6 +179,7 @@
     <ClInclude Include="headers\GameplayManager.h" />
     <ClInclude Include="headers\Game.h" />
     <ClInclude Include="headers\Graphics.h" />
+    <ClInclude Include="headers\Input.h" />
     <ClInclude Include="headers\units\Hoplites.h" />
     <ClInclude Include="headers\units\Unit.h" />
     <ClInclude Include="headers\utils.h" />
@@ -186,6 +187,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GameplayManager.cpp" />
+    <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\units\Hoplites.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Graphics.cpp" />

@@ -33,31 +33,35 @@ void GameplayManager::GameLoop()
     //TODO
     bool initialPosition = true;
 
-    while (true)
+    while (!m_input.QuitRequested())
     {
         namespace chrono = std::chrono;
         auto now = chrono::high_resolution_clock::now();
         auto lastUpdateInterval = chrono::duration_cast<chrono::milliseconds>(now - m_lastUpdate).count();
-        if (lastUpdateInterval < 1000)
+
+        m_input.HandleEvents();
+
+        if (m_input.MouseLBClicked() && IsMouseOverUnit(m_input.GetMousePosition()))
+                m_chosenUnit->SetSelected(!m_chosenUnit->IsSelected());
+
+        if (lastUpdateInterval < 50)
             continue;
-        
+
         m_lastUpdate = now;
 
         for (auto & x : m_playerUnits)
         {
             auto position = x.second->GetPosition();
-            auto newPosition = position;
-            newPosition.x += 10;
-
-            x.second->ChangePosition(newPosition);
-            position = x.second->GetPosition();
 
             Vector2D unitSize{ m_graphics.GetUnitSize().x, m_graphics.GetUnitSize().y };
 
-            SDL_Rect srcRect{ 0, 0, unitSize.x, unitSize.y };
+            SDL_Rect srcRect{ 0, 0, 512, 256 };
             SDL_Rect dstRect{ position.x, position.y, unitSize.x, unitSize.y };
 
             m_graphics.AddToQueue("units\\placeholderPlayer", srcRect, dstRect);
+
+            if (x.second->IsSelected())
+                m_graphics.AddToQueue("units\\placeholderSelected", srcRect, dstRect);
         }
 
         m_graphics.RenderFrame();
@@ -78,7 +82,7 @@ bool GameplayManager::IsValidUnitName(const std::string name)
 
 bool GameplayManager::UnitExists(const std::string name)
 {
-    std::map<std::string, std::unique_ptr<Unit>>::const_iterator it{ m_playerUnits.find(name) };
+    auto it{ m_playerUnits.find(name) };
     if (it == m_playerUnits.cend())
         return false;
 
@@ -87,4 +91,21 @@ bool GameplayManager::UnitExists(const std::string name)
         return false;
 
     return true;
+}
+
+bool GameplayManager::IsMouseOverUnit(Vector2D mousePosition)
+{
+    auto unitSize = m_graphics.GetUnitSize();
+    for (auto & unit : m_playerUnits)
+    {
+        auto position = unit.second->GetPosition();
+        if (mousePosition.x >= position.x && mousePosition.x <= position.x + unitSize.x
+            && mousePosition.y >= position.y && mousePosition.y <= position.y + unitSize.y)
+        {
+            m_chosenUnit = unit.second;
+            return true;
+        }
+    }
+
+    return false;
 }

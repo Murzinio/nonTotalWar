@@ -65,7 +65,8 @@ void Graphics::LoadTextures()
 void Graphics::AddToQueue(std::string texture, SDL_Rect srcRect, SDL_Rect dstRect)
 {
     const auto it = m_textures.find(GetTexturePath(texture));
-    m_renderQueue.push({ it->second, srcRect, dstRect });
+    if (it != m_textures.cend())
+        m_renderQueue.push({ it->second, srcRect, dstRect });
 }
 
 void Graphics::RenderFrame()

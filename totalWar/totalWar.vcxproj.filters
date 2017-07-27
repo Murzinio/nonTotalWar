@@ -27,13 +27,16 @@
     <ClInclude Include="headers\units\Unit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\units\infantry\heavy\spear\Hoplites.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="headers\GameplayManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="headers\utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\units\Hoplites.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -50,10 +53,13 @@
     <ClCompile Include="src\units\Unit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\units\infantry\heavy\spear\Hoplites.cpp">
+    <ClCompile Include="src\GameplayManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameplayManager.cpp">
+    <ClCompile Include="src\units\Hoplites.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

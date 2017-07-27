@@ -23,7 +23,7 @@ namespace nonTotalWar
     class Graphics
     {
     private:
-        SDL_Window* m_window{ SDL_CreateWindow("nonTotalWar", 0, 0, settings::WINDOW_WIDTH, settings::WINDOW_HEIGHT, 0) };
+        SDL_Window* m_window{ SDL_CreateWindow("nonTotalWar", 100, 100, settings::WINDOW_WIDTH, settings::WINDOW_HEIGHT, 0) };
         SDL_Renderer* m_renderer{ SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED) };
 
         std::map<std::string, SDL_Texture*> m_textures;

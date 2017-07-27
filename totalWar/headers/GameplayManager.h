@@ -9,19 +9,21 @@
 #include <SDL.h>
 
 // game
-#include "..\headers\units\Hoplites.h"
-#include "..\headers\Graphics.h"
+#include "units\Hoplites.h"
+#include "Graphics.h"
+#include "Input.h"
 
 namespace nonTotalWar
 {
-
     class GameplayManager
     {
     private:
         Graphics& m_graphics;
+        Input m_input;
 
-        std::map<std::string, std::unique_ptr<Unit>> m_playerUnits;
-        std::map<std::string, std::unique_ptr<Unit>> m_aiUnits;
+        std::map<std::string, std::shared_ptr<Unit>> m_playerUnits;
+        std::map<std::string, std::shared_ptr<Unit>> m_aiUnits;
+        std::map<std::string, std::shared_ptr<Unit>> m_selectedUnits;
         //TODO unit counts by type in std::map
 
         void CreateUnits();
@@ -34,6 +36,9 @@ namespace nonTotalWar
         // unit name should be constructed from m_validUnitName and a number (i. e. "Hoplites_1")
 
         std::chrono::high_resolution_clock::time_point m_lastUpdate = std::chrono::high_resolution_clock::now();
+
+        std::shared_ptr<Unit> m_chosenUnit;
+        bool IsMouseOverUnit(Vector2D mousePosition);
 
     public:
         GameplayManager(Graphics& graphics);
