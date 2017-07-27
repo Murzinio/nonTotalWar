@@ -116,7 +116,5 @@ std::string Graphics::GetExePath()
 
 Vector2D Graphics::GetUnitSize()
 {
-    //TODO actual calculations from resolution
-    m_unitSize = { 100, 100 };
     return m_unitSize;
 }

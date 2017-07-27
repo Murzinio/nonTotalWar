@@ -14,12 +14,9 @@ Input::~Input()
 void Input::HandleEvents()
 {
     SDL_Event e;
-    bool mouseAlreadyPressed{ false };
 
     while (SDL_PollEvent(&e) != 0)
     {
-        std::cout << "event\n";
-
         if (e.type == SDL_QUIT)
         {
             m_quit = true;
@@ -33,10 +30,6 @@ void Input::HandleEvents()
                 m_mousePosition.x = e.button.x;
                 m_mousePosition.y = e.button.y;
                 m_mouseLBClick = true;
-
-                mouseAlreadyPressed = true;
-                std::cout << "mouse click\n";
-                break;
             }
         }
     }

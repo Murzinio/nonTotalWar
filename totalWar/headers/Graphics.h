@@ -43,7 +43,11 @@ namespace nonTotalWar
 
         std::string GetExePath();
 
-        Vector2D m_unitSize;
+        Vector2D m_unitSize
+        { 
+            settings::WINDOW_WIDTH / 24,
+            settings::WINDOW_HEIGHT / 24
+        };
 
     public:
         Graphics();
