@@ -18,11 +18,4 @@ namespace nonTotalWar
 
         return seglist;
     }
-
-    struct Vector2D
-    {
-        int x;
-        int y;
-        // uses int for compatibility with SDL_Rect
-    };
 }

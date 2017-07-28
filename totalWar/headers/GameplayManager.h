@@ -38,7 +38,7 @@ namespace nonTotalWar
         std::chrono::high_resolution_clock::time_point m_lastUpdate = std::chrono::high_resolution_clock::now();
 
         std::shared_ptr<Unit> m_chosenUnit;
-        bool IsMouseOverUnit(Vector2D mousePosition);
+        bool IsMouseOverUnit(SDL_Point mousePosition);
 
     public:
         GameplayManager(Graphics& graphics);

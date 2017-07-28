@@ -43,7 +43,7 @@ namespace nonTotalWar
 
         std::string GetExePath();
 
-        Vector2D m_unitSize
+        SDL_Point m_unitSize
         { 
             settings::WINDOW_WIDTH / 24,
             settings::WINDOW_HEIGHT / 24
@@ -53,7 +53,7 @@ namespace nonTotalWar
         Graphics();
         ~Graphics();
 
-        Vector2D GetUnitSize();
+        SDL_Point GetUnitSize();
     
         void AddToQueue(std::string, SDL_Rect srcRect, SDL_Rect dstRect);
         void RenderFrame();

@@ -9,7 +9,7 @@ namespace nonTotalWar
     private:
         bool m_quit{ false };
         bool m_mouseLBClick{ false };
-        Vector2D m_mousePosition;
+        SDL_Point m_mousePosition;
     public:
         Input();
         ~Input();
@@ -19,7 +19,7 @@ namespace nonTotalWar
 
         inline bool QuitRequested();
         inline bool MouseLBClicked();
-        inline Vector2D GetMousePosition();
+        inline SDL_Point GetMousePosition();
     };
 
     inline bool Input::QuitRequested()
@@ -38,7 +38,7 @@ namespace nonTotalWar
         return false;
     }
 
-    inline Vector2D Input::GetMousePosition()
+    inline SDL_Point Input::GetMousePosition()
     {
         return m_mousePosition;
     }

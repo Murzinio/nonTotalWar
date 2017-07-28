@@ -1,7 +1,6 @@
 #include "..\headers\GameplayManager.h"
 
 using nonTotalWar::GameplayManager;
-using nonTotalWar::Vector2D;
 using nonTotalWar::Graphics;
 
 GameplayManager::GameplayManager(Graphics& graphics) : m_graphics(graphics)
@@ -20,8 +19,8 @@ void GameplayManager::CreateUnits()
     //TODO
     for (size_t i = 1; i < 4; i++)
     {
-        nonTotalWar::Vector2D positionPlayer{ (int)(i * 100, i * (int)300) };
-        nonTotalWar::Vector2D positionAi{ (int)(i * 100 + 400, i * 300)};
+        SDL_Point positionPlayer{ (int)(i * 100, i * (int)300) };
+        SDL_Point positionAi{ (int)(i * 100 + 400, i * 300)};
 
         m_playerUnits["Hoplites" + std::to_string(i)] = std::make_unique<Hoplites>(positionPlayer);
         m_aiUnits["Hoplites" + std::to_string(i)] = std::make_unique<Hoplites>(positionAi);
@@ -53,7 +52,7 @@ void GameplayManager::GameLoop()
         {
             auto position = x.second->GetPosition();
 
-            Vector2D unitSize{ m_graphics.GetUnitSize().x, m_graphics.GetUnitSize().y };
+            SDL_Point unitSize{ m_graphics.GetUnitSize().x, m_graphics.GetUnitSize().y };
 
             SDL_Rect srcRect{ 0, 0, 512, 256 };
             SDL_Rect dstRect{ position.x, position.y, unitSize.x, unitSize.y };
@@ -93,7 +92,7 @@ bool GameplayManager::UnitExists(const std::string name)
     return true;
 }
 
-bool GameplayManager::IsMouseOverUnit(Vector2D mousePosition)
+bool GameplayManager::IsMouseOverUnit(SDL_Point mousePosition)
 {
     auto unitSize = m_graphics.GetUnitSize();
     for (auto & unit : m_playerUnits)

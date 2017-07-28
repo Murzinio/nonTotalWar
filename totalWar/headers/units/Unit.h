@@ -1,6 +1,7 @@
 #pragma once
 
 #include "..\utils.h"
+#include "SDL.h"
 
 namespace nonTotalWar
 {
@@ -13,16 +14,16 @@ namespace nonTotalWar
         size_t m_speed;
         size_t m_soldiers;
 
-        Vector2D m_position;
+        SDL_Point m_position;
 
         bool m_selected{ false };
 
     public:
-        Unit(size_t attack, size_t defence, size_t range, size_t speed, size_t soldiers, Vector2D position);
+        Unit(size_t attack, size_t defence, size_t range, size_t speed, size_t soldiers, SDL_Point position);
         virtual ~Unit();
 
-        nonTotalWar::Vector2D GetPosition();
-        void ChangePosition(nonTotalWar::Vector2D newPosition);
+        SDL_Point GetPosition();
+        void ChangePosition(SDL_Point newPosition);
         inline void SetSelected(bool select);
         inline bool IsSelected();
     };

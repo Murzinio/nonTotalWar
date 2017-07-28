@@ -7,7 +7,7 @@ namespace nonTotalWar
         : public Unit
     {
     public:
-        Hoplites(nonTotalWar::Vector2D position);
+        Hoplites(SDL_Point position);
         ~Hoplites();
     };
 

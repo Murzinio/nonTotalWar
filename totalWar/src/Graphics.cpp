@@ -1,7 +1,6 @@
 #include "..\headers\Graphics.h"
 
 using nonTotalWar::Graphics;
-using nonTotalWar::Vector2D;
 
 Graphics::Graphics()
 {
@@ -114,7 +113,7 @@ std::string Graphics::GetExePath()
     return finalPath;
 }
 
-Vector2D Graphics::GetUnitSize()
+SDL_Point Graphics::GetUnitSize()
 {
     return m_unitSize;
 }
