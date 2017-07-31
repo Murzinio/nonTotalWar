@@ -2,6 +2,7 @@
 #include <memory>
 #include <string>
 #include <map>
+#include <vector>
 #include <algorithm>
 #include <array>
 #include <chrono>
@@ -12,6 +13,7 @@
 #include "units\Hoplites.h"
 #include "Graphics.h"
 #include "Input.h"
+#include "TaskManager.h"
 
 namespace nonTotalWar
 {
@@ -26,6 +28,8 @@ namespace nonTotalWar
         std::map<std::string, std::shared_ptr<Unit>> m_selectedUnits;
         //TODO unit counts by type in std::map
 
+        TaskManager m_taskManager;
+
         void CreateUnits();
         void GameLoop();
         bool IsValidUnitName(const std::string name);
@@ -36,9 +40,11 @@ namespace nonTotalWar
         // unit name should be constructed from m_validUnitName and a number (i. e. "Hoplites_1")
 
         std::chrono::high_resolution_clock::time_point m_lastUpdate = std::chrono::high_resolution_clock::now();
+        static constexpr float m_updateInterval{ 1000.0f / 60.0f };
 
         std::shared_ptr<Unit> m_chosenUnit;
         bool IsMouseOverUnit(SDL_Point mousePosition);
+        std::vector<std::shared_ptr<Unit>> GetSelectedUnits();
 
     public:
         GameplayManager(Graphics& graphics);

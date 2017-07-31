@@ -3,7 +3,7 @@
 using nonTotalWar::GameplayManager;
 using nonTotalWar::Graphics;
 
-GameplayManager::GameplayManager(Graphics& graphics) : m_graphics(graphics)
+GameplayManager::GameplayManager(Graphics& graphics) : m_graphics(graphics), m_taskManager(m_playerUnits)
 {
     CreateUnits();
     GameLoop();
@@ -19,8 +19,8 @@ void GameplayManager::CreateUnits()
     //TODO
     for (size_t i = 1; i < 4; i++)
     {
-        SDL_Point positionPlayer{ (int)(i * 50), (int)(i * 100) };
-        SDL_Point positionAi{ 500, (int)(i * 100) };
+        SDL_Point positionPlayer{ (int)(i * 150) + 300, 200 };
+        SDL_Point positionAi{ (int)(i * 150) + 300, 600 };
 
         m_playerUnits["Hoplites" + std::to_string(i)] = std::make_unique<Hoplites>(positionPlayer, 0.0);
         m_aiUnits["Hoplites" + std::to_string(i)] = std::make_unique<Hoplites>(positionAi, 0.0);
@@ -42,9 +42,33 @@ void GameplayManager::GameLoop()
         m_input.HandleEvents();
 
         if (m_input.MouseLBClicked() && IsMouseOverUnit(m_input.GetMousePosition()))
-                m_chosenUnit->SetSelected(!m_chosenUnit->IsSelected());
+        {
+            m_chosenUnit->SetSelected(!m_chosenUnit->IsSelected());
+            m_chosenUnit = nullptr;
+        }
 
-        if (lastUpdateInterval < 500)
+        if (m_input.MouseRBClicked())
+        {
+            using nonTotalWar::UnitTask;
+
+            auto selectedUnits = GetSelectedUnits();
+            auto task = UnitTask::NONE;
+
+            if (m_chosenUnit == nullptr)
+                task = UnitTask::MOVE;
+            else
+                task = UnitTask::ATTACK;
+
+            for (auto & x : selectedUnits)
+            {
+                x->SetTask(task);
+                x->SetMoveDestination(m_input.GetMousePosition());
+            }
+        }
+
+        m_taskManager.HandleTasks();
+
+        if (lastUpdateInterval < m_updateInterval)
             continue;
 
         m_lastUpdate = now;
@@ -63,6 +87,26 @@ void GameplayManager::GameLoop()
             SDL_Rect dstRect{ position.x, position.y, unitSize.x, unitSize.y };
 
             m_graphics.AddToQueue("units\\placeholderPlayer", srcRect, dstRect, angle, center, SDL_FLIP_NONE);
+            m_graphics.AddToQueue("units\\hoplites", srcRect, dstRect, 0, center, SDL_FLIP_NONE);
+
+            if (x.second->IsSelected())
+                m_graphics.AddToQueue("units\\placeholderSelected", srcRect, dstRect, angle, center, SDL_FLIP_NONE);
+        }
+
+        for (auto & x : m_aiUnits)
+        {
+            auto position = x.second->GetPosition();
+            auto angle = x.second->GetAngle();;
+
+            SDL_Point unitSize = m_graphics.GetUnitSize();
+            SDL_Point center = { unitSize.x / 2, unitSize.y / 2 };
+
+            position.x += counter * unitSize.x / 32;
+
+            SDL_Rect srcRect{ 0, 0, 512, 256 };
+            SDL_Rect dstRect{ position.x, position.y, unitSize.x, unitSize.y };
+
+            m_graphics.AddToQueue("units\\placeholderAI", srcRect, dstRect, angle, center, SDL_FLIP_NONE);
             m_graphics.AddToQueue("units\\hoplites", srcRect, dstRect, 0, center, SDL_FLIP_NONE);
 
             if (x.second->IsSelected())
@@ -113,4 +157,15 @@ bool GameplayManager::IsMouseOverUnit(SDL_Point mousePosition)
     }
 
     return false;
+}
+
+std::vector<std::shared_ptr<nonTotalWar::Unit>> GameplayManager::GetSelectedUnits()
+{
+    std::vector<std::shared_ptr<Unit>> units;
+
+    for (auto & x : m_playerUnits)
+        if (x.second->IsSelected())
+            units.push_back(x.second);
+
+    return units;
 }

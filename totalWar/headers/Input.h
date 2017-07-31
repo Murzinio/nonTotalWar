@@ -10,6 +10,7 @@ namespace nonTotalWar
     private:
         bool m_quit{ false };
         bool m_mouseLBClick{ false };
+        bool m_mouseRBClick{ false };
         SDL_Point m_mousePosition;
     public:
         Input();
@@ -20,6 +21,17 @@ namespace nonTotalWar
 
         inline bool QuitRequested();
         inline bool MouseLBClicked();
+        inline bool MouseRBClicked()
+        {
+            if (m_mouseRBClick)
+            {
+                m_mouseRBClick = false;
+                return true;
+            }
+
+            return false;
+        };
+
         inline SDL_Point GetMousePosition();
     };
 

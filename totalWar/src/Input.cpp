@@ -31,6 +31,12 @@ void Input::HandleEvents()
                 m_mousePosition.y = e.button.y;
                 m_mouseLBClick = true;
             }
+            else if (e.button.button == SDL_BUTTON_RIGHT && e.button.state == SDL_RELEASED && e.button.clicks == 1)
+            {
+                m_mousePosition.x = e.button.x;
+                m_mousePosition.y = e.button.y;
+                m_mouseRBClick = true;
+            }
         }
     }
 }
