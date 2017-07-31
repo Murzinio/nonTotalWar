@@ -13,10 +13,7 @@ Unit::Unit(size_t attack, size_t defence, size_t range, size_t speed, size_t sol
     m_angle = angle;
 }
 
-
-Unit::~Unit()
-{
-}
+Unit::~Unit() {};
 
 SDL_Point Unit::GetPosition()
 {

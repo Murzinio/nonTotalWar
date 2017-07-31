@@ -6,11 +6,6 @@ Input::Input()
 {
 }
 
-
-Input::~Input()
-{
-}
-
 void Input::HandleEvents()
 {
     SDL_Event e;

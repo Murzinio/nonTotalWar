@@ -48,6 +48,5 @@ namespace nonTotalWar
 
     public:
         GameplayManager(Graphics& graphics);
-        ~GameplayManager();
     };
 }

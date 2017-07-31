@@ -6,7 +6,3 @@ Hoplites::Hoplites(SDL_Point position, double angle) : Unit(5, 20, 5, 5, 150, po
 {
 }
 
-
-Hoplites::~Hoplites()
-{
-}

@@ -35,11 +35,12 @@ namespace nonTotalWar
 
         SDL_Point GetPosition();
         void ChangePosition(SDL_Point newPosition);
-        inline void SetSelected(bool select);
-        inline bool IsSelected();
+        
+        void SetSelected(bool select) { m_selected = select; };
+        bool IsSelected() { return m_selected; };
 
-        inline void SetAngle(double angle);
-        inline double GetAngle();
+        inline void SetAngle(double angle) { m_angle = angle; };
+        inline double GetAngle() { return m_angle; };
 
         void SetTask(UnitTask task)
         {
@@ -57,24 +58,4 @@ namespace nonTotalWar
             m_moveDestination = destination;
         }
     };
-
-    inline void Unit::SetSelected(bool select)
-    {
-        m_selected = select;
-    }
-
-    inline bool Unit::IsSelected()
-    {
-        return m_selected;
-    }
-
-    inline void Unit::SetAngle(double angle)
-    {
-        m_angle = angle;
-    }
-
-    inline double Unit::GetAngle()
-    {
-        return m_angle;
-    }
 }

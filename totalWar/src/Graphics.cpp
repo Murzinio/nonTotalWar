@@ -28,13 +28,6 @@ Graphics::Graphics()
         LoadTextures();
 }
 
-
-Graphics::~Graphics()
-{
-    SDL_DestroyRenderer(m_renderer);
-    SDL_DestroyWindow(m_window);
-}
-
 void Graphics::LoadTextures()
 {
     namespace filesystem = std::experimental::filesystem;

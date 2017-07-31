@@ -8,7 +8,6 @@ namespace nonTotalWar
     {
     public:
         Hoplites(SDL_Point position, double angle);
-        ~Hoplites();
     };
 
 }

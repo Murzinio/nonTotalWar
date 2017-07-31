@@ -55,7 +55,6 @@ namespace nonTotalWar
 
     public:
         Graphics();
-        ~Graphics();
 
         SDL_Point GetUnitSize();
     

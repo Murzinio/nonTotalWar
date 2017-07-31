@@ -9,11 +9,6 @@ GameplayManager::GameplayManager(Graphics& graphics) : m_graphics(graphics), m_t
     GameLoop();
 }
 
-
-GameplayManager::~GameplayManager()
-{
-}
-
 void GameplayManager::CreateUnits()
 {
     //TODO

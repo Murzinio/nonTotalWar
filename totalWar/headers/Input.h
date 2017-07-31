@@ -14,7 +14,6 @@ namespace nonTotalWar
         SDL_Point m_mousePosition;
     public:
         Input();
-        ~Input();
 
         void HandleEvents();
         
