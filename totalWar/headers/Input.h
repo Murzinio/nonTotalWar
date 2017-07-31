@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include "utils.h"
 #include <iostream>
+
 namespace nonTotalWar
 {
     class Input

@@ -61,11 +61,11 @@ void Graphics::LoadTextures()
     }
 }
 
-void Graphics::AddToQueue(std::string texture, SDL_Rect srcRect, SDL_Rect dstRect)
+void Graphics::AddToQueue(std::string texture, SDL_Rect srcRect, SDL_Rect dstRect, double angle, SDL_Point center, SDL_RendererFlip flip)
 {
     const auto it = m_textures.find(GetTexturePath(texture));
     if (it != m_textures.cend())
-        m_renderQueue.push({ it->second, srcRect, dstRect });
+        m_renderQueue.push({ it->second, srcRect, dstRect, angle, center, flip });
 }
 
 void Graphics::RenderFrame()
@@ -73,10 +73,16 @@ void Graphics::RenderFrame()
     SDL_RenderClear(m_renderer);
     while (m_renderQueue.size() > 0)
     {
-        SDL_RenderCopy(m_renderer, 
-            m_renderQueue.front().texture, 
-            &m_renderQueue.front().srcRect, 
-            &m_renderQueue.front().dstRect);
+        SDL_RenderCopyEx
+        (
+            m_renderer,
+            m_renderQueue.front().texture,
+            &m_renderQueue.front().srcRect,
+            &m_renderQueue.front().dstRect,
+            m_renderQueue.front().angle,
+            &m_renderQueue.front().center,
+            m_renderQueue.front().flip
+        );
 
         m_renderQueue.pop();
     }

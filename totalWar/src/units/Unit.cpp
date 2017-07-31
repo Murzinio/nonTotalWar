@@ -2,7 +2,7 @@
 
 using nonTotalWar::Unit;
 
-Unit::Unit(size_t attack, size_t defence, size_t range, size_t speed, size_t soldiers, SDL_Point position)
+Unit::Unit(size_t attack, size_t defence, size_t range, size_t speed, size_t soldiers, SDL_Point position, double angle)
 {
     m_attack = attack;
     m_defence = defence;
@@ -10,6 +10,7 @@ Unit::Unit(size_t attack, size_t defence, size_t range, size_t speed, size_t sol
     m_speed = speed;
     m_position = position;
     m_soldiers = soldiers;
+    m_angle = angle;
 }
 
 

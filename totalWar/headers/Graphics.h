@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <queue>
 #include <iostream>
+#include <math.h>
 
 // GetExePath()
 #include <windows.h>
@@ -36,6 +37,9 @@ namespace nonTotalWar
             SDL_Texture* texture;
             SDL_Rect srcRect;
             SDL_Rect dstRect;
+            double angle;
+            SDL_Point center;
+            SDL_RendererFlip flip;
         };
 
         std::queue<RenderQueueItem> m_renderQueue;
@@ -55,7 +59,7 @@ namespace nonTotalWar
 
         SDL_Point GetUnitSize();
     
-        void AddToQueue(std::string, SDL_Rect srcRect, SDL_Rect dstRect);
+        void AddToQueue(std::string texture, SDL_Rect srcRect, SDL_Rect dstRect, double angle, SDL_Point center, SDL_RendererFlip flip);
         void RenderFrame();
     };
 

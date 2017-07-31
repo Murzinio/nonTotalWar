@@ -19,11 +19,11 @@ void GameplayManager::CreateUnits()
     //TODO
     for (size_t i = 1; i < 4; i++)
     {
-        SDL_Point positionPlayer{ (int)(i * 100, i * (int)300) };
-        SDL_Point positionAi{ (int)(i * 100 + 400, i * 300)};
+        SDL_Point positionPlayer{ (int)(i * 50), (int)(i * 100) };
+        SDL_Point positionAi{ 500, (int)(i * 100) };
 
-        m_playerUnits["Hoplites" + std::to_string(i)] = std::make_unique<Hoplites>(positionPlayer);
-        m_aiUnits["Hoplites" + std::to_string(i)] = std::make_unique<Hoplites>(positionAi);
+        m_playerUnits["Hoplites" + std::to_string(i)] = std::make_unique<Hoplites>(positionPlayer, 0.0);
+        m_aiUnits["Hoplites" + std::to_string(i)] = std::make_unique<Hoplites>(positionAi, 0.0);
     }
 }
 
@@ -31,6 +31,7 @@ void GameplayManager::GameLoop()
 {
     //TODO
     bool initialPosition = true;
+    auto counter = 0;
 
     while (!m_input.QuitRequested())
     {
@@ -43,7 +44,7 @@ void GameplayManager::GameLoop()
         if (m_input.MouseLBClicked() && IsMouseOverUnit(m_input.GetMousePosition()))
                 m_chosenUnit->SetSelected(!m_chosenUnit->IsSelected());
 
-        if (lastUpdateInterval < 50)
+        if (lastUpdateInterval < 500)
             continue;
 
         m_lastUpdate = now;
@@ -51,16 +52,21 @@ void GameplayManager::GameLoop()
         for (auto & x : m_playerUnits)
         {
             auto position = x.second->GetPosition();
+            auto angle = x.second->GetAngle();;
 
-            SDL_Point unitSize{ m_graphics.GetUnitSize().x, m_graphics.GetUnitSize().y };
+            SDL_Point unitSize = m_graphics.GetUnitSize();
+            SDL_Point center = { unitSize.x / 2, unitSize.y / 2 };
+
+            position.x += counter * unitSize.x / 32;
 
             SDL_Rect srcRect{ 0, 0, 512, 256 };
             SDL_Rect dstRect{ position.x, position.y, unitSize.x, unitSize.y };
 
-            m_graphics.AddToQueue("units\\placeholderPlayer", srcRect, dstRect);
+            m_graphics.AddToQueue("units\\placeholderPlayer", srcRect, dstRect, angle, center, SDL_FLIP_NONE);
+            m_graphics.AddToQueue("units\\hoplites", srcRect, dstRect, 0, center, SDL_FLIP_NONE);
 
             if (x.second->IsSelected())
-                m_graphics.AddToQueue("units\\placeholderSelected", srcRect, dstRect);
+                m_graphics.AddToQueue("units\\placeholderSelected", srcRect, dstRect, angle, center, SDL_FLIP_NONE);
         }
 
         m_graphics.RenderFrame();
