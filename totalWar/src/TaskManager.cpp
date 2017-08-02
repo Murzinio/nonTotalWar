@@ -1,7 +1,6 @@
 #include "..\headers\TaskManager.h"
 
 
-
 TaskManager::TaskManager(std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& units, SDL_Point unitSize) : m_units(units)
 {
     m_unitSize = unitSize;
@@ -74,55 +73,45 @@ void TaskManager::Rotate(std::shared_ptr<nonTotalWar::Unit> unit)
 
 void TaskManager::Move(std::shared_ptr<nonTotalWar::Unit> unit)
 {
+    auto speed = unit->GetSpeed();
+    auto counter = unit->GetMoveCounter();
+
+    if (counter != 25 - speed)
+    {
+        unit->SetMoveCounter(counter + 1);
+        return;
+    }
+    else
+        unit->SetMoveCounter(0);
+
     auto position = unit->GetPosition();
     auto destination = unit->GetMoveDestination();
-    destination.x -= m_unitSize.x / 2;
-    destination.y -= m_unitSize.y/ 2;
 
-    auto vectorLength = std::sqrt(std::pow(destination.x, 2.0) + std::pow(destination.y, 2.0));
-    auto speed = unit->GetSpeed();
+    destination.x -= m_unitSize.x / 2;
+    destination.y -= m_unitSize.y / 2;
         
-    auto valToAddX = static_cast<float>(nonTotalWar::settings::WINDOW_WIDTH) / 100000.0f * static_cast<float>(speed);
-    auto valToAddY = static_cast<float>(nonTotalWar::settings::WINDOW_HEIGHT) / 100000.0f * static_cast<float>(speed);
+    int valToAddX{ 1 };
+    int valToAddY{ 1 };
+
+    if (position.x + 1 == destination.x || position.x - 1 == destination.x)
+        valToAddX = 0;
+    else if (position.y + 1 == destination.y || position.y - 1 == destination.y)
+        valToAddY = 0;
 
     if (destination.x < position.x)
         valToAddX *= -1;
     if (destination.y < position.y)
         valToAddY *= -1;
 
-    if (std::abs(valToAddX) < 1.0)
-        m_moveCarryX += valToAddX;
-    else
-        position.x += static_cast<int>(valToAddX);
+    position.x += static_cast<int>(valToAddX);
+    position.y += static_cast<int>(valToAddY);
 
-    if (std::abs(valToAddY) < 1.0)
-        m_moveCarryY += valToAddY;
-    else
-        position.y += static_cast<int>(valToAddY);
-
-    if (position.x + valToAddX > destination.x && destination.x > position.x || position.y + valToAddY > destination.y && destination.y > position.y)
+    if ((position.x + 1 == destination.x || position.x - 1 == destination.x) 
+        && (position.y + 1 == destination.y || position.y - 1 == destination.y))
     {
         auto& tasks = unit->GetTasks();
         tasks.pop();
         return;
-    }
-    else if (position.x + valToAddX < destination.x && destination.x < position.x || position.y + valToAddY < destination.y && destination.y < position.y)
-    {
-        auto& tasks = unit->GetTasks();
-        tasks.pop();
-        return;
-    }
-
-    if (std::abs(m_moveCarryX) > 1.0)
-    {
-        position.x += static_cast<int>(m_moveCarryX);
-        m_moveCarryX = 0.0f;
-    }
-
-    if (std::abs(m_moveCarryY) > 1.0)
-    {
-        position.y += static_cast<int>(m_moveCarryY);
-        m_moveCarryY = 0.0f;
     }
 
     unit->SetPosition(position);

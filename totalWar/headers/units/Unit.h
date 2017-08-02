@@ -18,11 +18,11 @@ namespace nonTotalWar
     class Unit
     {
     private:
-        size_t m_attack;
-        size_t m_defence;
-        size_t m_range;
-        size_t m_speed;
-        size_t m_soldiers;
+        int m_attack;
+        int m_defence;
+        int m_range;
+        int m_speed;
+        int m_soldiers;
 
         SDL_Point m_position;
 
@@ -33,9 +33,10 @@ namespace nonTotalWar
         std::queue<UnitTask> m_tasks;
         bool m_taskStarted{ false };
         SDL_Point m_moveDestination;
+        int m_moveCounter{ 0 };
 
     public:
-        Unit(size_t attack, size_t defence, size_t range, size_t speed, size_t soldiers, SDL_Point position, double angle);
+        Unit(int attack, int defence, int range, int speed, int soldiers, SDL_Point position, double angle);
         virtual ~Unit();
 
         SDL_Point GetPosition();
@@ -62,11 +63,14 @@ namespace nonTotalWar
         void SetMoveDestination(SDL_Point destination) { m_moveDestination = destination; };
 
         bool GetTaskStarted() { return m_taskStarted; };
-        size_t GetSpeed() { return m_speed; };
+        int GetSpeed() { return m_speed; };
         void ClearTasks() 
         {
             m_tasks = {};
             m_moveDestination = { 0, 0 };
         }
+
+        void SetMoveCounter(int value) { m_moveCounter = value; };
+        int GetMoveCounter() { return m_moveCounter; };
     };
 }

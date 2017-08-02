@@ -12,7 +12,7 @@ GameplayManager::GameplayManager(Graphics& graphics) : m_graphics(graphics), m_t
 void GameplayManager::CreateUnits()
 {
     //TODO
-    for (size_t i = 1; i < 4; i++)
+    for (int i = 1; i < 4; i++)
     {
         SDL_Point positionPlayer{ (int)(i * 150) + 300, 200 };
         SDL_Point positionAi{ (int)(i * 150) + 300, 600 };
