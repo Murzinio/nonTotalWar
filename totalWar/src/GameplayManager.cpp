@@ -27,6 +27,7 @@ void GameplayManager::GameLoop()
     //TODO
     bool initialPosition = true;
     auto counter = 0;
+    SDL_Rect selectionRect{ 0, 0, 0, 0 };
 
     while (!m_input.GetQuitRequested())
     {
@@ -39,7 +40,6 @@ void GameplayManager::GameLoop()
 
         m_input.HandleEvents();
 
-        SDL_Rect selectionRect{ 0, 0, 0, 0 };
         auto selectionRectCreated{ false };
 
         if (m_input.GetMouseLBPressed())
@@ -59,16 +59,44 @@ void GameplayManager::GameLoop()
                 selectionRect.y -= selectionRect.h;
             }
 
+        }
+
+        if (m_input.GetMouseLBWasReleased())
+        {
+            auto anyUnitSelected{ false };
             for (auto & x : m_playerUnits)
             {
                 auto position = x.second->GetPosition();
+                auto unitSize = m_graphics.GetUnitSize();
+                position.x += unitSize.x / 2;
+                position.y += unitSize.y / 2;
 
                 if ((position.x >= selectionRect.x && position.x <= selectionRect.x + selectionRect.w)
                     & (position.y >= selectionRect.y && position.y <= selectionRect.y + selectionRect.h))
+                {
                     x.second->SetSelected(!x.second->IsSelected());
+                    if (!anyUnitSelected)
+                        anyUnitSelected = true;
+                }
             }
 
+            if (!anyUnitSelected)
+                for (auto & x : m_playerUnits)
+                    x.second->SetSelected(false);
+
+            selectionRect = { 0, 0, 0, 0 };
+            m_input.ClearSelectionRectangle();
         }
+
+        if (m_input.GetMouseLBClick()) 
+            if (IsMouseOverUnit(m_input.GetMousePositionClick()))
+            {
+                m_chosenUnit->SetSelected(!m_chosenUnit->IsSelected());
+                m_chosenUnit = nullptr;
+            }
+            else
+                for (auto & x : m_playerUnits)
+                    x.second->SetSelected(false);
 
         if (m_input.GetMouseRBClicked())
         {
@@ -83,7 +111,7 @@ void GameplayManager::GameLoop()
                 x->ClearTasks();
                 x->AddTask(task);
                 x->AddTask(task2);
-                x->SetMoveDestination(m_input.GetMousePosition());
+                x->SetMoveDestination(m_input.GetMousePositionClick());
             }
         }
 
@@ -111,7 +139,6 @@ void GameplayManager::GameLoop()
             if (x.second->IsSelected())
                 m_graphics.AddToQueue("units\\placeholderSelected", srcRect, dstRect, x.second->GetAngle(), center, SDL_FLIP_NONE);
 
-            
         }
 
         for (auto & x : m_aiUnits)

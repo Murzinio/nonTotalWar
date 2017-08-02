@@ -10,6 +10,9 @@ void Input::HandleEvents()
 {
     SDL_Event e;
 
+    m_mousePositionMotion.x = 0;
+    m_mousePositionMotion.y = 0;
+
     while (SDL_PollEvent(&e) != 0)
     {
         if (e.type == SDL_QUIT)
@@ -23,6 +26,7 @@ void Input::HandleEvents()
             {
                 m_mousePositionMotion.x = e.motion.x;
                 m_mousePositionMotion.y = e.motion.y;
+                std::cout << "\nm_mouseLBPressed\n";
                 CreateSelectionRectangle();
             }
         }
@@ -44,7 +48,15 @@ void Input::HandleEvents()
             {
                 if (m_mouseLBPressed)
                     m_mouseLBWasReleased = true;
-
+                if (m_selectionRectangle.x == 0
+                    && m_selectionRectangle.y == 0
+                    && m_selectionRectangle.w == 0
+                    && m_selectionRectangle.h == 0)
+                {
+                    m_mouseLBClick = true;
+                    std::cout << "\nm_mouseLBClick\n";
+                }
+                
                 m_mouseLBPressed = false;
             }
             else if (e.button.button == SDL_BUTTON_RIGHT && e.button.state == SDL_RELEASED && e.button.clicks == 1)
@@ -76,5 +88,16 @@ bool Input::GetMouseLBWasReleased()
         return true;
     }
 
+    return false;
+}
+
+bool Input::GetMouseLBClick()
+{
+    if (m_mouseLBClick)
+    {
+        m_mouseLBClick = false;
+        return true;
+    }
+    
     return false;
 }
