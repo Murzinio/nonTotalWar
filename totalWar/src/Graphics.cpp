@@ -80,6 +80,18 @@ void Graphics::RenderFrame()
         m_renderQueue.pop();
     }
 
+    if (m_drawSelectionRect)
+    {
+        SDL_SetRenderDrawColor(m_renderer, 255, 255, 0, SDL_ALPHA_OPAQUE);
+        SDL_RenderDrawLine(m_renderer, m_selectionRect.x, m_selectionRect.y, m_selectionRect.x + m_selectionRect.w, m_selectionRect.y);
+        SDL_RenderDrawLine(m_renderer, m_selectionRect.x, m_selectionRect.y, m_selectionRect.x, m_selectionRect.y + m_selectionRect.h);
+        SDL_RenderDrawLine(m_renderer, m_selectionRect.x, m_selectionRect.y + m_selectionRect.h, m_selectionRect.x + m_selectionRect.w, m_selectionRect.y + m_selectionRect.h);
+        SDL_RenderDrawLine(m_renderer, m_selectionRect.x + m_selectionRect.w, m_selectionRect.y, m_selectionRect.x + m_selectionRect.w, m_selectionRect.y + m_selectionRect.h);
+
+        m_drawSelectionRect = false;
+        m_selectionRect = { 0, 0, 0, 0 };
+    }
+
     SDL_RenderPresent(m_renderer);
 }
 
@@ -115,4 +127,10 @@ std::string Graphics::GetExePath()
 SDL_Point Graphics::GetUnitSize()
 {
     return m_unitSize;
+}
+
+void Graphics::AddSelectionRectToQueue(SDL_Rect dstRect)
+{
+    m_drawSelectionRect = true;
+    m_selectionRect = dstRect;
 }

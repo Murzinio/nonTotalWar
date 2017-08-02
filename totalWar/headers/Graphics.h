@@ -43,7 +43,8 @@ namespace nonTotalWar
         };
 
         std::queue<RenderQueueItem> m_renderQueue;
-        
+        bool m_drawSelectionRect{ false };
+        SDL_Rect m_selectionRect{ 0, 0, 0, 0 };
 
         std::string GetExePath();
 
@@ -59,6 +60,7 @@ namespace nonTotalWar
         SDL_Point GetUnitSize();
     
         void AddToQueue(std::string texture, SDL_Rect srcRect, SDL_Rect dstRect, double angle, SDL_Point center, SDL_RendererFlip flip);
+        void AddSelectionRectToQueue(SDL_Rect dstRect);
         void RenderFrame();
     };
 

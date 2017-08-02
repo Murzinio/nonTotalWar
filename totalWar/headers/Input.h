@@ -9,18 +9,25 @@ namespace nonTotalWar
     {
     private:
         bool m_quit{ false };
-        bool m_mouseLBClick{ false };
         bool m_mouseRBClick{ false };
-        SDL_Point m_mousePosition;
+        bool m_mouseLBPressed{ false };
+        bool m_mouseLBWasReleased{ false };
+        SDL_Point m_mousePositionMotion;
+        SDL_Point m_mousePositionClick;
+        SDL_Rect m_selectionRectangle;
+
+        void CreateSelectionRectangle();
+
     public:
         Input();
 
         void HandleEvents();
-        
 
-        inline bool QuitRequested();
-        inline bool MouseLBClicked();
-        inline bool MouseRBClicked()
+        bool GetQuitRequested() { return m_quit; };
+        bool GetMouseLBPressed() { return m_mouseLBPressed; };
+        bool GetMouseLBWasReleased();
+        SDL_Rect GetSelectionRectangle() { return m_selectionRectangle; };
+        bool GetMouseRBClicked()
         {
             if (m_mouseRBClick)
             {
@@ -31,28 +38,7 @@ namespace nonTotalWar
             return false;
         };
 
-        inline SDL_Point GetMousePosition();
+        SDL_Point GetMousePosition() { return m_mousePositionMotion; };
     };
-
-    inline bool Input::QuitRequested()
-    {
-        return m_quit;
-    }
-
-    inline bool Input::MouseLBClicked()
-    {
-        if (m_mouseLBClick)
-        {
-            m_mouseLBClick = false;
-            return true;
-        }
-
-        return false;
-    }
-
-    inline SDL_Point Input::GetMousePosition()
-    {
-        return m_mousePosition;
-    }
 }
 

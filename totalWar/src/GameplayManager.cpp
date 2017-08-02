@@ -28,27 +28,49 @@ void GameplayManager::GameLoop()
     bool initialPosition = true;
     auto counter = 0;
 
-    while (!m_input.QuitRequested())
+    while (!m_input.GetQuitRequested())
     {
-
         namespace chrono = std::chrono;
         auto now = chrono::high_resolution_clock::now();
         auto lastUpdateInterval = chrono::duration_cast<chrono::milliseconds>(now - m_lastUpdate).count();
-
 
         if (lastUpdateInterval < m_updateInterval)
             continue;
 
         m_input.HandleEvents();
 
+        SDL_Rect selectionRect{ 0, 0, 0, 0 };
+        auto selectionRectCreated{ false };
 
-        if (m_input.MouseLBClicked() && IsMouseOverUnit(m_input.GetMousePosition()))
+        if (m_input.GetMouseLBPressed())
         {
-            m_chosenUnit->SetSelected(!m_chosenUnit->IsSelected());
-            m_chosenUnit = nullptr;
+            selectionRect = m_input.GetSelectionRectangle();
+            selectionRectCreated = true;
+
+            if (selectionRect.w < 0)
+            {
+                selectionRect.w = std::abs(selectionRect.w);
+                selectionRect.x -= selectionRect.w;
+            }
+
+            if (selectionRect.h < 0)
+            {
+                selectionRect.h = std::abs(selectionRect.h);
+                selectionRect.y -= selectionRect.h;
+            }
+
+            for (auto & x : m_playerUnits)
+            {
+                auto position = x.second->GetPosition();
+
+                if ((position.x >= selectionRect.x && position.x <= selectionRect.x + selectionRect.w)
+                    & (position.y >= selectionRect.y && position.y <= selectionRect.y + selectionRect.h))
+                    x.second->SetSelected(!x.second->IsSelected());
+            }
+
         }
 
-        if (m_input.MouseRBClicked())
+        if (m_input.GetMouseRBClicked())
         {
             using nonTotalWar::UnitTask;
 
@@ -67,9 +89,9 @@ void GameplayManager::GameLoop()
 
         m_taskManager.HandleTasks();
 
-        
-
         m_lastUpdate = now;
+
+        m_graphics.AddToQueue("background\\background", { 0, 0, settings::WINDOW_WIDTH, settings::WINDOW_HEIGHT }, { 0, 0, settings::WINDOW_WIDTH, settings::WINDOW_HEIGHT }, 0, { 0, 0 }, SDL_FLIP_NONE);
 
         for (auto & x : m_playerUnits)
         {
@@ -88,6 +110,8 @@ void GameplayManager::GameLoop()
 
             if (x.second->IsSelected())
                 m_graphics.AddToQueue("units\\placeholderSelected", srcRect, dstRect, x.second->GetAngle(), center, SDL_FLIP_NONE);
+
+            
         }
 
         for (auto & x : m_aiUnits)
@@ -108,6 +132,11 @@ void GameplayManager::GameLoop()
 
             if (x.second->IsSelected())
                 m_graphics.AddToQueue("units\\placeholderSelected", srcRect, dstRect, angle, center, SDL_FLIP_NONE);
+        }
+
+        if (selectionRectCreated)
+        {
+            m_graphics.AddSelectionRectToQueue(selectionRect);
         }
 
         m_graphics.RenderFrame();

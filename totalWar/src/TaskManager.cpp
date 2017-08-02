@@ -35,8 +35,6 @@ void TaskManager::HandleTasks()
     }
 }
 
-
-
 void TaskManager::Rotate(std::shared_ptr<nonTotalWar::Unit> unit)
 {
     auto unitPos = unit->GetPosition();
@@ -103,8 +101,8 @@ void TaskManager::Move(std::shared_ptr<nonTotalWar::Unit> unit)
     if (destination.y < position.y)
         valToAddY *= -1;
 
-    position.x += static_cast<int>(valToAddX);
-    position.y += static_cast<int>(valToAddY);
+    position.x += valToAddX;
+    position.y += valToAddY;
 
     if ((position.x + 1 == destination.x || position.x - 1 == destination.x) 
         && (position.y + 1 == destination.y || position.y - 1 == destination.y))
