@@ -3,7 +3,7 @@
 using nonTotalWar::GameplayManager;
 using nonTotalWar::Graphics;
 
-GameplayManager::GameplayManager(Graphics& graphics) : m_graphics(graphics), m_taskManager(m_playerUnits)
+GameplayManager::GameplayManager(Graphics& graphics) : m_graphics(graphics), m_taskManager(m_playerUnits, m_graphics.GetUnitSize())
 {
     CreateUnits();
     GameLoop();
@@ -30,11 +30,17 @@ void GameplayManager::GameLoop()
 
     while (!m_input.QuitRequested())
     {
+
         namespace chrono = std::chrono;
         auto now = chrono::high_resolution_clock::now();
         auto lastUpdateInterval = chrono::duration_cast<chrono::milliseconds>(now - m_lastUpdate).count();
 
+
+        if (lastUpdateInterval < m_updateInterval)
+            continue;
+
         m_input.HandleEvents();
+
 
         if (m_input.MouseLBClicked() && IsMouseOverUnit(m_input.GetMousePosition()))
         {
@@ -47,31 +53,26 @@ void GameplayManager::GameLoop()
             using nonTotalWar::UnitTask;
 
             auto selectedUnits = GetSelectedUnits();
-            auto task = UnitTask::NONE;
-
-            if (m_chosenUnit == nullptr)
-                task = UnitTask::MOVE;
-            else
-                task = UnitTask::ATTACK;
+            auto task = UnitTask::ROTATE;
+            auto task2 = UnitTask::MOVE;
 
             for (auto & x : selectedUnits)
             {
-                x->SetTask(task);
+                x->AddTask(task);
+                x->AddTask(task2);
                 x->SetMoveDestination(m_input.GetMousePosition());
             }
         }
 
         m_taskManager.HandleTasks();
 
-        if (lastUpdateInterval < m_updateInterval)
-            continue;
+        
 
         m_lastUpdate = now;
 
         for (auto & x : m_playerUnits)
         {
             auto position = x.second->GetPosition();
-            auto angle = x.second->GetAngle();;
 
             SDL_Point unitSize = m_graphics.GetUnitSize();
             SDL_Point center = { unitSize.x / 2, unitSize.y / 2 };
@@ -81,11 +82,11 @@ void GameplayManager::GameLoop()
             SDL_Rect srcRect{ 0, 0, 512, 256 };
             SDL_Rect dstRect{ position.x, position.y, unitSize.x, unitSize.y };
 
-            m_graphics.AddToQueue("units\\placeholderPlayer", srcRect, dstRect, angle, center, SDL_FLIP_NONE);
-            m_graphics.AddToQueue("units\\hoplites", srcRect, dstRect, 0, center, SDL_FLIP_NONE);
+            m_graphics.AddToQueue("units\\placeholderPlayer", srcRect, dstRect, x.second->GetAngle(), center, SDL_FLIP_NONE);
+            m_graphics.AddToQueue("units\\hoplites", srcRect, dstRect, x.second->GetAngle(), center, SDL_FLIP_NONE);
 
             if (x.second->IsSelected())
-                m_graphics.AddToQueue("units\\placeholderSelected", srcRect, dstRect, angle, center, SDL_FLIP_NONE);
+                m_graphics.AddToQueue("units\\placeholderSelected", srcRect, dstRect, x.second->GetAngle(), center, SDL_FLIP_NONE);
         }
 
         for (auto & x : m_aiUnits)

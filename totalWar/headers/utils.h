@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <SDL.h>
 
 namespace nonTotalWar
 {
@@ -17,5 +18,10 @@ namespace nonTotalWar
         }
 
         return seglist;
+    }
+
+    inline double GetAngleToPoint(SDL_Point first, SDL_Point second)
+    {
+        return static_cast<double>(atan2(second.x - first.x, second.y - first.y)) * (180.0f / 3.14159f) * - 1;
     }
 }

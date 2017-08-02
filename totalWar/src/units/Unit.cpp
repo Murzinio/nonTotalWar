@@ -27,7 +27,7 @@ void Unit::ChangePosition(SDL_Point newPosition)
 
 SDL_Point Unit::GetMoveDestination()
 {
-    if (m_task != UnitTask::NONE)
+    if (m_tasks.size() > 0)
         return m_moveDestination;
 
     SDL_Point nullPoint{ 0, 0 };

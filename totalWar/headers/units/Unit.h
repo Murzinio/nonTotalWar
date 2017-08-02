@@ -1,5 +1,7 @@
 #pragma once
 
+#include <queue>
+
 #include "..\utils.h"
 #include "SDL.h"
 
@@ -7,6 +9,7 @@ namespace nonTotalWar
 {
     enum class UnitTask
     {
+        ROTATE,
         MOVE,
         ATTACK,
         NONE
@@ -26,7 +29,9 @@ namespace nonTotalWar
         double m_angle{ 0.0 };
 
         bool m_selected{ false };
-        UnitTask m_task{ UnitTask::NONE };
+
+        std::queue<UnitTask> m_tasks;
+        bool m_taskStarted{ false };
         SDL_Point m_moveDestination;
 
     public:
@@ -42,20 +47,20 @@ namespace nonTotalWar
         inline void SetAngle(double angle) { m_angle = angle; };
         inline double GetAngle() { return m_angle; };
 
-        void SetTask(UnitTask task)
+        void AddTask(UnitTask task)
         {
-            m_task = task;
+            m_tasks.push(task);
+            m_taskStarted = true;
         }
 
-        UnitTask GetTask()
+        std::queue<UnitTask>& GetTasks()
         {
-            return m_task;
+            return m_tasks;
         }
 
         SDL_Point GetMoveDestination();
-        void SetMoveDestination(SDL_Point destination) 
-        {
-            m_moveDestination = destination;
-        }
+        void SetMoveDestination(SDL_Point destination) { m_moveDestination = destination; };
+
+        bool GetTaskStarted() { return m_taskStarted; };
     };
 }
