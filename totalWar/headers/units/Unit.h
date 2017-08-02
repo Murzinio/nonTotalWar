@@ -39,7 +39,7 @@ namespace nonTotalWar
         virtual ~Unit();
 
         SDL_Point GetPosition();
-        void ChangePosition(SDL_Point newPosition);
+        void SetPosition(SDL_Point newPosition);
         
         void SetSelected(bool select) { m_selected = select; };
         bool IsSelected() { return m_selected; };
@@ -62,5 +62,11 @@ namespace nonTotalWar
         void SetMoveDestination(SDL_Point destination) { m_moveDestination = destination; };
 
         bool GetTaskStarted() { return m_taskStarted; };
+        size_t GetSpeed() { return m_speed; };
+        void ClearTasks() 
+        {
+            m_tasks = {};
+            m_moveDestination = { 0, 0 };
+        }
     };
 }

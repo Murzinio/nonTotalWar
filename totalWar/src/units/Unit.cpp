@@ -20,7 +20,7 @@ SDL_Point Unit::GetPosition()
     return m_position;
 }
 
-void Unit::ChangePosition(SDL_Point newPosition)
+void Unit::SetPosition(SDL_Point newPosition)
 {
     m_position = newPosition;
 }

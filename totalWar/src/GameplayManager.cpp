@@ -58,6 +58,7 @@ void GameplayManager::GameLoop()
 
             for (auto & x : selectedUnits)
             {
+                x->ClearTasks();
                 x->AddTask(task);
                 x->AddTask(task2);
                 x->SetMoveDestination(m_input.GetMousePosition());

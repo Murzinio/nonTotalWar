@@ -22,6 +22,11 @@ namespace nonTotalWar
 
     inline double GetAngleToPoint(SDL_Point first, SDL_Point second)
     {
-        return static_cast<double>(atan2(second.x - first.x, second.y - first.y)) * (180.0f / 3.14159f) * - 1;
+        return std::atan2(second.x - first.x, second.y - first.y) * (180.0 / 3.14159) * - 1.0;
+    }
+
+    inline double GetDistanceToPoint(SDL_Point first, SDL_Point second)
+    {
+        return std::sqrt(std::pow(second.x - first.x, 2.0) + std::pow(second.y - first.y, 2.0));
     }
 }
