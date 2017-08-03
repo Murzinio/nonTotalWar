@@ -26,7 +26,6 @@ void Input::HandleEvents()
             {
                 m_mousePositionMotion.x = e.motion.x;
                 m_mousePositionMotion.y = e.motion.y;
-                std::cout << "\nm_mouseLBPressed\n";
                 CreateSelectionRectangle();
             }
         }
@@ -40,7 +39,6 @@ void Input::HandleEvents()
             m_mousePositionClick.x = e.button.x;
             m_mousePositionClick.y = e.button.y;
 
-            std::cout << "\ndown\n";
         }
         else if (e.type = SDL_MOUSEBUTTONUP)
         {
@@ -54,7 +52,6 @@ void Input::HandleEvents()
                     && m_selectionRectangle.h == 0)
                 {
                     m_mouseLBClick = true;
-                    std::cout << "\nm_mouseLBClick\n";
                 }
                 
                 m_mouseLBPressed = false;
@@ -67,7 +64,6 @@ void Input::HandleEvents()
             m_mousePositionClick.x = e.button.x;
             m_mousePositionClick.y = e.button.y;
 
-            std::cout << "\nup\n";
         }
     }
 }
@@ -75,9 +71,6 @@ void Input::HandleEvents()
 void Input::CreateSelectionRectangle()
 {
     m_selectionRectangle = {m_mousePositionClick.x, m_mousePositionClick.y, m_mousePositionMotion.x - m_mousePositionClick.x, m_mousePositionMotion.y - m_mousePositionClick.y};
-
-    std::cout << std::endl << m_selectionRectangle.x << std::endl << m_selectionRectangle.y << std::endl
-        << m_selectionRectangle.w << std::endl << m_selectionRectangle.h << std::endl;
 }
 
 bool Input::GetMouseLBWasReleased()

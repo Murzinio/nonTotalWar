@@ -5,6 +5,7 @@ using nonTotalWar::Graphics;
 Graphics::Graphics()
 {
     bool success = false;
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
 
     if (settings::FULLSCREEN)
         SDL_SetWindowFullscreen(m_window, SDL_WINDOW_FULLSCREEN);
