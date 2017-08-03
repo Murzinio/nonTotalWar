@@ -36,7 +36,7 @@ namespace nonTotalWar
         bool m_taskStarted{ false };
         SDL_Point m_moveDestination;
         int m_moveCounter{ 0 };
-        std::array<SDL_Point, 8> m_verticles;
+        std::array<SDL_Point, 6> m_verticles;
 
     public:
         Unit(int attack, int defence, int range, int speed, int soldiers, SDL_Point position, double angle);
@@ -77,6 +77,6 @@ namespace nonTotalWar
         int GetMoveCounter() { return m_moveCounter; };
 
         void CalculateVerticles();
-        std::array<SDL_Point, 8> GetVerticles() { return m_verticles; };
+        std::array<SDL_Point, 6> GetVerticles() { return m_verticles; };
     };
 }

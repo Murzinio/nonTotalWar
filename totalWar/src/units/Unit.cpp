@@ -49,6 +49,7 @@ void Unit::CalculateVerticles()
     newX = m_position.x + newX - x;
     newY = m_position.y + newY - y;
 
+    // TOP LEFT
     m_verticles[0] = { static_cast<int>(newX), static_cast<int>(newY) };
 
     x = unitSize.x / 2;
@@ -59,6 +60,7 @@ void Unit::CalculateVerticles()
     newX = m_position.x + newX - x;
     newY = m_position.y + newY - y;
 
+    // TOP RIGHT
     m_verticles[1] = { static_cast<int>(newX), static_cast<int>(newY) };
 
     x = unitSize.x / - 2;
@@ -70,6 +72,7 @@ void Unit::CalculateVerticles()
     newX = m_position.x + newX - x;
     newY = m_position.y + newY - y;
 
+    // BOTTOM LEFT
     m_verticles[2] = { static_cast<int>(newX), static_cast<int>(newY) };
 
     x = unitSize.x / 2;
@@ -80,5 +83,30 @@ void Unit::CalculateVerticles()
     newX = m_position.x + newX - x;
     newY = m_position.y + newY - y;
 
+    // BOTTOM RIGHT
     m_verticles[3] = { static_cast<int>(newX), static_cast<int>(newY) };
+
+    x = 0;
+    y = unitSize.y / -2;
+
+    newX = x * std::cos(radians) - y * std::sin(radians) + unitSize.x / 2;
+    newY = x * std::sin(radians) + y * std::cos(radians);
+
+    newX = m_position.x + newX - x;
+    newY = m_position.y + newY - y;
+
+    // TOP MIDDLE
+    m_verticles[4] = { static_cast<int>(newX), static_cast<int>(newY) };
+
+    x = 0;
+    y = unitSize.y / 2;
+
+    newX = x * std::cos(radians) - y * std::sin(radians) + unitSize.x / 2;
+    newY = x * std::sin(radians) + y * std::cos(radians) + unitSize.y;
+
+    newX = m_position.x + newX - x;
+    newY = m_position.y + newY - y;
+
+    // BOTTOM MIDDLE
+    m_verticles[5] = { static_cast<int>(newX), static_cast<int>(newY) };
 }

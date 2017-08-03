@@ -14,9 +14,9 @@ void TaskManager::HandleTasks()
         auto unit = x.second;
         auto& tasks = unit->GetTasks();
 
-        auto collisionPoints = unit->GetVerticles();
+        auto verticles = unit->GetVerticles();
 
-        for (auto & point : collisionPoints)
+        for (auto & point : verticles)
         {
             for (int i = 0; i < 3; i++)
                 for (int j = 0; j < 3; j++)
@@ -86,6 +86,8 @@ void TaskManager::Rotate(std::shared_ptr<nonTotalWar::Unit> unit)
     else if (absoluteDiffNormalised < 0)
         angleToSet = currentAngle - speed / 60.0;
 
+    auto test = CheckForCollisions(unit);
+
     unit->SetAngle(angleToSet);
 }
 
@@ -145,20 +147,46 @@ nonTotalWar::Collision TaskManager::CheckForCollisions(std::shared_ptr<nonTotalW
 
     auto unitSize = GetUnitSize();
 
+
     for (auto & x : m_units)
     {
         auto unit = x.second;
+        auto unitVerticles = unit->GetVerticles();
 
         for (auto & y : m_units)
         {
+            if (x.first == y.first)
+                continue;
+
+
+
             auto otherUnit = y.second;
+            auto otherUnitVerticles = otherUnit->GetVerticles();
 
-            auto position1 = unit->GetPosition();
-            auto position2 = otherUnit->GetPosition();
+            for (auto & v : unitVerticles)
+            {
+                for (auto & ov : otherUnitVerticles)
+                {
+                    if (v.x == 0 || ov.x == 0)
+                        continue;
 
-            if (position1.x + 2 * unitSize.x == position2.x
-                || position1.y + 2 * unitSize.y == position2.y)
-                return Collision::FRIENDLY_UNIT;
+                    auto collisionX{ false };
+                    auto collisionY{ false };
+
+                    if (std::abs(v.x - ov.x) <= 20)
+                        collisionX= true;
+
+                    if (std::abs(v.y - ov.y) <= 20)
+                        collisionY = true;
+
+                    if (collisionX && collisionY)
+                    {
+                        unit->ClearTasks();
+                        otherUnit->ClearTasks();
+                    }
+                }
+            }
+
         }
     }
 
