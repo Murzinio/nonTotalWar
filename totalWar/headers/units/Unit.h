@@ -1,6 +1,8 @@
 #pragma once
 
 #include <queue>
+#include <array>
+#include <math.h>
 
 #include "..\utils.h"
 #include "SDL.h"
@@ -23,7 +25,7 @@ namespace nonTotalWar
         int m_range;
         int m_speed;
         int m_soldiers;
-
+        SDL_Point m_unitSize;
         SDL_Point m_position;
 
         double m_angle{ 0.0 };
@@ -34,6 +36,7 @@ namespace nonTotalWar
         bool m_taskStarted{ false };
         SDL_Point m_moveDestination;
         int m_moveCounter{ 0 };
+        std::array<SDL_Point, 8> m_verticles;
 
     public:
         Unit(int attack, int defence, int range, int speed, int soldiers, SDL_Point position, double angle);
@@ -72,5 +75,8 @@ namespace nonTotalWar
 
         void SetMoveCounter(int value) { m_moveCounter = value; };
         int GetMoveCounter() { return m_moveCounter; };
+
+        void CalculateVerticles();
+        std::array<SDL_Point, 8> GetVerticles() { return m_verticles; };
     };
 }

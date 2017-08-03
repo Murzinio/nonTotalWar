@@ -2,6 +2,9 @@
 
 using nonTotalWar::Graphics;
 
+bool Graphics::m_drawDebugPoints = true;
+std::vector<SDL_Point> Graphics::m_debugPoints = { { 0, 0 } };
+
 Graphics::Graphics()
 {
     bool success = false;
@@ -93,6 +96,17 @@ void Graphics::RenderFrame()
         m_selectionRect = { 0, 0, 0, 0 };
     }
 
+    if (m_drawDebugPoints)
+    {
+        SDL_SetRenderDrawColor(m_renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
+        for (auto & point : m_debugPoints)
+            SDL_RenderDrawPoint(m_renderer, point.x, point.y);
+
+        m_drawDebugPoints = false;
+        m_debugPoints = { { 0, 0 } };
+
+    }
+
     SDL_RenderPresent(m_renderer);
 }
 
@@ -125,13 +139,14 @@ std::string Graphics::GetExePath()
     return finalPath;
 }
 
-SDL_Point Graphics::GetUnitSize()
-{
-    return m_unitSize;
-}
-
 void Graphics::AddSelectionRectToQueue(SDL_Rect dstRect)
 {
     m_drawSelectionRect = true;
     m_selectionRect = dstRect;
+}
+
+void Graphics::DebugDrawPoint(SDL_Point position)
+{
+    m_drawDebugPoints = true;
+    m_debugPoints.push_back(position);
 }

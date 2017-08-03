@@ -46,21 +46,17 @@ namespace nonTotalWar
         bool m_drawSelectionRect{ false };
         SDL_Rect m_selectionRect{ 0, 0, 0, 0 };
 
-        std::string GetExePath();
+        static bool m_drawDebugPoints;
+        static std::vector<SDL_Point> m_debugPoints;
 
-        SDL_Point m_unitSize
-        { 
-            settings::WINDOW_WIDTH / 24,
-            settings::WINDOW_HEIGHT / 24
-        };
+        std::string GetExePath();
 
     public:
         Graphics();
 
-        SDL_Point GetUnitSize();
-    
         void AddToQueue(std::string texture, SDL_Rect srcRect, SDL_Rect dstRect, double angle, SDL_Point center, SDL_RendererFlip flip);
         void AddSelectionRectToQueue(SDL_Rect dstRect);
+        static void DebugDrawPoint(SDL_Point position);
         void RenderFrame();
     };
 

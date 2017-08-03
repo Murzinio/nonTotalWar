@@ -1,9 +1,10 @@
 #include "..\headers\TaskManager.h"
 
+using nonTotalWar::TaskManager;
 
-TaskManager::TaskManager(std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& units, SDL_Point unitSize) : m_units(units)
+TaskManager::TaskManager(std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& units) : m_units(units)
 {
-    m_unitSize = unitSize;
+
 }
 
 void TaskManager::HandleTasks()
@@ -12,6 +13,20 @@ void TaskManager::HandleTasks()
     {
         auto unit = x.second;
         auto& tasks = unit->GetTasks();
+
+        auto collisionPoints = unit->GetVerticles();
+
+        for (auto & point : collisionPoints)
+        {
+            for (int i = 0; i < 3; i++)
+                for (int j = 0; j < 3; j++)
+                {
+                    Graphics::DebugDrawPoint({ point.x + j, point.y + i });
+                }
+        }
+
+        unit->CalculateVerticles();
+
         if (tasks.size() == 0)
             continue;
 
@@ -32,6 +47,8 @@ void TaskManager::HandleTasks()
             default:
                 break;
         }
+
+        
     }
 }
 
@@ -40,8 +57,10 @@ void TaskManager::Rotate(std::shared_ptr<nonTotalWar::Unit> unit)
     auto unitPos = unit->GetPosition();
     auto unitCenter = unitPos;
     
-    unitCenter.x += m_unitSize.x / 2;
-    unitCenter.y += m_unitSize.y / 2;
+    auto unitSize = GetUnitSize();
+
+    unitCenter.x += unitSize.x / 2;
+    unitCenter.y += unitSize.y / 2;
 
     auto speed = unit->GetSpeed();
     auto targetAngle = nonTotalWar::GetAngleToPoint(unitCenter, unit->GetMoveDestination());
@@ -49,6 +68,7 @@ void TaskManager::Rotate(std::shared_ptr<nonTotalWar::Unit> unit)
     auto angleToSet = 0.0;
 
     auto normalised = std::fmod((targetAngle - currentAngle), 360);
+#undef min
     auto absoluteDiffNormalised = std::min(360.0 - normalised, normalised);
 
     if (std::abs(absoluteDiffNormalised) <= std::abs(1.0))
@@ -74,6 +94,8 @@ void TaskManager::Move(std::shared_ptr<nonTotalWar::Unit> unit)
     auto speed = unit->GetSpeed();
     auto counter = unit->GetMoveCounter();
 
+    auto unitSize = GetUnitSize();
+
     if (counter != 25 - speed)
     {
         unit->SetMoveCounter(counter + 1);
@@ -85,8 +107,8 @@ void TaskManager::Move(std::shared_ptr<nonTotalWar::Unit> unit)
     auto position = unit->GetPosition();
     auto destination = unit->GetMoveDestination();
 
-    destination.x -= m_unitSize.x / 2;
-    destination.y -= m_unitSize.y / 2;
+    destination.x -= unitSize.x / 2;
+    destination.y -= unitSize.y / 2;
         
     int valToAddX{ 1 };
     int valToAddY{ 1 };
@@ -112,5 +134,33 @@ void TaskManager::Move(std::shared_ptr<nonTotalWar::Unit> unit)
         return;
     }
 
+    auto test = CheckForCollisions(unit);
+
     unit->SetPosition(position);
+}
+
+nonTotalWar::Collision TaskManager::CheckForCollisions(std::shared_ptr<nonTotalWar::Unit> unit)
+{
+    using nonTotalWar::Collision;
+
+    auto unitSize = GetUnitSize();
+
+    for (auto & x : m_units)
+    {
+        auto unit = x.second;
+
+        for (auto & y : m_units)
+        {
+            auto otherUnit = y.second;
+
+            auto position1 = unit->GetPosition();
+            auto position2 = otherUnit->GetPosition();
+
+            if (position1.x + 2 * unitSize.x == position2.x
+                || position1.y + 2 * unitSize.y == position2.y)
+                return Collision::FRIENDLY_UNIT;
+        }
+    }
+
+    return Collision::NONE;
 }

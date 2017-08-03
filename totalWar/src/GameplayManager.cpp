@@ -3,7 +3,7 @@
 using nonTotalWar::GameplayManager;
 using nonTotalWar::Graphics;
 
-GameplayManager::GameplayManager(Graphics& graphics) : m_graphics(graphics), m_taskManager(m_playerUnits, m_graphics.GetUnitSize())
+GameplayManager::GameplayManager(Graphics& graphics) : m_graphics(graphics), m_taskManager(m_playerUnits)
 {
     CreateUnits();
     GameLoop();
@@ -67,7 +67,7 @@ void GameplayManager::GameLoop()
             for (auto & x : m_playerUnits)
             {
                 auto position = x.second->GetPosition();
-                auto unitSize = m_graphics.GetUnitSize();
+                auto unitSize = GetUnitSize();
                 position.x += unitSize.x / 2;
                 position.y += unitSize.y / 2;
 
@@ -125,7 +125,7 @@ void GameplayManager::GameLoop()
         {
             auto position = x.second->GetPosition();
 
-            SDL_Point unitSize = m_graphics.GetUnitSize();
+            auto unitSize = GetUnitSize();
             SDL_Point center = { unitSize.x / 2, unitSize.y / 2 };
 
             position.x += counter * unitSize.x / 32;
@@ -146,7 +146,7 @@ void GameplayManager::GameLoop()
             auto position = x.second->GetPosition();
             auto angle = x.second->GetAngle();;
 
-            SDL_Point unitSize = m_graphics.GetUnitSize();
+            auto unitSize = GetUnitSize();
             SDL_Point center = { unitSize.x / 2, unitSize.y / 2 };
 
             position.x += counter * unitSize.x / 32;
@@ -197,7 +197,7 @@ bool GameplayManager::UnitExists(const std::string name)
 
 bool GameplayManager::IsMouseOverUnit(SDL_Point mousePosition)
 {
-    auto unitSize = m_graphics.GetUnitSize();
+    auto unitSize = GetUnitSize();
     for (auto & unit : m_playerUnits)
     {
         auto position = unit.second->GetPosition();
