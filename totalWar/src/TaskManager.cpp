@@ -40,6 +40,10 @@ void TaskManager::HandleTasks()
                 Rotate(unit);
                 break;
 
+            case UnitTask::FLIP:
+                Flip(unit);
+                break;
+
             case UnitTask::MOVE:
                 Move(unit);
                 break;
@@ -64,6 +68,13 @@ void TaskManager::Rotate(std::shared_ptr<nonTotalWar::Unit> unit)
 
     auto speed = unit->GetSpeed();
     auto targetAngle = nonTotalWar::GetAngleToPoint(unitCenter, unit->GetMoveDestination());
+    if (unit->GetTurnedBack())
+    {
+        if (targetAngle > 0)
+            targetAngle -= 180;
+        else
+            targetAngle += 180;
+    }
     auto currentAngle = unit->GetAngle();
     auto angleToSet = 0.0;
 
@@ -89,6 +100,24 @@ void TaskManager::Rotate(std::shared_ptr<nonTotalWar::Unit> unit)
     auto test = CheckForCollisions(unit);
 
     unit->SetAngle(angleToSet);
+}
+
+void TaskManager::Flip(std::shared_ptr<nonTotalWar::Unit> unit)
+{
+    auto speed = unit->GetSpeed();
+    auto counter = unit->GetMoveCounter();
+
+    if (counter != 25 - speed)
+    {
+        unit->SetMoveCounter(counter + 1);
+        return;
+    }
+    else
+        unit->SetMoveCounter(0);
+
+    unit->SetTurnedBack(!unit->GetTurnedBack());
+    auto& tasks = unit->GetTasks();
+    tasks.pop();
 }
 
 void TaskManager::Move(std::shared_ptr<nonTotalWar::Unit> unit)

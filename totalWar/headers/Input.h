@@ -18,6 +18,8 @@ namespace nonTotalWar
         SDL_Rect m_selectionRectangle;
 
         void CreateSelectionRectangle();
+        bool m_keyUp;
+        SDL_Keycode m_key;
 
     public:
         Input();
@@ -42,6 +44,8 @@ namespace nonTotalWar
         };
 
         SDL_Point GetMousePositionClick() { return m_mousePositionClick; };
+        bool GetKeyUp();
+        SDL_Keycode GetKey() { return m_key; };
     };
 }
 

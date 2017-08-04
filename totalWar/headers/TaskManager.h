@@ -31,6 +31,7 @@ namespace nonTotalWar
         void HandleTasks();
 
         void Rotate(std::shared_ptr<nonTotalWar::Unit> unit);
+        void Flip(std::shared_ptr<nonTotalWar::Unit> unit);
         void Move(std::shared_ptr<nonTotalWar::Unit> unit);
         Collision CheckForCollisions(std::shared_ptr<nonTotalWar::Unit> unit);
     };

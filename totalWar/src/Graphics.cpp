@@ -147,6 +147,8 @@ void Graphics::AddSelectionRectToQueue(SDL_Rect dstRect)
 
 void Graphics::DebugDrawPoint(SDL_Point position)
 {
+#ifdef _DEBUG
     m_drawDebugPoints = true;
     m_debugPoints.push_back(position);
+#endif
 }

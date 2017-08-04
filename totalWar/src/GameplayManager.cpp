@@ -39,6 +39,25 @@ void GameplayManager::GameLoop()
             continue;
 
         m_input.HandleEvents();
+        if (m_input.GetKeyUp())
+        {
+            auto selectedUnits = GetSelectedUnits();
+
+            if (m_input.GetKey() == SDLK_b)
+                if (selectedUnits.size() > 0)
+                {
+                    Unit* previousUnit = nullptr;
+                    for (auto & unit : selectedUnits)
+                    {
+                        if (unit.get() != previousUnit)
+                        {
+                            previousUnit = unit.get();
+                            unit->AddTask(UnitTask::FLIP);
+                        }
+                    }
+                }
+                    
+        }
 
         auto selectionRectCreated{ false };
 
@@ -98,7 +117,7 @@ void GameplayManager::GameLoop()
                 for (auto & x : m_playerUnits)
                     x.second->SetSelected(false);
 
-        if (m_input.GetMouseRBClicked())
+        if (m_input.GetMouseRBClicked() && !IsMouseOverUnit(m_input.GetMousePositionClick()))
         {
             using nonTotalWar::UnitTask;
 
@@ -133,8 +152,13 @@ void GameplayManager::GameLoop()
             SDL_Rect srcRect{ 0, 0, 512, 256 };
             SDL_Rect dstRect{ position.x, position.y, unitSize.x, unitSize.y };
 
-            m_graphics.AddToQueue("units\\placeholderPlayer", srcRect, dstRect, x.second->GetAngle(), center, SDL_FLIP_NONE);
-            m_graphics.AddToQueue("units\\hoplites", srcRect, dstRect, x.second->GetAngle(), center, SDL_FLIP_NONE);
+            auto flip = SDL_FLIP_NONE;
+
+            if (x.second->GetTurnedBack())
+                flip = SDL_FLIP_VERTICAL;
+
+            m_graphics.AddToQueue("units\\placeholderPlayer", srcRect, dstRect, x.second->GetAngle(), center, flip);
+            m_graphics.AddToQueue("units\\hoplites", srcRect, dstRect, 0.0, center, SDL_FLIP_NONE);
 
             if (x.second->IsSelected())
                 m_graphics.AddToQueue("units\\placeholderSelected", srcRect, dstRect, x.second->GetAngle(), center, SDL_FLIP_NONE);

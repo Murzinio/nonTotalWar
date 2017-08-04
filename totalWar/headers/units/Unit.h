@@ -12,6 +12,7 @@ namespace nonTotalWar
     enum class UnitTask
     {
         ROTATE,
+        FLIP,
         MOVE,
         ATTACK,
         NONE
@@ -29,6 +30,7 @@ namespace nonTotalWar
         SDL_Point m_position;
 
         double m_angle{ 0.0 };
+        bool m_turnedBack{ false };
 
         bool m_selected{ false };
 
@@ -78,5 +80,7 @@ namespace nonTotalWar
 
         void CalculateVerticles();
         std::array<SDL_Point, 6> GetVerticles() { return m_verticles; };
+        bool GetTurnedBack() { return m_turnedBack; };
+        void SetTurnedBack(bool value) { m_turnedBack = value; };
     };
 }

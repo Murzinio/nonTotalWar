@@ -65,6 +65,12 @@ void Input::HandleEvents()
             m_mousePositionClick.y = e.button.y;
 
         }
+
+        if (e.type = SDL_KEYUP)
+        {
+            m_keyUp = true;
+            m_key = e.key.keysym.sym;
+        }
     }
 }
 
@@ -92,5 +98,16 @@ bool Input::GetMouseLBClick()
         return true;
     }
     
+    return false;
+}
+
+bool Input::GetKeyUp()
+{
+    if (m_keyUp)
+    {
+        m_keyUp = false;
+        return true;
+    }
+
     return false;
 }
