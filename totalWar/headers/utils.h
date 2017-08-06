@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <math.h>
+
 #include <SDL.h>
 
 #include "..\Settings.h"
@@ -35,5 +37,12 @@ namespace nonTotalWar
     inline constexpr SDL_Point GetUnitSize()
     {
         return { settings::WINDOW_WIDTH / 24, settings::WINDOW_HEIGHT / 24 };
+    }
+
+    inline double GetTriangleArea(double a, double b, double c)
+    {
+        // using Heron's formula
+        auto s = (a + b + c) / 2;
+        return std::sqrt(s * (s - a) * (s - b) * (s - c)); 
     }
 }

@@ -39,9 +39,11 @@ SDL_Point Unit::GetMoveDestination()
 void Unit::CalculateVerticles()
 {
     auto unitSize = GetUnitSize();
+    auto radians = m_angle * (3.14159265 / 180);
+
+    // TOP LEFT
     double x = unitSize.x / - 2;
     double y = unitSize.y / - 2;
-    auto radians = m_angle * (3.14159265 / 180);
 
     auto newX = x * std::cos(radians) - y * std::sin(radians);
     auto newY = x * std::sin(radians) + y * std::cos(radians);
@@ -49,9 +51,9 @@ void Unit::CalculateVerticles()
     newX = m_position.x + newX - x;
     newY = m_position.y + newY - y;
 
-    // TOP LEFT
     m_verticles[0] = { static_cast<int>(newX), static_cast<int>(newY) };
 
+    // TOP RIGHT
     x = unitSize.x / 2;
 
     newX = x * std::cos(radians) - y * std::sin(radians) + unitSize.x;
@@ -60,22 +62,11 @@ void Unit::CalculateVerticles()
     newX = m_position.x + newX - x;
     newY = m_position.y + newY - y;
 
-    // TOP RIGHT
     m_verticles[1] = { static_cast<int>(newX), static_cast<int>(newY) };
 
-    x = unitSize.x / - 2;
-    y = unitSize.y / 2;
-
-    newX = x * std::cos(radians) - y * std::sin(radians);
-    newY = x * std::sin(radians) + y * std::cos(radians) + unitSize.y;
-
-    newX = m_position.x + newX - x;
-    newY = m_position.y + newY - y;
-
-    // BOTTOM LEFT
-    m_verticles[2] = { static_cast<int>(newX), static_cast<int>(newY) };
-
+    // BOTTOM RIGHT
     x = unitSize.x / 2;
+    y = unitSize.y / 2;
 
     newX = x * std::cos(radians) - y * std::sin(radians) + unitSize.x;
     newY = x * std::sin(radians) + y * std::cos(radians) + unitSize.y;
@@ -83,9 +74,9 @@ void Unit::CalculateVerticles()
     newX = m_position.x + newX - x;
     newY = m_position.y + newY - y;
 
-    // BOTTOM RIGHT
-    m_verticles[3] = { static_cast<int>(newX), static_cast<int>(newY) };
+    m_verticles[2] = { static_cast<int>(newX), static_cast<int>(newY) };
 
+    // BOTTOM LEFT
     x = 0;
     y = unitSize.y / -2;
 
@@ -95,18 +86,24 @@ void Unit::CalculateVerticles()
     newX = m_position.x + newX - x;
     newY = m_position.y + newY - y;
 
-    // TOP MIDDLE
-    m_verticles[4] = { static_cast<int>(newX), static_cast<int>(newY) };
 
-    x = 0;
+    x = unitSize.x / -2;
     y = unitSize.y / 2;
 
-    newX = x * std::cos(radians) - y * std::sin(radians) + unitSize.x / 2;
+    newX = x * std::cos(radians) - y * std::sin(radians);
     newY = x * std::sin(radians) + y * std::cos(radians) + unitSize.y;
 
     newX = m_position.x + newX - x;
     newY = m_position.y + newY - y;
 
-    // BOTTOM MIDDLE
-    m_verticles[5] = { static_cast<int>(newX), static_cast<int>(newY) };
+    m_verticles[3] = { static_cast<int>(newX), static_cast<int>(newY) };
+}
+
+void Unit::SetMoveDestination(SDL_Point destination)
+{
+    auto unitSize = GetUnitSize();
+
+    m_moveDestination = destination;
+    m_moveDestination.x -= unitSize.x / 2;
+    m_moveDestination.y -= unitSize.y / 2;
 }

@@ -14,8 +14,8 @@ void GameplayManager::CreateUnits()
     //TODO
     for (int i = 1; i < 4; i++)
     {
-        SDL_Point positionPlayer{ (int)(i * 150) + 300, 200 };
-        SDL_Point positionAi{ (int)(i * 150) + 300, 600 };
+        SDL_Point positionPlayer{ (int)(i * 180) + 300, 200 };
+        SDL_Point positionAi{ (int)(i * 180) + 300, 600 };
 
         m_playerUnits["Hoplites" + std::to_string(i)] = std::make_unique<Hoplites>(positionPlayer, 0.0);
         m_aiUnits["Hoplites" + std::to_string(i)] = std::make_unique<Hoplites>(positionAi, 0.0);
@@ -56,7 +56,6 @@ void GameplayManager::GameLoop()
                         }
                     }
                 }
-                    
         }
 
         auto selectionRectCreated{ false };
@@ -77,7 +76,6 @@ void GameplayManager::GameLoop()
                 selectionRect.h = std::abs(selectionRect.h);
                 selectionRect.y -= selectionRect.h;
             }
-
         }
 
         if (m_input.GetMouseLBWasReleased())
@@ -162,7 +160,6 @@ void GameplayManager::GameLoop()
 
             if (x.second->IsSelected())
                 m_graphics.AddToQueue("units\\placeholderSelected", srcRect, dstRect, x.second->GetAngle(), center, SDL_FLIP_NONE);
-
         }
 
         for (auto & x : m_aiUnits)
@@ -192,7 +189,6 @@ void GameplayManager::GameLoop()
 
         m_graphics.RenderFrame();
     }
-    
 }
 
 bool GameplayManager::IsValidUnitName(const std::string name)

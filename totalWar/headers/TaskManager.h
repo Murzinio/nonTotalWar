@@ -33,6 +33,7 @@ namespace nonTotalWar
         void Rotate(std::shared_ptr<nonTotalWar::Unit> unit);
         void Flip(std::shared_ptr<nonTotalWar::Unit> unit);
         void Move(std::shared_ptr<nonTotalWar::Unit> unit);
+        SDL_Point GetFuturePosition(std::shared_ptr<nonTotalWar::Unit> unit, int movesForward);
         Collision CheckForCollisions(std::shared_ptr<nonTotalWar::Unit> unit);
     };
 }

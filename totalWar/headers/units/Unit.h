@@ -38,7 +38,7 @@ namespace nonTotalWar
         bool m_taskStarted{ false };
         SDL_Point m_moveDestination;
         int m_moveCounter{ 0 };
-        std::array<SDL_Point, 6> m_verticles;
+        std::array<SDL_Point, 4> m_verticles;
 
     public:
         Unit(int attack, int defence, int range, int speed, int soldiers, SDL_Point position, double angle);
@@ -65,7 +65,7 @@ namespace nonTotalWar
         }
 
         SDL_Point GetMoveDestination();
-        void SetMoveDestination(SDL_Point destination) { m_moveDestination = destination; };
+        void SetMoveDestination(SDL_Point destination);
 
         bool GetTaskStarted() { return m_taskStarted; };
         int GetSpeed() { return m_speed; };
@@ -79,7 +79,7 @@ namespace nonTotalWar
         int GetMoveCounter() { return m_moveCounter; };
 
         void CalculateVerticles();
-        std::array<SDL_Point, 6> GetVerticles() { return m_verticles; };
+        std::array<SDL_Point, 4> GetVerticles() { return m_verticles; };
         bool GetTurnedBack() { return m_turnedBack; };
         void SetTurnedBack(bool value) { m_turnedBack = value; };
     };
