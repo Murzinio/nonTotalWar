@@ -106,4 +106,5 @@ void Unit::SetMoveDestination(SDL_Point destination)
     m_moveDestination = destination;
     m_moveDestination.x -= unitSize.x / 2;
     m_moveDestination.y -= unitSize.y / 2;
+    m_moveCounter = 0;
 }

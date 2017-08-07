@@ -3,7 +3,7 @@
 using nonTotalWar::GameplayManager;
 using nonTotalWar::Graphics;
 
-GameplayManager::GameplayManager(Graphics& graphics) : m_graphics(graphics), m_taskManager(m_playerUnits)
+GameplayManager::GameplayManager(Graphics& graphics) : m_graphics(graphics), m_taskManager(m_playerUnits, m_aiUnits)
 {
     CreateUnits();
     GameLoop();
@@ -106,7 +106,7 @@ void GameplayManager::GameLoop()
         }
 
         if (m_input.GetMouseLBClick()) 
-            if (IsMouseOverUnit(m_input.GetMousePositionClick()))
+            if (IsMouseOverFriendlyUnit(m_input.GetMousePositionClick()))
             {
                 m_chosenUnit->SetSelected(!m_chosenUnit->IsSelected());
                 m_chosenUnit = nullptr;
@@ -115,19 +115,33 @@ void GameplayManager::GameLoop()
                 for (auto & x : m_playerUnits)
                     x.second->SetSelected(false);
 
-        if (m_input.GetMouseRBClicked() && !IsMouseOverUnit(m_input.GetMousePositionClick()))
+        if (m_input.GetMouseRBClicked())
+        if (IsMouseOverEnemyUnit(m_input.GetMousePositionClick()))
+        {
+            auto selectedUnits = GetSelectedUnits();
+            for (auto & unit : selectedUnits)
+            {
+                std::cout << unit << " attack " << m_chosenUnit;
+                unit->ClearTasks();
+                unit->AddTask(UnitTask::ROTATE);
+                unit->AddTask(UnitTask::ATTACK);
+                unit->SetMoveDestination(m_input.GetMousePositionClick());
+                unit->SetAttackTarget(m_chosenUnit);
+            }
+
+            m_chosenUnit = nullptr;
+        }
+        else if (!IsMouseOverFriendlyUnit(m_input.GetMousePositionClick()))
         {
             using nonTotalWar::UnitTask;
 
             auto selectedUnits = GetSelectedUnits();
-            auto task = UnitTask::ROTATE;
-            auto task2 = UnitTask::MOVE;
 
             for (auto & x : selectedUnits)
             {
                 x->ClearTasks();
-                x->AddTask(task);
-                x->AddTask(task2);
+                x->AddTask(UnitTask::ROTATE);
+                x->AddTask(UnitTask::MOVE);
                 x->SetMoveDestination(m_input.GetMousePositionClick());
             }
         }
@@ -215,10 +229,27 @@ bool GameplayManager::UnitExists(const std::string name)
     return true;
 }
 
-bool GameplayManager::IsMouseOverUnit(SDL_Point mousePosition)
+bool GameplayManager::IsMouseOverFriendlyUnit(SDL_Point mousePosition)
 {
     auto unitSize = GetUnitSize();
     for (auto & unit : m_playerUnits)
+    {
+        auto position = unit.second->GetPosition();
+        if (mousePosition.x >= position.x && mousePosition.x <= position.x + unitSize.x
+            && mousePosition.y >= position.y && mousePosition.y <= position.y + unitSize.y)
+        {
+            m_chosenUnit = unit.second;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool GameplayManager::IsMouseOverEnemyUnit(SDL_Point mousePosition)
+{
+    auto unitSize = GetUnitSize();
+    for (auto & unit : m_aiUnits)
     {
         auto position = unit.second->GetPosition();
         if (mousePosition.x >= position.x && mousePosition.x <= position.x + unitSize.x

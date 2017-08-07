@@ -3,6 +3,7 @@
 #include <queue>
 #include <array>
 #include <math.h>
+#include <memory>
 
 #include "..\utils.h"
 #include "SDL.h"
@@ -33,10 +34,12 @@ namespace nonTotalWar
         bool m_turnedBack{ false };
 
         bool m_selected{ false };
+        bool m_fighting{ false };
 
         std::queue<UnitTask> m_tasks;
         bool m_taskStarted{ false };
         SDL_Point m_moveDestination;
+        std::shared_ptr<Unit> m_attackTarget{ nullptr };
         int m_moveCounter{ 0 };
         std::array<SDL_Point, 4> m_verticles;
 
@@ -66,9 +69,12 @@ namespace nonTotalWar
 
         SDL_Point GetMoveDestination();
         void SetMoveDestination(SDL_Point destination);
+        void SetAttackTarget(std::shared_ptr<Unit> target) { m_attackTarget = target; };
+        auto GetAttackTarget() { return m_attackTarget; };
 
         bool GetTaskStarted() { return m_taskStarted; };
         int GetSpeed() { return m_speed; };
+        int GetRange() { return m_range; };
         void ClearTasks() 
         {
             m_tasks = {};
@@ -82,5 +88,8 @@ namespace nonTotalWar
         std::array<SDL_Point, 4> GetVerticles() { return m_verticles; };
         bool GetTurnedBack() { return m_turnedBack; };
         void SetTurnedBack(bool value) { m_turnedBack = value; };
+
+        void SetIsFighting(bool value) { m_fighting = value; };
+        bool GetIsFighting() { return m_fighting; };
     };
 }

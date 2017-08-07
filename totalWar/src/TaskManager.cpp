@@ -2,7 +2,7 @@
 
 using nonTotalWar::TaskManager;
 
-TaskManager::TaskManager(std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& units) : m_units(units)
+TaskManager::TaskManager(std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& units, std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& unitsAi) : m_units(units), m_unitsAi(unitsAi)
 {
 
 }
@@ -46,6 +46,10 @@ void TaskManager::HandleTasks()
 
             case UnitTask::MOVE:
                 Move(unit);
+                break;
+
+            case UnitTask::ATTACK:
+                Attack(unit);
                 break;
 
             default:
@@ -102,8 +106,6 @@ void TaskManager::Rotate(std::shared_ptr<nonTotalWar::Unit> unit)
         angleToSet = currentAngle + speed / 60.0;
     else if (absoluteDiffNormalised < 0)
         angleToSet = currentAngle - speed / 60.0;
-
-    auto test = CheckForCollisions(unit);
 
     unit->SetAngle(angleToSet);
 }
@@ -169,9 +171,9 @@ void TaskManager::Move(std::shared_ptr<nonTotalWar::Unit> unit)
         return;
     }
 
-    auto test = CheckForCollisions(unit);
+    auto collision = CheckForCollisions(unit, 10);
 
-    if (test != Collision::NONE)
+    if (collision == Collision::FRIENDLY_UNIT)
     {
         auto& tasks = unit->GetTasks();
         tasks.pop();
@@ -180,6 +182,28 @@ void TaskManager::Move(std::shared_ptr<nonTotalWar::Unit> unit)
 
     unit->SetPosition(position);
 
+}
+
+void TaskManager::Attack(std::shared_ptr<nonTotalWar::Unit> unit)
+{
+    auto target = unit->GetAttackTarget();
+    auto targetPosition = target->GetPosition();
+    auto position = unit->GetPosition();
+    auto range = unit->GetRange();
+
+    if (CheckForCollisions(unit, range) != Collision::ENEMY_UNIT)
+    {
+        Move(unit);
+    }
+    else unit->SetIsFighting(true);
+
+    if (unit->GetIsFighting())
+        ProcessFighting(unit, target);
+}
+
+void TaskManager::ProcessFighting(std::shared_ptr<nonTotalWar::Unit> unit, std::shared_ptr<nonTotalWar::Unit> enemyUnit)
+{
+    //TODO
 }
 
 SDL_Point TaskManager::GetFuturePosition(std::shared_ptr<nonTotalWar::Unit> unit, int movesForward)
@@ -233,7 +257,7 @@ SDL_Point TaskManager::GetFuturePosition(std::shared_ptr<nonTotalWar::Unit> unit
     return futurePosition;
 }
 
-nonTotalWar::Collision TaskManager::CheckForCollisions(std::shared_ptr<nonTotalWar::Unit> unit)
+nonTotalWar::Collision TaskManager::CheckForCollisions(std::shared_ptr<nonTotalWar::Unit> unit, int range)
 {
     using nonTotalWar::Collision;
 
@@ -246,10 +270,11 @@ nonTotalWar::Collision TaskManager::CheckForCollisions(std::shared_ptr<nonTotalW
     {
         auto unit = x.second;
         auto originalPosition = unit->GetPosition();
-        auto unitVerticles = unit->GetVerticles();
 
-        unit->SetPosition(GetFuturePosition(unit, 10));
+        unit->SetPosition(GetFuturePosition(unit, range));
         unit->CalculateVerticles();
+
+        auto unitVerticles = unit->GetVerticles();
 
         for (auto & y : m_units)
         {
@@ -257,11 +282,12 @@ nonTotalWar::Collision TaskManager::CheckForCollisions(std::shared_ptr<nonTotalW
                 continue;
 
             auto otherUnit = y.second;
-            auto otherUnitVerticles = otherUnit->GetVerticles();
 
             auto originalPositionOther = otherUnit->GetPosition();
             otherUnit->SetPosition(GetFuturePosition(otherUnit, 10));
             otherUnit->CalculateVerticles();
+
+            auto otherUnitVerticles = otherUnit->GetVerticles();
 
             auto unitTooFar = true;
 
@@ -307,7 +333,79 @@ nonTotalWar::Collision TaskManager::CheckForCollisions(std::shared_ptr<nonTotalW
                     collision = Collision::FRIENDLY_UNIT;
             }
 
-            
+            otherUnit->SetPosition(originalPositionOther);
+            //unit->CalculateVerticles();
+
+        }
+
+        unit->SetPosition(originalPosition);
+        //unit->CalculateVerticles();
+    }
+
+    for (auto & x : m_units)
+    {
+        auto unit = x.second;
+        auto originalPosition = unit->GetPosition();
+
+        unit->SetPosition(GetFuturePosition(unit, range));
+        unit->CalculateVerticles();
+
+        auto unitVerticles = unit->GetVerticles();
+
+        for (auto & y : m_unitsAi)
+        {
+
+            auto otherUnit = y.second;
+
+            auto originalPositionOther = otherUnit->GetPosition();
+            otherUnit->SetPosition(GetFuturePosition(otherUnit, 10));
+            otherUnit->CalculateVerticles();
+
+            auto otherUnitVerticles = otherUnit->GetVerticles();
+
+            auto unitTooFar = true;
+
+            for (auto & v : unitVerticles)
+            {
+                // if distance to every verticle of other unit is greater than unit rectangle diagonal, skip checks
+                for (auto & ov : otherUnitVerticles)
+                    if (ov.x != v.x && GetDistanceToPoint(v, ov) <= std::sqrt(unitSize.x*unitSize.x + unitSize.y*unitSize.y))
+                        unitTooFar = false;
+
+                if (unitTooFar)
+                    continue;
+
+                // calculate area of triangle built on first unit verticle and pair of other unit verticles, 
+                // if the sum of 4 areas is greater than the area of rectangle, the first unit verticle is not inside other unit
+                // to do, skip if distance between verticles is greater than unit rectangle diagonal
+                auto areasSum = 0.0;
+
+                for (int i = 0; i < 4; ++i)
+                {
+                    auto a = 0.0;
+                    auto b = 0.0;
+                    auto c = 0.0;
+
+                    if (i < 3)
+                    {
+                        a = GetDistanceToPoint(v, otherUnitVerticles[i]);
+                        b = GetDistanceToPoint(v, otherUnitVerticles[i + 1]);
+                        c = GetDistanceToPoint(otherUnitVerticles[i], otherUnitVerticles[i + 1]);
+                    }
+                    else
+                    {
+                        a = GetDistanceToPoint(v, otherUnitVerticles[i]);
+                        b = GetDistanceToPoint(v, otherUnitVerticles[0]);
+                        c = GetDistanceToPoint(otherUnitVerticles[i], otherUnitVerticles[0]);
+                    }
+
+                    areasSum += GetTriangleArea(a, b, c);
+                    std::cout << a << std::endl << b << std::endl << c << std::endl;
+                }
+
+                if (static_cast<int>(areasSum) <= unitSize.x * unitSize.y)
+                    collision = Collision::ENEMY_UNIT;
+            }
 
             otherUnit->SetPosition(originalPositionOther);
             //unit->CalculateVerticles();
