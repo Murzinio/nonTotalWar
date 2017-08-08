@@ -1,6 +1,7 @@
 #include "..\headers\TaskManager.h"
 
 using nonTotalWar::TaskManager;
+using nonTotalWar::settings::UNIT_SIZE;
 
 TaskManager::TaskManager(std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& units, std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& unitsAi) : m_units(units), m_unitsAi(unitsAi)
 {
@@ -64,17 +65,15 @@ void TaskManager::Rotate(std::shared_ptr<nonTotalWar::Unit> unit)
 {
     auto unitPos = unit->GetPosition();
     auto unitCenter = unitPos;
-    
-    auto unitSize = GetUnitSize();
 
-    unitCenter.x += unitSize.x / 2;
-    unitCenter.y += unitSize.y / 2;
+    unitCenter.x += UNIT_SIZE.x / 2;
+    unitCenter.y += UNIT_SIZE.y / 2;
 
     auto speed = unit->GetSpeed();
     auto destination = unit->GetMoveDestination();
 
-    destination.x += unitSize.x / 2;
-    destination.y += unitSize.y / 2;
+    destination.x += UNIT_SIZE.x / 2;
+    destination.y += UNIT_SIZE.y / 2;
 
     auto targetAngle = nonTotalWar::GetAngleToPoint(unitCenter, destination);
 
@@ -132,8 +131,6 @@ void TaskManager::Move(std::shared_ptr<nonTotalWar::Unit> unit)
 {
     auto speed = unit->GetSpeed();
     auto counter = unit->GetMoveCounter();
-
-    auto unitSize = GetUnitSize();
 
     if (counter != 25 - speed)
     {
@@ -208,7 +205,6 @@ void TaskManager::ProcessFighting(std::shared_ptr<nonTotalWar::Unit> unit, std::
 
 SDL_Point TaskManager::GetFuturePosition(std::shared_ptr<nonTotalWar::Unit> unit, int movesForward)
 {
-    auto unitSize = nonTotalWar::GetUnitSize();
     auto position = unit->GetPosition();
     auto destination = unit->GetMoveDestination();
 
@@ -264,7 +260,6 @@ nonTotalWar::Collision TaskManager::CheckForCollisions(std::shared_ptr<nonTotalW
     auto collision = Collision::NONE;
 
     auto moveDestination = unit->GetMoveDestination();
-    auto unitSize = GetUnitSize();
 
     for (auto & x : m_units)
     {
@@ -295,7 +290,7 @@ nonTotalWar::Collision TaskManager::CheckForCollisions(std::shared_ptr<nonTotalW
             {
                 // if distance to every verticle of other unit is greater than unit rectangle diagonal, skip checks
                 for (auto & ov : otherUnitVerticles)
-                    if (ov.x != v.x && GetDistanceToPoint(v, ov) <= std::sqrt(unitSize.x*unitSize.x + unitSize.y*unitSize.y))
+                    if (ov.x != v.x && GetDistanceToPoint(v, ov) <= std::sqrt(UNIT_SIZE.x * UNIT_SIZE.x + UNIT_SIZE.y * UNIT_SIZE.y))
                         unitTooFar = false;
 
                 if (unitTooFar)
@@ -329,7 +324,7 @@ nonTotalWar::Collision TaskManager::CheckForCollisions(std::shared_ptr<nonTotalW
                     std::cout << a << std::endl << b << std::endl << c << std::endl;
                 }
 
-                if (static_cast<int>(areasSum) <= unitSize.x * unitSize.y)
+                if (static_cast<int>(areasSum) <= UNIT_SIZE.x * UNIT_SIZE.y)
                     collision = Collision::FRIENDLY_UNIT;
             }
 
@@ -369,7 +364,7 @@ nonTotalWar::Collision TaskManager::CheckForCollisions(std::shared_ptr<nonTotalW
             {
                 // if distance to every verticle of other unit is greater than unit rectangle diagonal, skip checks
                 for (auto & ov : otherUnitVerticles)
-                    if (ov.x != v.x && GetDistanceToPoint(v, ov) <= std::sqrt(unitSize.x*unitSize.x + unitSize.y*unitSize.y))
+                    if (ov.x != v.x && GetDistanceToPoint(v, ov) <= std::sqrt(UNIT_SIZE.x*UNIT_SIZE.x + UNIT_SIZE.y*UNIT_SIZE.y))
                         unitTooFar = false;
 
                 if (unitTooFar)
@@ -403,7 +398,7 @@ nonTotalWar::Collision TaskManager::CheckForCollisions(std::shared_ptr<nonTotalW
                     std::cout << a << std::endl << b << std::endl << c << std::endl;
                 }
 
-                if (static_cast<int>(areasSum) <= unitSize.x * unitSize.y)
+                if (static_cast<int>(areasSum) <= UNIT_SIZE.x * UNIT_SIZE.y)
                     collision = Collision::ENEMY_UNIT;
             }
 

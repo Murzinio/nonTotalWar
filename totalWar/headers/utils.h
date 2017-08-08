@@ -34,11 +34,6 @@ namespace nonTotalWar
         return std::sqrt(std::pow(second.x - first.x, 2.0) + std::pow(second.y - first.y, 2.0));
     }
 
-    inline constexpr SDL_Point GetUnitSize()
-    {
-        return { settings::WINDOW_WIDTH / 24, settings::WINDOW_HEIGHT / 24 };
-    }
-
     inline double GetTriangleArea(double a, double b, double c)
     {
         // using Heron's formula

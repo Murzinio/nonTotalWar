@@ -2,6 +2,7 @@
 
 using nonTotalWar::GameplayManager;
 using nonTotalWar::Graphics;
+using nonTotalWar::settings::UNIT_SIZE;
 
 GameplayManager::GameplayManager(Graphics& graphics) : m_graphics(graphics), m_taskManager(m_playerUnits, m_aiUnits)
 {
@@ -84,9 +85,8 @@ void GameplayManager::GameLoop()
             for (auto & x : m_playerUnits)
             {
                 auto position = x.second->GetPosition();
-                auto unitSize = GetUnitSize();
-                position.x += unitSize.x / 2;
-                position.y += unitSize.y / 2;
+                position.x += UNIT_SIZE.x / 2;
+                position.y += UNIT_SIZE.y / 2;
 
                 if ((position.x >= selectionRect.x && position.x <= selectionRect.x + selectionRect.w)
                     & (position.y >= selectionRect.y && position.y <= selectionRect.y + selectionRect.h))
@@ -156,13 +156,12 @@ void GameplayManager::GameLoop()
         {
             auto position = x.second->GetPosition();
 
-            auto unitSize = GetUnitSize();
-            SDL_Point center = { unitSize.x / 2, unitSize.y / 2 };
+            SDL_Point center = { UNIT_SIZE.x / 2, UNIT_SIZE.y / 2 };
 
-            position.x += counter * unitSize.x / 32;
+            position.x += counter * UNIT_SIZE.x / 32;
 
             SDL_Rect srcRect{ 0, 0, 512, 256 };
-            SDL_Rect dstRect{ position.x, position.y, unitSize.x, unitSize.y };
+            SDL_Rect dstRect{ position.x, position.y, UNIT_SIZE.x, UNIT_SIZE.y };
 
             auto flip = SDL_FLIP_NONE;
 
@@ -181,13 +180,12 @@ void GameplayManager::GameLoop()
             auto position = x.second->GetPosition();
             auto angle = x.second->GetAngle();;
 
-            auto unitSize = GetUnitSize();
-            SDL_Point center = { unitSize.x / 2, unitSize.y / 2 };
+            SDL_Point center = { UNIT_SIZE.x / 2, UNIT_SIZE.y / 2 };
 
-            position.x += counter * unitSize.x / 32;
+            position.x += counter * UNIT_SIZE.x / 32;
 
             SDL_Rect srcRect{ 0, 0, 512, 256 };
-            SDL_Rect dstRect{ position.x, position.y, unitSize.x, unitSize.y };
+            SDL_Rect dstRect{ position.x, position.y, UNIT_SIZE.x, UNIT_SIZE.y };
 
             m_graphics.AddToQueue("units\\placeholderAI", srcRect, dstRect, angle, center, SDL_FLIP_NONE);
             m_graphics.AddToQueue("units\\hoplites", srcRect, dstRect, 0, center, SDL_FLIP_NONE);
@@ -231,12 +229,11 @@ bool GameplayManager::UnitExists(const std::string name)
 
 bool GameplayManager::IsMouseOverFriendlyUnit(SDL_Point mousePosition)
 {
-    auto unitSize = GetUnitSize();
     for (auto & unit : m_playerUnits)
     {
         auto position = unit.second->GetPosition();
-        if (mousePosition.x >= position.x && mousePosition.x <= position.x + unitSize.x
-            && mousePosition.y >= position.y && mousePosition.y <= position.y + unitSize.y)
+        if (mousePosition.x >= position.x && mousePosition.x <= position.x + UNIT_SIZE.x
+            && mousePosition.y >= position.y && mousePosition.y <= position.y + UNIT_SIZE.y)
         {
             m_chosenUnit = unit.second;
             return true;
@@ -248,12 +245,11 @@ bool GameplayManager::IsMouseOverFriendlyUnit(SDL_Point mousePosition)
 
 bool GameplayManager::IsMouseOverEnemyUnit(SDL_Point mousePosition)
 {
-    auto unitSize = GetUnitSize();
     for (auto & unit : m_aiUnits)
     {
         auto position = unit.second->GetPosition();
-        if (mousePosition.x >= position.x && mousePosition.x <= position.x + unitSize.x
-            && mousePosition.y >= position.y && mousePosition.y <= position.y + unitSize.y)
+        if (mousePosition.x >= position.x && mousePosition.x <= position.x + UNIT_SIZE.x
+            && mousePosition.y >= position.y && mousePosition.y <= position.y + UNIT_SIZE.y)
         {
             m_chosenUnit = unit.second;
             return true;

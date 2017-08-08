@@ -1,6 +1,7 @@
 #include "..\..\headers\units\Unit.h"
 
 using nonTotalWar::Unit;
+using nonTotalWar::settings::UNIT_SIZE;
 
 Unit::Unit(int attack, int defence, int range, int speed, int soldiers, SDL_Point position, double angle)
 {
@@ -38,12 +39,11 @@ SDL_Point Unit::GetMoveDestination()
 
 void Unit::CalculateVerticles()
 {
-    auto unitSize = GetUnitSize();
     auto radians = m_angle * (3.14159265 / 180);
 
     // TOP LEFT
-    double x = unitSize.x / - 2;
-    double y = unitSize.y / - 2;
+    double x = UNIT_SIZE.x / - 2;
+    double y = UNIT_SIZE.y / - 2;
 
     auto newX = x * std::cos(radians) - y * std::sin(radians);
     auto newY = x * std::sin(radians) + y * std::cos(radians);
@@ -54,9 +54,9 @@ void Unit::CalculateVerticles()
     m_verticles[0] = { static_cast<int>(newX), static_cast<int>(newY) };
 
     // TOP RIGHT
-    x = unitSize.x / 2;
+    x = UNIT_SIZE.x / 2;
 
-    newX = x * std::cos(radians) - y * std::sin(radians) + unitSize.x;
+    newX = x * std::cos(radians) - y * std::sin(radians) + UNIT_SIZE.x;
     newY = x * std::sin(radians) + y * std::cos(radians);
 
     newX = m_position.x + newX - x;
@@ -65,11 +65,11 @@ void Unit::CalculateVerticles()
     m_verticles[1] = { static_cast<int>(newX), static_cast<int>(newY) };
 
     // BOTTOM RIGHT
-    x = unitSize.x / 2;
-    y = unitSize.y / 2;
+    x = UNIT_SIZE.x / 2;
+    y = UNIT_SIZE.y / 2;
 
-    newX = x * std::cos(radians) - y * std::sin(radians) + unitSize.x;
-    newY = x * std::sin(radians) + y * std::cos(radians) + unitSize.y;
+    newX = x * std::cos(radians) - y * std::sin(radians) + UNIT_SIZE.x;
+    newY = x * std::sin(radians) + y * std::cos(radians) + UNIT_SIZE.y;
 
     newX = m_position.x + newX - x;
     newY = m_position.y + newY - y;
@@ -78,20 +78,20 @@ void Unit::CalculateVerticles()
 
     // BOTTOM LEFT
     x = 0;
-    y = unitSize.y / -2;
+    y = UNIT_SIZE.y / -2;
 
-    newX = x * std::cos(radians) - y * std::sin(radians) + unitSize.x / 2;
+    newX = x * std::cos(radians) - y * std::sin(radians) + UNIT_SIZE.x / 2;
     newY = x * std::sin(radians) + y * std::cos(radians);
 
     newX = m_position.x + newX - x;
     newY = m_position.y + newY - y;
 
 
-    x = unitSize.x / -2;
-    y = unitSize.y / 2;
+    x = UNIT_SIZE.x / -2;
+    y = UNIT_SIZE.y / 2;
 
     newX = x * std::cos(radians) - y * std::sin(radians);
-    newY = x * std::sin(radians) + y * std::cos(radians) + unitSize.y;
+    newY = x * std::sin(radians) + y * std::cos(radians) + UNIT_SIZE.y;
 
     newX = m_position.x + newX - x;
     newY = m_position.y + newY - y;
@@ -101,10 +101,8 @@ void Unit::CalculateVerticles()
 
 void Unit::SetMoveDestination(SDL_Point destination)
 {
-    auto unitSize = GetUnitSize();
-
     m_moveDestination = destination;
-    m_moveDestination.x -= unitSize.x / 2;
-    m_moveDestination.y -= unitSize.y / 2;
+    m_moveDestination.x -= UNIT_SIZE.x / 2;
+    m_moveDestination.y -= UNIT_SIZE.y / 2;
     m_moveCounter = 0;
 }
