@@ -184,6 +184,12 @@ void TaskManager::Move(std::shared_ptr<nonTotalWar::Unit> unit)
 void TaskManager::Attack(std::shared_ptr<nonTotalWar::Unit> unit)
 {
     auto target = unit->GetAttackTarget();
+    if (unit->GetIsFighting())
+    {
+        ProcessFighting(unit, target);
+        return;
+    }
+
     auto targetPosition = target->GetPosition();
     auto position = unit->GetPosition();
     auto range = unit->GetRange();

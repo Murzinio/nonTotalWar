@@ -199,6 +199,9 @@ void GameplayManager::GameLoop()
             m_graphics.AddSelectionRectToQueue(selectionRect);
         }
 
+        if (GetSelectedUnits().size() == 1)
+            m_unitStatsBar.Draw();
+
         m_graphics.RenderFrame();
     }
 }

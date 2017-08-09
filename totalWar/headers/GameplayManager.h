@@ -14,6 +14,7 @@
 #include "Graphics.h"
 #include "Input.h"
 #include "TaskManager.h"
+#include "UnitStatsBar.h"
 
 namespace nonTotalWar
 {
@@ -21,6 +22,7 @@ namespace nonTotalWar
     {
     private:
         Graphics& m_graphics;
+        UnitStatsBar m_unitStatsBar{ m_graphics, m_selectedUnits };
         Input m_input;
 
         std::map<std::string, std::shared_ptr<Unit>> m_playerUnits;
