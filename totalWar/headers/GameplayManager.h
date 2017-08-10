@@ -47,7 +47,6 @@ namespace nonTotalWar
         std::shared_ptr<Unit> m_chosenUnit;
         bool IsMouseOverFriendlyUnit(SDL_Point mousePosition);
         bool IsMouseOverEnemyUnit(SDL_Point mousePosition);
-        std::vector<std::shared_ptr<Unit>> GetSelectedUnits();
 
     public:
         GameplayManager(Graphics& graphics);

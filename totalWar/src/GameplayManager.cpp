@@ -42,14 +42,13 @@ void GameplayManager::GameLoop()
         m_input.HandleEvents();
         if (m_input.GetKeyUp())
         {
-            auto selectedUnits = GetSelectedUnits();
-
             if (m_input.GetKey() == SDLK_b)
-                if (selectedUnits.size() > 0)
+                if (m_selectedUnits.size() > 0)
                 {
                     Unit* previousUnit = nullptr;
-                    for (auto & unit : selectedUnits)
+                    for (auto & x : m_selectedUnits)
                     {
+                        auto unit = x.second;
                         if (unit.get() != previousUnit)
                         {
                             previousUnit = unit.get();
@@ -91,15 +90,25 @@ void GameplayManager::GameLoop()
                 if ((position.x >= selectionRect.x && position.x <= selectionRect.x + selectionRect.w)
                     & (position.y >= selectionRect.y && position.y <= selectionRect.y + selectionRect.h))
                 {
-                    x.second->SetSelected(!x.second->IsSelected());
+                    x.second->SetSelected(true);
                     if (!anyUnitSelected)
                         anyUnitSelected = true;
+
+                    m_selectedUnits.emplace(x);
                 }
+                else
+                    x.second->SetSelected(false);
+
             }
 
-            if (!anyUnitSelected)
+            if (!anyUnitSelected && !IsMouseOverFriendlyUnit(m_input.GetMousePositionClick()))
+            {
                 for (auto & x : m_playerUnits)
                     x.second->SetSelected(false);
+
+                m_selectedUnits.clear();
+            }
+                
 
             selectionRect = { 0, 0, 0, 0 };
             m_input.ClearSelectionRectangle();
@@ -108,7 +117,13 @@ void GameplayManager::GameLoop()
         if (m_input.GetMouseLBClick()) 
             if (IsMouseOverFriendlyUnit(m_input.GetMousePositionClick()))
             {
-                m_chosenUnit->SetSelected(!m_chosenUnit->IsSelected());
+                m_chosenUnit->SetSelected(true);
+                m_selectedUnits.clear();
+                
+                for (auto & x : m_playerUnits)
+                    if (x.second.get() == m_chosenUnit.get())
+                        m_selectedUnits.emplace(x);
+
                 m_chosenUnit = nullptr;
             }
             else
@@ -118,9 +133,9 @@ void GameplayManager::GameLoop()
         if (m_input.GetMouseRBClicked())
         if (IsMouseOverEnemyUnit(m_input.GetMousePositionClick()))
         {
-            auto selectedUnits = GetSelectedUnits();
-            for (auto & unit : selectedUnits)
+            for (auto & x : m_selectedUnits)
             {
+                auto unit = x.second;
                 std::cout << unit << " attack " << m_chosenUnit;
                 unit->ClearTasks();
                 unit->AddTask(UnitTask::ROTATE);
@@ -135,14 +150,14 @@ void GameplayManager::GameLoop()
         {
             using nonTotalWar::UnitTask;
 
-            auto selectedUnits = GetSelectedUnits();
-
-            for (auto & x : selectedUnits)
+            for (auto & x : m_selectedUnits)
             {
-                x->ClearTasks();
-                x->AddTask(UnitTask::ROTATE);
-                x->AddTask(UnitTask::MOVE);
-                x->SetMoveDestination(m_input.GetMousePositionClick());
+                auto unit = x.second;
+
+                unit->ClearTasks();
+                unit->AddTask(UnitTask::ROTATE);
+                unit->AddTask(UnitTask::MOVE);
+                unit->SetMoveDestination(m_input.GetMousePositionClick());
             }
         }
 
@@ -199,7 +214,7 @@ void GameplayManager::GameLoop()
             m_graphics.AddSelectionRectToQueue(selectionRect);
         }
 
-        if (GetSelectedUnits().size() == 1)
+        if (m_selectedUnits.size() == 1)
             m_unitStatsBar.Draw();
 
         m_graphics.RenderFrame();
@@ -260,15 +275,4 @@ bool GameplayManager::IsMouseOverEnemyUnit(SDL_Point mousePosition)
     }
 
     return false;
-}
-
-std::vector<std::shared_ptr<nonTotalWar::Unit>> GameplayManager::GetSelectedUnits()
-{
-    std::vector<std::shared_ptr<Unit>> units;
-
-    for (auto & x : m_playerUnits)
-        if (x.second->IsSelected())
-            units.push_back(x.second);
-
-    return units;
 }
