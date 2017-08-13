@@ -27,9 +27,30 @@ Graphics::Graphics()
     }
     else
         success = true;
+    TTF_Init();
+    m_font = TTF_OpenFont("resources\\fonts\\verdana.ttf", 14);
+    m_fontSize = 14;
+    if (m_font == nullptr)
+        success = false;
+
+    std::cout << SDL_GetError();
 
     if (success)
+    {
         LoadTextures();
+        m_texturesLoaded = true;
+    }
+}
+
+Graphics::~Graphics()
+{
+    SDL_DestroyRenderer(m_renderer);
+    SDL_DestroyWindow(m_window);
+    TTF_CloseFont(m_font);
+
+    m_renderer = nullptr;
+    m_window = nullptr;
+    m_font = nullptr;
 }
 
 void Graphics::LoadTextures()
@@ -58,11 +79,16 @@ void Graphics::LoadTextures()
     }
 }
 
-void Graphics::AddToQueue(std::string texture, SDL_Rect srcRect, SDL_Rect dstRect, double angle, SDL_Point center, SDL_RendererFlip flip)
+void Graphics::AddToQueue(std::string texture, SDL_Rect srcRect, SDL_Rect dstRect, double angle, SDL_Point center, SDL_RendererFlip flip, bool isText)
 {
     const auto it = m_textures.find(GetTexturePath(texture));
     if (it != m_textures.cend())
-        m_renderQueue.push({ it->second, srcRect, dstRect, angle, center, flip });
+        m_renderQueue.push({ it->second, srcRect, dstRect, angle, center, flip, isText });
+}
+
+void Graphics::AddToQueue(std::string texture, SDL_Rect srcRect, SDL_Rect dstRect, double angle, SDL_Point center, SDL_RendererFlip flip)
+{
+    AddToQueue(texture, srcRect, dstRect, angle, center, flip, false);
 }
 
 void Graphics::RenderFrame()
@@ -70,16 +96,28 @@ void Graphics::RenderFrame()
     SDL_RenderClear(m_renderer);
     while (m_renderQueue.size() > 0)
     {
-        SDL_RenderCopyEx
-        (
-            m_renderer,
-            m_renderQueue.front().texture,
-            &m_renderQueue.front().srcRect,
-            &m_renderQueue.front().dstRect,
-            m_renderQueue.front().angle,
-            &m_renderQueue.front().center,
-            m_renderQueue.front().flip
-        );
+        if (!m_renderQueue.front().isText)
+            SDL_RenderCopyEx
+            (
+                m_renderer,
+                m_renderQueue.front().texture,
+                &m_renderQueue.front().srcRect,
+                &m_renderQueue.front().dstRect,
+                m_renderQueue.front().angle,
+                &m_renderQueue.front().center,
+                m_renderQueue.front().flip
+            );
+        else
+            SDL_RenderCopyEx
+            (
+                m_renderer,
+                m_renderQueue.front().texture,
+                nullptr,
+                &m_renderQueue.front().dstRect,
+                0.0,
+                nullptr,
+                m_renderQueue.front().flip
+            );
 
         m_renderQueue.pop();
     }
@@ -151,4 +189,26 @@ void Graphics::DebugDrawPoint(SDL_Point position)
     m_drawDebugPoints = true;
     m_debugPoints.push_back(position);
 #endif
+}
+
+void Graphics::AddTextToQueue(SDL_Rect dstRect, std::string text, SDL_Color color, int size)
+{
+    if (m_fontSize != size)
+    {
+        TTF_CloseFont(m_font);
+        m_font = TTF_OpenFont("resources\\fonts\\verdana.ttf", size);
+        m_fontSize = size;
+    }
+    auto surface = TTF_RenderText_Solid(m_font, text.c_str(), color);
+
+    if (m_textTexture != nullptr)
+    {
+        SDL_DestroyTexture(m_textTexture);
+        m_textTexture = nullptr;
+    }
+    
+    m_textTexture = SDL_CreateTextureFromSurface(m_renderer, surface);
+
+    m_renderQueue.push({ m_textTexture, {0, 0, 0, 0}, {100, 100, surface->w, surface->h}, 0.0, {0, 0}, SDL_FLIP_NONE, true });
+    SDL_FreeSurface(surface);
 }

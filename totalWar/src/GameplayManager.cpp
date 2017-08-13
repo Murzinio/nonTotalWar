@@ -6,8 +6,11 @@ using nonTotalWar::settings::UNIT_SIZE;
 
 GameplayManager::GameplayManager(Graphics& graphics) : m_graphics(graphics), m_taskManager(m_playerUnits, m_aiUnits)
 {
-    CreateUnits();
-    GameLoop();
+    if (graphics.GetTexturesLoaded())
+    {
+        CreateUnits();
+        GameLoop();
+    }
 }
 
 void GameplayManager::CreateUnits()
