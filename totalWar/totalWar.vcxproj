@@ -78,11 +78,11 @@
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\libs\SDL2_image-2.0.1\include;$(SolutionDir)\libs\SDL2_ttf-2.0.14\include;$(SolutionDir)\libs\SDL2-2.0.5\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\libs\SDL2_image-2.0.1\include;$(SolutionDir)\libs\SDL2_ttf-2.0.14\include;$(SolutionDir)\libs\SDL2-2.0.5\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -111,7 +111,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>W:\Visual Studio\libs\SDL2_image-2.0.1\include;W:\Visual Studio\libs\SDL2-2.0.5\include;W:\Visual Studio\libs\boost164;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>W:\Visual Studio\libs\SDL2_ttf-2.0.14\VisualC\external\include;W:\Visual Studio\libs\SDL2_image-2.0.1\include;W:\Visual Studio\libs\SDL2-2.0.5\include;W:\Visual Studio\libs\boost164;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/std:c++latest</AdditionalOptions>
@@ -119,12 +119,13 @@
       <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>W:\Visual Studio\libs\SDL2_image-2.0.1\lib\x64;W:\Visual Studio\libs\SDL2-2.0.5\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\libs\SDL2_ttf-2.0.14\lib\x64;$(SolutionDir)\libs\SDL2-2.0.5\lib\x64;$(SolutionDir)\libs\SDL2_image-2.0.1\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(ProjectDir)resources" "$(TargetDir)resources\" /s /e /Y</Command>
+      <Command>xcopy "$(ProjectDir)resources" "$(TargetDir)resources\" /s /e /Y
+xcopy "$(SolutionDir)libs\dlls" "$(TargetDir)" /s /e /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -169,10 +170,11 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>W:\Visual Studio\libs\SDL2_image-2.0.1\lib\x64;W:\Visual Studio\libs\SDL2-2.0.5\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\libs\SDL2_ttf-2.0.14\lib\x64;$(SolutionDir)\libs\SDL2-2.0.5\lib\x64;$(SolutionDir)\libs\SDL2_image-2.0.1\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(ProjectDir)resources" "$(TargetDir)resources\" /s /e /Y</Command>
+      <Command>xcopy "$(ProjectDir)resources" "$(TargetDir)resources\" /s /e /Y
+xcopy "$(SolutionDir)libs\dlls" "$(TargetDir)" /s /e /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
