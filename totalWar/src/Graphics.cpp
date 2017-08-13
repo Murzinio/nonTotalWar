@@ -191,7 +191,7 @@ void Graphics::DebugDrawPoint(SDL_Point position)
 #endif
 }
 
-void Graphics::AddTextToQueue(SDL_Rect dstRect, std::string text, SDL_Color color, int size)
+void Graphics::AddTextToQueue(SDL_Point position, std::string text, SDL_Color color, int size)
 {
     if (m_fontSize != size)
     {
@@ -199,16 +199,24 @@ void Graphics::AddTextToQueue(SDL_Rect dstRect, std::string text, SDL_Color colo
         m_font = TTF_OpenFont("resources\\fonts\\verdana.ttf", size);
         m_fontSize = size;
     }
-    auto surface = TTF_RenderText_Solid(m_font, text.c_str(), color);
-
-    if (m_textTexture != nullptr)
-    {
-        SDL_DestroyTexture(m_textTexture);
-        m_textTexture = nullptr;
-    }
     
-    m_textTexture = SDL_CreateTextureFromSurface(m_renderer, surface);
+    std::map<std::string, SDL_Texture*>::const_iterator it = m_textTextures.find(text);
+    if (it == m_textTextures.cend())
+    {
+        auto surface = TTF_RenderText_Solid(m_font, text.c_str(), color);
+        auto texture = SDL_CreateTextureFromSurface(m_renderer, surface);
+        m_textTextures.emplace(text, texture);
+        m_renderQueue.push({ texture,{ 0, 0, 0, 0 },{ position.x, position.y, surface->w, surface->h }, 0.0,{ 0, 0 }, SDL_FLIP_NONE, true });
+        SDL_FreeSurface(surface);
+    }
+    else
+    {
+        int width;
+        int height;
+        Uint32 format = SDL_PIXELFORMAT_UNKNOWN;
+        int access = SDL_TEXTUREACCESS_STATIC;
+        SDL_QueryTexture(it->second, &format, &access, &width, &height);
+        m_renderQueue.push({ it->second,{ 0, 0, 0, 0 },{ position.x, position.y, width, height }, 0.0,{ 0, 0 }, SDL_FLIP_NONE, true });
+    }
 
-    m_renderQueue.push({ m_textTexture, {0, 0, 0, 0}, {100, 100, surface->w, surface->h}, 0.0, {0, 0}, SDL_FLIP_NONE, true });
-    SDL_FreeSurface(surface);
 }

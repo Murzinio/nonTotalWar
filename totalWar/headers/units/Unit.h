@@ -75,6 +75,7 @@ namespace nonTotalWar
         bool GetTaskStarted() { return m_taskStarted; };
         int GetSpeed() { return m_speed; };
         int GetRange() { return m_range; };
+        int GetSoldiers() { return m_soldiers; };
         void ClearTasks() 
         {
             m_tasks = {};

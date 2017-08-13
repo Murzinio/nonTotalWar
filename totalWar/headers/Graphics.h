@@ -30,7 +30,7 @@ namespace nonTotalWar
         std::map<std::string, SDL_Texture*> m_textures;
         TTF_Font* m_font{ nullptr };
         int m_fontSize{ 0 };
-        SDL_Texture* m_textTexture{ nullptr };
+        std::map<std::string, SDL_Texture*> m_textTextures;
 
         void LoadTextures();
         bool m_texturesLoaded{ false };
@@ -63,7 +63,7 @@ namespace nonTotalWar
         void AddToQueue(std::string texture, SDL_Rect srcRect, SDL_Rect dstRect, double angle, SDL_Point center, SDL_RendererFlip flip, bool isText);
         void AddToQueue(std::string texture, SDL_Rect srcRect, SDL_Rect dstRect, double angle, SDL_Point center, SDL_RendererFlip flip);
         void AddSelectionRectToQueue(SDL_Rect dstRect);
-        void AddTextToQueue(SDL_Rect dstRect, std::string text, SDL_Color color, int size);
+        void AddTextToQueue(SDL_Point position, std::string text, SDL_Color color, int size);
         static void DebugDrawPoint(SDL_Point position);
         void RenderFrame();
         bool GetTexturesLoaded() { return m_texturesLoaded; };
