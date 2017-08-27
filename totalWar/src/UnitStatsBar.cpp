@@ -25,6 +25,8 @@ void UnitStatsBar::Draw()
         m_graphics.AddTextToQueue(position, "State: Idle", { 255, 0, 0 }, 14);
     else if(unit->GetIsFighting())
         m_graphics.AddTextToQueue(position, "State: Fighting", { 255, 0, 0 }, 14);
+    else
+        m_graphics.AddTextToQueue(position, "State: Moving", { 255, 0, 0 }, 14);
 
     position.y += dstRect.h / 8;
     m_graphics.AddTextToQueue(position, "Soldiers: " + std::to_string(unit->GetSoldiers()), { 255, 0, 0 }, 14);
