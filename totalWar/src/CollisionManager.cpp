@@ -8,7 +8,7 @@ CollisionManager::CollisionManager(std::map<std::string, std::shared_ptr<nonTota
 
 }
 
-SDL_Point CollisionManager::GetFuturePosition(std::shared_ptr<nonTotalWar::Unit> unit, int movesForward)
+nonTotalWar::Vector2D CollisionManager::GetFuturePosition(std::shared_ptr<nonTotalWar::Unit> unit, int movesForward)
 {
     auto position = unit->GetPosition();
     auto destination = unit->GetMoveDestination();
@@ -53,7 +53,7 @@ SDL_Point CollisionManager::GetFuturePosition(std::shared_ptr<nonTotalWar::Unit>
         }
 
     nonTotalWar::Graphics::DebugDrawPoint(futurePosition);
-    nonTotalWar::Graphics::DebugDrawPoint({ futurePosition.x + 1, futurePosition.y + 1 });
+    nonTotalWar::Graphics::DebugDrawPoint({ static_cast<int>(futurePosition.x + 1), static_cast<int>(futurePosition.y + 1) });
 
     return futurePosition;
 }

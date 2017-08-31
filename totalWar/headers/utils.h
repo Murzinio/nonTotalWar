@@ -40,4 +40,16 @@ namespace nonTotalWar
         auto s = (a + b + c) / 2;
         return std::sqrt(s * (s - a) * (s - b) * (s - c)); 
     }
+
+    struct Vector2D
+    {
+        float x;
+        float y;
+
+        operator SDL_Point() const
+        {
+            SDL_Point point = { static_cast<int>(x), static_cast<int>(y) };
+            return point;
+        }
+    };
 }

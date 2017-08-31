@@ -18,7 +18,7 @@ namespace nonTotalWar
         std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& m_units;
         std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& m_unitsAi;
 
-        SDL_Point GetFuturePosition(std::shared_ptr<nonTotalWar::Unit> unit, int movesForward);
+        Vector2D GetFuturePosition(std::shared_ptr<nonTotalWar::Unit> unit, int movesForward);
 
     public:
         CollisionManager(std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& units, std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& unitsAi);

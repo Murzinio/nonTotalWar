@@ -1,9 +1,10 @@
 #include "..\..\headers\units\Unit.h"
 
 using nonTotalWar::Unit;
+using nonTotalWar::Vector2D;
 using nonTotalWar::settings::UNIT_SIZE;
 
-Unit::Unit(int attack, int defence, int range, int speed, int soldiers, SDL_Point position, double angle)
+Unit::Unit(int attack, int defence, int range, int speed, int soldiers, nonTotalWar::Vector2D position, double angle)
 {
     m_attack = attack;
     m_defence = defence;
@@ -18,12 +19,12 @@ Unit::Unit(int attack, int defence, int range, int speed, int soldiers, SDL_Poin
 
 Unit::~Unit() {};
 
-SDL_Point Unit::GetPosition()
+Vector2D Unit::GetPosition()
 {
     return m_position;
 }
 
-void Unit::SetPosition(SDL_Point newPosition)
+void Unit::SetPosition(Vector2D newPosition)
 {
     m_position = newPosition;
 }

@@ -2,6 +2,7 @@
 
 using nonTotalWar::GameplayManager;
 using nonTotalWar::Graphics;
+using nonTotalWar::Vector2D;
 using nonTotalWar::settings::UNIT_SIZE;
 
 GameplayManager::GameplayManager(Graphics& graphics) : m_graphics(graphics), m_taskManager(m_playerUnits, m_aiUnits)
@@ -18,8 +19,8 @@ void GameplayManager::CreateUnits()
     //TODO
     for (int i = 1; i < 4; i++)
     {
-        SDL_Point positionPlayer{ (int)(i * 180) + 300, 200 };
-        SDL_Point positionAi{ (int)(i * 180) + 300, 600 };
+        Vector2D positionPlayer{ static_cast<float>((i * 180) + 300), static_cast<float>(200) };
+        Vector2D positionAi{ static_cast<float>((i * 180) + 300), static_cast<float>(600) };
 
         m_playerUnits["Hoplites" + std::to_string(i)] = std::make_unique<Hoplites>(positionPlayer, 0.0);
         m_aiUnits["Hoplites" + std::to_string(i)] = std::make_unique<Hoplites>(positionAi, 0.0);
@@ -179,7 +180,7 @@ void GameplayManager::GameLoop()
             position.x += counter * UNIT_SIZE.x / 32;
 
             SDL_Rect srcRect{ 0, 0, 512, 256 };
-            SDL_Rect dstRect{ position.x, position.y, UNIT_SIZE.x, UNIT_SIZE.y };
+            SDL_Rect dstRect{ static_cast<int>(position.x), static_cast<int>(position.y), UNIT_SIZE.x, UNIT_SIZE.y };
 
             auto flip = SDL_FLIP_NONE;
 
@@ -203,7 +204,7 @@ void GameplayManager::GameLoop()
             position.x += counter * UNIT_SIZE.x / 32;
 
             SDL_Rect srcRect{ 0, 0, 512, 256 };
-            SDL_Rect dstRect{ position.x, position.y, UNIT_SIZE.x, UNIT_SIZE.y };
+            SDL_Rect dstRect{ static_cast<int>(position.x), static_cast<int>(position.y), UNIT_SIZE.x, UNIT_SIZE.y };
 
             m_graphics.AddToQueue("units\\placeholderAI", srcRect, dstRect, angle, center, SDL_FLIP_NONE);
             m_graphics.AddToQueue("units\\hoplites", srcRect, dstRect, 0, center, SDL_FLIP_NONE);

@@ -28,7 +28,7 @@ namespace nonTotalWar
         int m_speed;
         int m_soldiers;
         SDL_Point m_unitSize;
-        SDL_Point m_position;
+        Vector2D m_position;
 
         double m_angle{ 0.0 };
         bool m_turnedBack{ false };
@@ -44,11 +44,11 @@ namespace nonTotalWar
         std::array<SDL_Point, 4> m_verticles;
 
     public:
-        Unit(int attack, int defence, int range, int speed, int soldiers, SDL_Point position, double angle);
+        Unit(int attack, int defence, int range, int speed, int soldiers, Vector2D position, double angle);
         virtual ~Unit();
 
-        SDL_Point GetPosition();
-        void SetPosition(SDL_Point newPosition);
+        Vector2D GetPosition();
+        void SetPosition(Vector2D newPosition);
         
         void SetSelected(bool select) { m_selected = select; };
         bool IsSelected() { return m_selected; };
