@@ -35,6 +35,7 @@ namespace nonTotalWar
 
         bool m_selected{ false };
         bool m_fighting{ false };
+        bool m_toDestroy{ false };
 
         std::queue<UnitTask> m_tasks;
         bool m_taskStarted{ false };
@@ -71,11 +72,13 @@ namespace nonTotalWar
         void SetMoveDestination(SDL_Point destination);
         void SetAttackTarget(std::shared_ptr<Unit> target) { m_attackTarget = target; };
         auto GetAttackTarget() { return m_attackTarget; };
+        int GetAttack() { return m_attack; };
 
         bool GetTaskStarted() { return m_taskStarted; };
         int GetSpeed() { return m_speed; };
         int GetRange() { return m_range; };
         int GetSoldiers() { return m_soldiers; };
+        void KillSoldiers(int value) { m_soldiers -= value; };
         void ClearTasks() 
         {
             m_tasks = {};
@@ -92,5 +95,7 @@ namespace nonTotalWar
 
         void SetIsFighting(bool value) { m_fighting = value; };
         bool GetIsFighting() { return m_fighting; };
+        void SetToDestroy() { m_toDestroy = true; };
+        bool GetToDestroy() { return m_toDestroy; };
     };
 }

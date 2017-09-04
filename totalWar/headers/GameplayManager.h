@@ -42,11 +42,13 @@ namespace nonTotalWar
         // unit name should be constructed from m_validUnitName and a number (i. e. "Hoplites_1")
 
         std::chrono::high_resolution_clock::time_point m_lastUpdate = std::chrono::high_resolution_clock::now();
-        static constexpr float m_updateInterval{ 1000.0f / 360.0f };
+        static constexpr float m_updateInterval{ 1000.0f / 60.0f };
 
         std::shared_ptr<Unit> m_chosenUnit;
         bool IsMouseOverFriendlyUnit(SDL_Point mousePosition);
         bool IsMouseOverEnemyUnit(SDL_Point mousePosition);
+
+        void RemoveDestroyedUnits();
 
     public:
         GameplayManager(Graphics& graphics);

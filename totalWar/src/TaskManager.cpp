@@ -2,6 +2,7 @@
 
 using nonTotalWar::TaskManager;
 using nonTotalWar::settings::UNIT_SIZE;
+using nonTotalWar::settings::COMBAT_SPEED;
 
 TaskManager::TaskManager(std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& units, std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& unitsAi) : m_units(units), m_unitsAi(unitsAi), m_collisionManager(units, unitsAi)
 {
@@ -206,6 +207,13 @@ void TaskManager::Attack(std::shared_ptr<nonTotalWar::Unit> unit)
 
 void TaskManager::ProcessFighting(std::shared_ptr<nonTotalWar::Unit> unit, std::shared_ptr<nonTotalWar::Unit> enemyUnit)
 {
-    //TODO
-}
+    // chance of killing enemy soldier every frame = (attack stat/100) * combat speed defined in settings (0.5 by default)
+    auto attack = unit->GetAttack();
+    auto soldiers = unit->GetSoldiers();
 
+    if (unit->GetSoldiers() > 0 && intDistribution(mt19937) <= attack * COMBAT_SPEED)
+        unit->KillSoldiers(1);
+    else if (soldiers == 0)
+        unit->SetToDestroy();
+
+}

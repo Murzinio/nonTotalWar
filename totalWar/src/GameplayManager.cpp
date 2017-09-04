@@ -19,7 +19,7 @@ void GameplayManager::CreateUnits()
     //TODO
     for (int i = 1; i < 4; i++)
     {
-        Vector2D positionPlayer{ static_cast<float>((i * 180) + 300), static_cast<float>(200) };
+        Vector2D positionPlayer{ static_cast<float>((i * 180) + 300), static_cast<float>(550) };
         Vector2D positionAi{ static_cast<float>((i * 180) + 300), static_cast<float>(600) };
 
         m_playerUnits["Hoplites" + std::to_string(i)] = std::make_unique<Hoplites>(positionPlayer, 0.0);
@@ -42,6 +42,8 @@ void GameplayManager::GameLoop()
 
         if (lastUpdateInterval < m_updateInterval)
             continue;
+
+        RemoveDestroyedUnits();
 
         m_input.HandleEvents();
         if (m_input.GetKeyUp())
@@ -140,7 +142,6 @@ void GameplayManager::GameLoop()
             for (auto & x : m_selectedUnits)
             {
                 auto unit = x.second;
-                std::cout << unit << " attack " << m_chosenUnit;
                 unit->ClearTasks();
                 unit->AddTask(UnitTask::ROTATE);
                 unit->AddTask(UnitTask::ATTACK);
@@ -197,7 +198,7 @@ void GameplayManager::GameLoop()
         for (auto & x : m_aiUnits)
         {
             auto position = x.second->GetPosition();
-            auto angle = x.second->GetAngle();;
+            auto angle = x.second->GetAngle();
 
             SDL_Point center = { UNIT_SIZE.x / 2, UNIT_SIZE.y / 2 };
 
@@ -279,4 +280,33 @@ bool GameplayManager::IsMouseOverEnemyUnit(SDL_Point mousePosition)
     }
 
     return false;
+}
+
+void GameplayManager::RemoveDestroyedUnits()
+{
+    auto it = m_playerUnits.begin();
+    while (it != m_playerUnits.end())
+    {
+        if (it->second->GetToDestroy())
+        {
+            it = m_playerUnits.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
+
+    it = m_selectedUnits.begin();
+    while (it != m_selectedUnits.end()) 
+    {
+        if (it->second->GetToDestroy()) 
+        {
+            it = m_selectedUnits.erase(it);
+        }
+        else 
+        {
+            ++it;
+        }
+    }
 }

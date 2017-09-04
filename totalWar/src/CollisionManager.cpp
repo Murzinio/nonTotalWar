@@ -126,7 +126,6 @@ nonTotalWar::Collision CollisionManager::CheckForCollisions(std::shared_ptr<nonT
                     }
 
                     areasSum += GetTriangleArea(a, b, c);
-                    std::cout << a << std::endl << b << std::endl << c << std::endl;
                 }
 
                 if (static_cast<int>(areasSum) <= UNIT_SIZE.x * UNIT_SIZE.y)
@@ -200,7 +199,6 @@ nonTotalWar::Collision CollisionManager::CheckForCollisions(std::shared_ptr<nonT
                     }
 
                     areasSum += GetTriangleArea(a, b, c);
-                    std::cout << a << std::endl << b << std::endl << c << std::endl;
                 }
 
                 if (static_cast<int>(areasSum) <= UNIT_SIZE.x * UNIT_SIZE.y)
