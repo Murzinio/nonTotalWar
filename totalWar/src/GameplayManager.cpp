@@ -5,11 +5,12 @@ using nonTotalWar::Graphics;
 using nonTotalWar::Vector2D;
 using nonTotalWar::settings::UNIT_SIZE;
 
-GameplayManager::GameplayManager(Graphics& graphics) : m_graphics(graphics), m_taskManager(m_playerUnits, m_aiUnits)
+GameplayManager::GameplayManager(Graphics& graphics) : m_graphics(graphics), m_taskManager(m_playerUnits, m_aiUnits), m_aiPlayer(m_playerUnits, m_aiUnits)
 {
     if (graphics.GetTexturesLoaded())
     {
         CreateUnits();
+        m_aiPlayer.CreateCombatPlan();
         GameLoop();
     }
 }
@@ -19,11 +20,11 @@ void GameplayManager::CreateUnits()
     //TODO
     for (int i = 1; i < 4; i++)
     {
-        Vector2D positionPlayer{ static_cast<float>((i * 180) + 300), static_cast<float>(550) };
+        Vector2D positionPlayer{ static_cast<float>((i * 180) + 300), static_cast<float>(350) };
         Vector2D positionAi{ static_cast<float>((i * 180) + 300), static_cast<float>(600) };
 
-        m_playerUnits["Hoplites" + std::to_string(i)] = std::make_unique<Hoplites>(positionPlayer, 0.0);
-        m_aiUnits["Hoplites" + std::to_string(i)] = std::make_unique<Hoplites>(positionAi, 0.0);
+        m_playerUnits["Hoplites" + std::to_string(i) + "_Player"] = std::make_unique<Hoplites>(positionPlayer, 0.0);
+        m_aiUnits["Hoplites" + std::to_string(i) + "_AI"] = std::make_unique<Hoplites>(positionAi, 180.0);
     }
 }
 
@@ -145,7 +146,7 @@ void GameplayManager::GameLoop()
                 unit->ClearTasks();
                 unit->AddTask(UnitTask::ROTATE);
                 unit->AddTask(UnitTask::ATTACK);
-                unit->SetMoveDestination(m_input.GetMousePositionClick());
+                unit->SetMoveDestination(m_input.GetMousePositionClick()); //TODO handle required tasks in taskmanager
                 unit->SetAttackTarget(m_chosenUnit);
             }
 
@@ -222,6 +223,8 @@ void GameplayManager::GameLoop()
         if (m_selectedUnits.size() == 1)
             m_unitStatsBar.Draw();
 
+        m_aiPlayer.UpdateEnemyPositions();
+
         m_graphics.RenderFrame();
     }
 }
@@ -231,6 +234,10 @@ bool GameplayManager::IsValidUnitName(const std::string name)
     auto splittedName = nonTotalWar::SplitString(name, '_');
 
     for (auto & x : m_validUnitNames)
+        if (std::find(splittedName.cbegin(), splittedName.cend(), x) == splittedName.cend())
+            return false;
+
+    for (auto & x : m_validUnitOwners)
         if (std::find(splittedName.cbegin(), splittedName.cend(), x) == splittedName.cend())
             return false;
 

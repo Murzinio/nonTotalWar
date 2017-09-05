@@ -60,6 +60,56 @@ void TaskManager::HandleTasks()
 
         Graphics::DebugDrawPoint(unit->GetMoveDestination());
     }
+
+    for (auto & x : m_unitsAi)
+    {
+        auto unit = x.second;
+        auto& tasks = unit->GetTasks();
+
+        auto verticles = unit->GetVerticles();
+
+        for (auto & point : verticles)
+        {
+            for (int i = 0; i < 3; i++)
+                for (int j = 0; j < 3; j++)
+                {
+                    Graphics::DebugDrawPoint({ point.x + j, point.y + i });
+                }
+        }
+
+        unit->CalculateVerticles();
+
+        if (tasks.size() == 0)
+            continue;
+
+        auto task = tasks.front();
+
+        using nonTotalWar::UnitTask;
+
+        switch (task)
+        {
+        case UnitTask::ROTATE:
+            Rotate(unit);
+            break;
+
+        case UnitTask::FLIP:
+            Flip(unit);
+            break;
+
+        case UnitTask::MOVE:
+            Move(unit);
+            break;
+
+        case UnitTask::ATTACK:
+            Attack(unit);
+            break;
+
+        default:
+            break;
+        }
+
+        Graphics::DebugDrawPoint(unit->GetMoveDestination());
+    }
 }
 
 void TaskManager::Rotate(std::shared_ptr<nonTotalWar::Unit> unit)

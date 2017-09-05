@@ -107,3 +107,12 @@ void Unit::SetMoveDestination(SDL_Point destination)
     m_moveDestination.y -= UNIT_SIZE.y / 2;
     m_moveCounter = 0;
 }
+
+void Unit::SetMoveDestination(SDL_Point destination, bool dontResetMoveCounter)
+{
+    m_moveDestination = destination;
+    m_moveDestination.x -= UNIT_SIZE.x / 2;
+    m_moveDestination.y -= UNIT_SIZE.y / 2;
+    if (!dontResetMoveCounter)
+        m_moveCounter = 0;
+}

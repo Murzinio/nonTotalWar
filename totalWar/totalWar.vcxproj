@@ -178,6 +178,7 @@ xcopy "$(SolutionDir)libs\dlls" "$(TargetDir)" /s /e /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="headers\AiPlayer.h" />
     <ClInclude Include="headers\CollisionManager.h" />
     <ClInclude Include="headers\GameplayManager.h" />
     <ClInclude Include="headers\Game.h" />
@@ -191,6 +192,7 @@ xcopy "$(SolutionDir)libs\dlls" "$(TargetDir)" /s /e /Y</Command>
     <ClInclude Include="Settings.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AiPlayer.cpp" />
     <ClCompile Include="src\CollisionManager.cpp" />
     <ClCompile Include="src\GameplayManager.cpp" />
     <ClCompile Include="src\Input.cpp" />

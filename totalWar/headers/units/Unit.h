@@ -70,6 +70,7 @@ namespace nonTotalWar
 
         SDL_Point GetMoveDestination();
         void SetMoveDestination(SDL_Point destination);
+        void SetMoveDestination(SDL_Point destination, bool dontResetMoveCounter);
         void SetAttackTarget(std::shared_ptr<Unit> target) { m_attackTarget = target; };
         auto GetAttackTarget() { return m_attackTarget; };
         int GetAttack() { return m_attack; };
