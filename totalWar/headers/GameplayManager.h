@@ -47,7 +47,7 @@ namespace nonTotalWar
         // unit name should be constructed from m_validUnitName, number and owner (i. e. "Hoplites_1_AI")
 
         std::chrono::high_resolution_clock::time_point m_lastUpdate = std::chrono::high_resolution_clock::now();
-        static constexpr float m_updateInterval{ 1000.0f / 1440.0f };
+        static constexpr float m_updateInterval{ 1000.0f / 1200.0f };
 
         std::shared_ptr<Unit> m_chosenUnit;
         bool IsMouseOverFriendlyUnit(SDL_Point mousePosition);

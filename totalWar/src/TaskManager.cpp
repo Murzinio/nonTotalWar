@@ -194,25 +194,21 @@ void TaskManager::Move(std::shared_ptr<nonTotalWar::Unit> unit)
     auto position = unit->GetPosition();
     auto destination = unit->GetMoveDestination();
 
+    auto distance = static_cast<float>(GetDistanceToPoint(position, destination));
         
-    int valToAddX{ 1 };
-    int valToAddY{ 1 };
+    float valToAddX{ (destination.x - position.x) / distance };
+    float valToAddY{ (destination.y - position.y) / distance };
 
-    if (position.x + 1 == destination.x || position.x - 1 == destination.x)
+    if (std::abs(position.x - destination.x) < 2.0)
         valToAddX = 0;
-    else if (position.y + 1 == destination.y || position.y - 1 == destination.y)
+    else if (std::abs(position.y - destination.y) < 2.0)
         valToAddY = 0;
-
-    if (destination.x < position.x)
-        valToAddX *= -1;
-    if (destination.y < position.y)
-        valToAddY *= -1;
 
     position.x += valToAddX;
     position.y += valToAddY;
 
-    if ((position.x + 1 == destination.x || position.x - 1 == destination.x) 
-        && (position.y + 1 == destination.y || position.y - 1 == destination.y))
+    if (std::abs(position.x - destination.x) < 2.0
+        && std::abs(position.y - destination.y) < 2.0)
     {
         auto& tasks = unit->GetTasks();
         tasks.pop();

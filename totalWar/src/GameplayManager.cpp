@@ -10,7 +10,7 @@ GameplayManager::GameplayManager(Graphics& graphics) : m_graphics(graphics), m_t
     if (graphics.GetTexturesLoaded())
     {
         CreateUnits();
-        m_aiPlayer.CreateCombatPlan();
+        //m_aiPlayer.CreateCombatPlan();
         GameLoop();
     }
 }

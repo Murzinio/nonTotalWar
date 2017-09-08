@@ -27,6 +27,8 @@ void AiPlayer::Flank()
 
 void AiPlayer::EngageAllUnits()
 {
+    using namespace nonTotalWar::settings;
+
     for (const auto & x : m_units)
     {
         auto unit = x.second;
@@ -34,7 +36,12 @@ void AiPlayer::EngageAllUnits()
         unit->ClearTasks();
         unit->AddTask(UnitTask::ROTATE);
         unit->AddTask(UnitTask::ATTACK);
-        unit->SetMoveDestination(closestEnemy->GetPosition());
+
+        auto enemyPosition = closestEnemy->GetPosition();
+        enemyPosition.x += UNIT_SIZE.x / 2;
+        enemyPosition.y += UNIT_SIZE.y / 2;
+
+        unit->SetMoveDestination(enemyPosition, true);
         unit->SetAttackTarget(closestEnemy);
     }
 }
@@ -108,6 +115,8 @@ void AiPlayer::CreateCombatPlan()
 
 void AiPlayer::UpdateEnemyPositions()
 {
+    using namespace nonTotalWar::settings;
+
     for (const auto & x : m_units)
     {
         auto unit = x.second;
@@ -115,7 +124,11 @@ void AiPlayer::UpdateEnemyPositions()
         /*unit->ClearTasks();
         unit->AddTask(UnitTask::ROTATE);
         unit->AddTask(UnitTask::ATTACK);*/
-        unit->SetMoveDestination(closestEnemy->GetPosition(), true);
+        auto enemyPosition = closestEnemy->GetPosition();
+        enemyPosition.x += UNIT_SIZE.x / 2;
+        enemyPosition.y += UNIT_SIZE.y / 2;
+
+        unit->SetMoveDestination(enemyPosition, true);
         unit->SetAttackTarget(closestEnemy);
     }
 }
