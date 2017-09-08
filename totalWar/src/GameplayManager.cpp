@@ -18,7 +18,7 @@ GameplayManager::GameplayManager(Graphics& graphics) : m_graphics(graphics), m_t
 void GameplayManager::CreateUnits()
 {
     //TODO
-    for (int i = 1; i < 4; i++)
+    for (int i = 1; i < 2; i++)
     {
         Vector2D positionPlayer{ static_cast<float>((i * 180) + 300), static_cast<float>(350) };
         Vector2D positionAi{ static_cast<float>((i * 180) + 300), static_cast<float>(600) };
@@ -296,6 +296,8 @@ void GameplayManager::RemoveDestroyedUnits()
     {
         if (it->second->GetToDestroy())
         {
+
+            it->second == nullptr;
             it = m_playerUnits.erase(it);
         }
         else
@@ -309,9 +311,24 @@ void GameplayManager::RemoveDestroyedUnits()
     {
         if (it->second->GetToDestroy()) 
         {
+            it->second == nullptr;
             it = m_selectedUnits.erase(it);
         }
         else 
+        {
+            ++it;
+        }
+    }
+
+    it = m_aiUnits.begin();
+    while (it != m_aiUnits.end())
+    {
+        if (it->second->GetToDestroy())
+        {
+            it->second == nullptr;
+            it = m_aiUnits.erase(it);
+        }
+        else
         {
             ++it;
         }

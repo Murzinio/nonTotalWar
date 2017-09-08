@@ -48,11 +48,16 @@ std::shared_ptr<Unit> AiPlayer::FindClosestEnemyUnit(const std::shared_ptr<Unit>
     for (const auto & x : m_enemyUnits)
     {
         auto enemyUnit = x.second;
+        if (enemyUnit == nullptr)
+            continue;
+
         auto enemyPosition = enemyUnit->GetPosition();
         auto enemyCenter = enemyPosition;
         enemyCenter.x += UNIT_SIZE.x;
         enemyCenter.y += UNIT_SIZE.y;
 
+        if (unit == nullptr)
+            continue;
 
         auto position = unit->GetPosition();
         auto center = position;

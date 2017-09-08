@@ -21,6 +21,9 @@ Unit::~Unit() {};
 
 Vector2D Unit::GetPosition()
 {
+    if (this == nullptr)
+        return { 0, 0 };
+
     return m_position;
 }
 

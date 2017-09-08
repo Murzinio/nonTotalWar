@@ -19,7 +19,9 @@ void UnitStatsBar::Draw()
     position.y += dstRect.h / 10;
 
     auto unit = m_selectedUnits.begin()->second;
-    
+    if (unit->GetToDestroy())
+        return;
+
     auto tasks = unit->GetTasks();
     if (tasks.size() == 0)
         m_graphics.AddTextToQueue(position, "State: Idle", { 255, 0, 0 }, 14);

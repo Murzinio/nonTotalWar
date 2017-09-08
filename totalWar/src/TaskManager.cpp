@@ -235,8 +235,26 @@ void TaskManager::Move(std::shared_ptr<nonTotalWar::Unit> unit)
 void TaskManager::Attack(std::shared_ptr<nonTotalWar::Unit> unit)
 {
     auto target = unit->GetAttackTarget();
+
+    if (unit->GetToDestroy())
+    {
+        target->SetIsFighting(false);
+        target->ClearTasks();
+
+        return;
+    }
+    if (target->GetToDestroy())
+    {
+        unit->SetIsFighting(false);
+        unit->ClearTasks();
+
+        return;
+    }
+
     if (unit->GetIsFighting())
     {
+        if (!target->GetIsFighting())
+            target->SetIsFighting(true);
         ProcessFighting(unit, target);
         return;
     }
@@ -257,6 +275,21 @@ void TaskManager::Attack(std::shared_ptr<nonTotalWar::Unit> unit)
 
 void TaskManager::ProcessFighting(std::shared_ptr<nonTotalWar::Unit> unit, std::shared_ptr<nonTotalWar::Unit> enemyUnit)
 {
+    if (unit->GetToDestroy())
+    {
+        enemyUnit->SetIsFighting(false);
+        enemyUnit->ClearTasks();
+
+        return;
+    }
+    if (enemyUnit->GetToDestroy())
+    {
+        unit->SetIsFighting(false);
+        unit->ClearTasks();
+
+        return;
+    }
+    
     // chance of killing enemy soldier every frame = (attack stat/100) * combat speed defined in settings (0.5 by default)
     auto attack = unit->GetAttack();
     auto soldiers = unit->GetSoldiers();
@@ -265,5 +298,13 @@ void TaskManager::ProcessFighting(std::shared_ptr<nonTotalWar::Unit> unit, std::
         unit->KillSoldiers(1);
     else if (soldiers == 0)
         unit->SetToDestroy();
+
+    auto enemyAttack = enemyUnit->GetAttack();
+    auto enemySoldiers = enemyUnit->GetSoldiers();
+
+    if (enemyUnit->GetSoldiers() > 0 && intDistribution(mt19937) <= attack * COMBAT_SPEED)
+        enemyUnit->KillSoldiers(1);
+    else if (enemySoldiers == 0)
+        enemyUnit->SetToDestroy();
 
 }
