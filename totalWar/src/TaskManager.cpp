@@ -58,7 +58,7 @@ void TaskManager::HandleTasks()
                 break;
         }
 
-        Graphics::DebugDrawPoint(unit->GetMoveDestination());
+        //Graphics::DebugDrawPoint(unit->GetMoveDestination());
     }
 
     for (auto & x : m_unitsAi)
@@ -108,7 +108,7 @@ void TaskManager::HandleTasks()
             break;
         }
 
-        Graphics::DebugDrawPoint(unit->GetMoveDestination());
+        //Graphics::DebugDrawPoint(unit->GetMoveDestination());
     }
 }
 
@@ -271,6 +271,12 @@ void TaskManager::Attack(std::shared_ptr<nonTotalWar::Unit> unit)
 
 void TaskManager::ProcessFighting(std::shared_ptr<nonTotalWar::Unit> unit, std::shared_ptr<nonTotalWar::Unit> enemyUnit)
 {
+    if (enemyUnit->GetTasks().size() > 0)
+        enemyUnit->ClearTasks();
+
+    if (!enemyUnit->GetIsFighting())
+        enemyUnit->SetIsFighting(true);
+
     if (unit->GetToDestroy())
     {
         enemyUnit->SetIsFighting(false);

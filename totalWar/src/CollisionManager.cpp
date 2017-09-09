@@ -53,7 +53,7 @@ nonTotalWar::Vector2D CollisionManager::GetFuturePosition(std::shared_ptr<nonTot
         }
 
     nonTotalWar::Graphics::DebugDrawPoint(futurePosition);
-    nonTotalWar::Graphics::DebugDrawPoint({ static_cast<int>(futurePosition.x + 1), static_cast<int>(futurePosition.y + 1) });
+    //nonTotalWar::Graphics::DebugDrawPoint({ static_cast<int>(futurePosition.x + 1), static_cast<int>(futurePosition.y + 1) });
 
     return futurePosition;
 }
@@ -133,7 +133,7 @@ nonTotalWar::Collision CollisionManager::CheckForCollisions(std::shared_ptr<nonT
             }
 
             otherUnit->SetPosition(originalPositionOther);
-            //unit->CalculateVerticles();
+            //otherUnit->CalculateVerticles();
 
         }
 
@@ -147,7 +147,7 @@ nonTotalWar::Collision CollisionManager::CheckForCollisions(std::shared_ptr<nonT
         auto originalPosition = unit->GetPosition();
 
         unit->SetPosition(GetFuturePosition(unit, range));
-        unit->CalculateVerticles();
+        //unit->CalculateVerticles();
 
         auto unitVerticles = unit->GetVerticles();
 
@@ -157,7 +157,7 @@ nonTotalWar::Collision CollisionManager::CheckForCollisions(std::shared_ptr<nonT
             auto otherUnit = y.second;
 
             auto originalPositionOther = otherUnit->GetPosition();
-            otherUnit->SetPosition(GetFuturePosition(otherUnit, 10));
+            otherUnit->SetPosition(GetFuturePosition(otherUnit, range));
             otherUnit->CalculateVerticles();
 
             auto otherUnitVerticles = otherUnit->GetVerticles();
@@ -206,7 +206,7 @@ nonTotalWar::Collision CollisionManager::CheckForCollisions(std::shared_ptr<nonT
             }
 
             otherUnit->SetPosition(originalPositionOther);
-            //unit->CalculateVerticles();
+            //otherUnit->CalculateVerticles();
 
         }
 

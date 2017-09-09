@@ -10,7 +10,7 @@ GameplayManager::GameplayManager(Graphics& graphics) : m_graphics(graphics), m_t
     if (graphics.GetTexturesLoaded())
     {
         CreateUnits();
-        //m_aiPlayer.CreateCombatPlan();
+        m_aiPlayer.CreateCombatPlan();
         GameLoop();
     }
 }
@@ -222,6 +222,11 @@ void GameplayManager::GameLoop()
 
         if (m_selectedUnits.size() == 1)
             m_unitStatsBar.Draw();
+
+#ifdef _DEBUG
+        m_graphics.AddTextToQueue({ 0, 0 }, "DEBUG", { 255, 0, 0 }, 14);
+
+#endif // _DEBUG
 
         m_aiPlayer.UpdateEnemyPositions();
 

@@ -23,7 +23,7 @@ void UnitStatsBar::Draw()
         return;
 
     auto tasks = unit->GetTasks();
-    if (tasks.size() == 0)
+    if (tasks.size() == 0 && !unit->GetIsFighting())
         m_graphics.AddTextToQueue(position, "State: Idle", { 255, 0, 0 }, 14);
     else if(unit->GetIsFighting())
         m_graphics.AddTextToQueue(position, "State: Fighting", { 255, 0, 0 }, 14);
