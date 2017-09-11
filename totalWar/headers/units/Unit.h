@@ -22,6 +22,8 @@ namespace nonTotalWar
     class Unit
     {
     private:
+        int m_id;
+
         int m_attack;
         int m_defence;
         int m_range;
@@ -45,7 +47,7 @@ namespace nonTotalWar
         std::array<SDL_Point, 4> m_verticles;
 
     public:
-        Unit(int attack, int defence, int range, int speed, int soldiers, Vector2D position, double angle);
+        Unit(int id, int attack, int defence, int range, int speed, int soldiers, Vector2D position, double angle);
         virtual ~Unit();
 
         Vector2D GetPosition();
@@ -98,5 +100,7 @@ namespace nonTotalWar
         bool GetIsFighting() { return m_fighting; };
         void SetToDestroy() { m_toDestroy = true; };
         bool GetToDestroy() { return m_toDestroy; };
+
+        int GetId() { return m_id; };
     };
 }

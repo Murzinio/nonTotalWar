@@ -7,7 +7,7 @@ namespace nonTotalWar
         : public Unit
     {
     public:
-        Hoplites(Vector2D position, double angle);
+        Hoplites(int id, Vector2D position, double angle);
     };
 
 }

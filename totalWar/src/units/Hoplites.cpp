@@ -3,7 +3,7 @@
 using nonTotalWar::Hoplites;
 using nonTotalWar::Vector2D;
 
-Hoplites::Hoplites(Vector2D position, double angle) : Unit(5, 5, 1, 5, 150, position, angle)
+Hoplites::Hoplites(int id, Vector2D position, double angle) : Unit(id, 5, 5, 1, 5, 150, position, angle)
 {
 }
 

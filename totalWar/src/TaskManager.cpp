@@ -217,12 +217,12 @@ void TaskManager::Move(std::shared_ptr<nonTotalWar::Unit> unit)
 
     auto collision = m_collisionManager.CheckForCollisions(unit, 10);
 
-    if (collision == nonTotalWar::Collision::FRIENDLY_UNIT)
+    /*if (collision == nonTotalWar::Collision::FRIENDLY_UNIT)
     {
         auto& tasks = unit->GetTasks();
         tasks.pop();
         return;
-    }
+    }*/
 
     unit->SetPosition(position);
 
@@ -249,8 +249,6 @@ void TaskManager::Attack(std::shared_ptr<nonTotalWar::Unit> unit)
 
     if (unit->GetIsFighting())
     {
-        if (!target->GetIsFighting())
-            target->SetIsFighting(true);
         ProcessFighting(unit, target);
         return;
     }
@@ -259,13 +257,17 @@ void TaskManager::Attack(std::shared_ptr<nonTotalWar::Unit> unit)
     auto position = unit->GetPosition();
     auto range = unit->GetRange();
 
-    if (m_collisionManager.CheckForCollisions(unit, range) != Collision::ENEMY_UNIT)
+    if (m_collisionManager.CheckForCollisions(unit, range).GetType() != CollisionType::ENEMY_UNIT)
     {
         Move(unit);
     }
-    else unit->SetIsFighting(true);
+    else
+    {
+        target->SetIsFighting(true);
+        unit->SetIsFighting(true);
+    }
 
-    if (unit->GetIsFighting())
+    if (unit->GetIsFighting() && target->GetIsFighting())
         ProcessFighting(unit, target);
 }
 
@@ -273,9 +275,6 @@ void TaskManager::ProcessFighting(std::shared_ptr<nonTotalWar::Unit> unit, std::
 {
     if (enemyUnit->GetTasks().size() > 0)
         enemyUnit->ClearTasks();
-
-    if (!enemyUnit->GetIsFighting())
-        enemyUnit->SetIsFighting(true);
 
     if (unit->GetToDestroy())
     {
@@ -291,6 +290,9 @@ void TaskManager::ProcessFighting(std::shared_ptr<nonTotalWar::Unit> unit, std::
 
         return;
     }
+
+    bool attackedFromBehind{ false };
+    bool attackedFromFlank{ false };
     
     // chance of killing enemy soldier every frame = (attack stat/100) * combat speed defined in settings (0.5 by default)
     auto attack = unit->GetAttack();

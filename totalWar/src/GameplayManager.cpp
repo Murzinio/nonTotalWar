@@ -18,13 +18,13 @@ GameplayManager::GameplayManager(Graphics& graphics) : m_graphics(graphics), m_t
 void GameplayManager::CreateUnits()
 {
     //TODO
-    for (int i = 1; i < 2; i++)
+    for (int i = 1; i < 3; i++)
     {
         Vector2D positionPlayer{ static_cast<float>((i * 180) + 300), static_cast<float>(350) };
         Vector2D positionAi{ static_cast<float>((i * 180) + 300), static_cast<float>(600) };
 
-        m_playerUnits["Hoplites" + std::to_string(i) + "_Player"] = std::make_unique<Hoplites>(positionPlayer, 0.0);
-        m_aiUnits["Hoplites" + std::to_string(i) + "_AI"] = std::make_unique<Hoplites>(positionAi, 180.0);
+        m_playerUnits["Hoplites" + std::to_string(i) + "_Player"] = std::make_unique<Hoplites>(i, positionPlayer, 0.0);
+        m_aiUnits["Hoplites" + std::to_string(i) + "_AI"] = std::make_unique<Hoplites>(i * -1, positionAi, 180.0);
     }
 }
 

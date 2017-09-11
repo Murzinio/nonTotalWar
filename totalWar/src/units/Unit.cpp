@@ -4,8 +4,10 @@ using nonTotalWar::Unit;
 using nonTotalWar::Vector2D;
 using nonTotalWar::settings::UNIT_SIZE;
 
-Unit::Unit(int attack, int defence, int range, int speed, int soldiers, nonTotalWar::Vector2D position, double angle)
+Unit::Unit(int id, int attack, int defence, int range, int speed, int soldiers, nonTotalWar::Vector2D position, double angle)
 {
+    m_id = id;
+
     m_attack = attack;
     m_defence = defence;
     m_range = range;

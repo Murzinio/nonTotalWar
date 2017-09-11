@@ -8,6 +8,7 @@ CollisionManager::CollisionManager(std::map<std::string, std::shared_ptr<nonTota
 
 }
 
+
 nonTotalWar::Vector2D CollisionManager::GetFuturePosition(std::shared_ptr<nonTotalWar::Unit> unit, int movesForward)
 {
     auto position = unit->GetPosition();
@@ -58,161 +59,182 @@ nonTotalWar::Vector2D CollisionManager::GetFuturePosition(std::shared_ptr<nonTot
     return futurePosition;
 }
 
-nonTotalWar::Collision CollisionManager::CheckForCollisions(std::shared_ptr<nonTotalWar::Unit> unit, int range)
+nonTotalWar::CollisionManager::Collision CollisionManager::CheckForCollisions(std::shared_ptr<nonTotalWar::Unit> unit, int range)
 {
-    using nonTotalWar::Collision;
+    if (unit->GetId() < 0)
+        return CheckForCollisionsPlayer(unit, range);
+    else if (unit->GetId() > 0)
+        return CheckForCollisionsAi(unit, range);
+    else
+        return Collision(nonTotalWar::CollisionType::NONE, 0, 0);
+}
 
-    auto collision = Collision::NONE;
+nonTotalWar::CollisionManager::Collision CollisionManager::CheckForCollisionsPlayer(std::shared_ptr<nonTotalWar::Unit> unit, int range)
+{
+    using nonTotalWar::CollisionManager;
+
+    auto collision = Collision(CollisionType::NONE, 0, 0);
 
     auto moveDestination = unit->GetMoveDestination();
 
-    for (auto & x : m_units)
+    auto originalPosition = unit->GetPosition();
+
+    unit->SetPosition(GetFuturePosition(unit, range));
+    unit->CalculateVerticles();
+
+    auto unitVerticles = unit->GetVerticles();
+
+    for (auto & y : m_units)
     {
-        auto unit = x.second;
-        auto originalPosition = unit->GetPosition();
+        if (unit->GetId() == y.second->GetId())
+            continue;
 
-        unit->SetPosition(GetFuturePosition(unit, range));
-        unit->CalculateVerticles();
+        auto otherUnit = y.second;
 
-        auto unitVerticles = unit->GetVerticles();
+        auto originalPositionOther = otherUnit->GetPosition();
+        otherUnit->SetPosition(GetFuturePosition(otherUnit, 10));
+        otherUnit->CalculateVerticles();
 
-        for (auto & y : m_units)
+        auto otherUnitVerticles = otherUnit->GetVerticles();
+
+        auto unitTooFar = true;
+
+        for (auto & v : unitVerticles)
         {
-            if (x.first == y.first)
+            // if distance to every verticle of other unit is greater than unit rectangle diagonal, skip checks
+            for (auto & ov : otherUnitVerticles)
+                if (ov.x != v.x && GetDistanceToPoint(v, ov) <= std::sqrt(UNIT_SIZE.x * UNIT_SIZE.x + UNIT_SIZE.y * UNIT_SIZE.y))
+                    unitTooFar = false;
+
+            if (unitTooFar)
                 continue;
 
-            auto otherUnit = y.second;
+            // calculate area of triangle built on first unit verticle and pair of other unit verticles, 
+            // if the sum of 4 areas is greater than the area of rectangle, the first unit verticle is not inside other unit
+            // to do, skip if distance between verticles is greater than unit rectangle diagonal
+            auto areasSum = 0.0;
 
-            auto originalPositionOther = otherUnit->GetPosition();
-            otherUnit->SetPosition(GetFuturePosition(otherUnit, 10));
-            otherUnit->CalculateVerticles();
-
-            auto otherUnitVerticles = otherUnit->GetVerticles();
-
-            auto unitTooFar = true;
-
-            for (auto & v : unitVerticles)
+            for (int i = 0; i < 4; ++i)
             {
-                // if distance to every verticle of other unit is greater than unit rectangle diagonal, skip checks
-                for (auto & ov : otherUnitVerticles)
-                    if (ov.x != v.x && GetDistanceToPoint(v, ov) <= std::sqrt(UNIT_SIZE.x * UNIT_SIZE.x + UNIT_SIZE.y * UNIT_SIZE.y))
-                        unitTooFar = false;
+                auto a = 0.0;
+                auto b = 0.0;
+                auto c = 0.0;
 
-                if (unitTooFar)
-                    continue;
-
-                // calculate area of triangle built on first unit verticle and pair of other unit verticles, 
-                // if the sum of 4 areas is greater than the area of rectangle, the first unit verticle is not inside other unit
-                // to do, skip if distance between verticles is greater than unit rectangle diagonal
-                auto areasSum = 0.0;
-
-                for (int i = 0; i < 4; ++i)
+                if (i < 3)
                 {
-                    auto a = 0.0;
-                    auto b = 0.0;
-                    auto c = 0.0;
-
-                    if (i < 3)
-                    {
-                        a = GetDistanceToPoint(v, otherUnitVerticles[i]);
-                        b = GetDistanceToPoint(v, otherUnitVerticles[i + 1]);
-                        c = GetDistanceToPoint(otherUnitVerticles[i], otherUnitVerticles[i + 1]);
-                    }
-                    else
-                    {
-                        a = GetDistanceToPoint(v, otherUnitVerticles[i]);
-                        b = GetDistanceToPoint(v, otherUnitVerticles[0]);
-                        c = GetDistanceToPoint(otherUnitVerticles[i], otherUnitVerticles[0]);
-                    }
-
-                    areasSum += GetTriangleArea(a, b, c);
+                    a = GetDistanceToPoint(v, otherUnitVerticles[i]);
+                    b = GetDistanceToPoint(v, otherUnitVerticles[i + 1]);
+                    c = GetDistanceToPoint(otherUnitVerticles[i], otherUnitVerticles[i + 1]);
+                }
+                else
+                {
+                    a = GetDistanceToPoint(v, otherUnitVerticles[i]);
+                    b = GetDistanceToPoint(v, otherUnitVerticles[0]);
+                    c = GetDistanceToPoint(otherUnitVerticles[i], otherUnitVerticles[0]);
                 }
 
-                if (static_cast<int>(areasSum) <= UNIT_SIZE.x * UNIT_SIZE.y)
-                    collision = Collision::FRIENDLY_UNIT;
+                areasSum += GetTriangleArea(a, b, c);
             }
 
-            otherUnit->SetPosition(originalPositionOther);
-            //otherUnit->CalculateVerticles();
-
+            if (static_cast<int>(areasSum) <= UNIT_SIZE.x * UNIT_SIZE.y)
+            {
+                collision.SetType(CollisionType::ENEMY_UNIT);
+                collision.SetId_1(unit->GetId());
+                collision.SetId_2(otherUnit->GetId());
+            }
         }
 
-        unit->SetPosition(originalPosition);
-        //unit->CalculateVerticles();
+        otherUnit->SetPosition(originalPositionOther);
+        //otherUnit->CalculateVerticles();
+
     }
 
-    for (auto & x : m_units)
+    unit->SetPosition(originalPosition);
+    //unit->CalculateVerticles();
+
+    return collision;
+
+}
+
+nonTotalWar::CollisionManager::Collision CollisionManager::CheckForCollisionsAi(std::shared_ptr<nonTotalWar::Unit> unit, int range)
+{
+    using nonTotalWar::CollisionManager;
+
+    auto collision = Collision(CollisionType::NONE, 0, 0);
+
+    auto moveDestination = unit->GetMoveDestination();
+
+    auto originalPosition = unit->GetPosition();
+
+    unit->SetPosition(GetFuturePosition(unit, range));
+    unit->CalculateVerticles();
+
+    auto unitVerticles = unit->GetVerticles();
+
+    for (auto & y : m_unitsAi)
     {
-        auto unit = x.second;
-        auto originalPosition = unit->GetPosition();
+        auto otherUnit = y.second;
 
-        unit->SetPosition(GetFuturePosition(unit, range));
-        //unit->CalculateVerticles();
+        auto originalPositionOther = otherUnit->GetPosition();
+        otherUnit->SetPosition(GetFuturePosition(otherUnit, range));
+        otherUnit->CalculateVerticles();
 
-        auto unitVerticles = unit->GetVerticles();
+        auto otherUnitVerticles = otherUnit->GetVerticles();
 
-        for (auto & y : m_unitsAi)
+        auto unitTooFar = true;
+
+        for (auto & v : unitVerticles)
         {
+            // if distance to every verticle of other unit is greater than unit rectangle diagonal, skip checks
+            for (auto & ov : otherUnitVerticles)
+                if (ov.x != v.x && GetDistanceToPoint(v, ov) <= std::sqrt(UNIT_SIZE.x*UNIT_SIZE.x + UNIT_SIZE.y*UNIT_SIZE.y))
+                    unitTooFar = false;
 
-            auto otherUnit = y.second;
+            if (unitTooFar)
+                continue;
 
-            auto originalPositionOther = otherUnit->GetPosition();
-            otherUnit->SetPosition(GetFuturePosition(otherUnit, range));
-            otherUnit->CalculateVerticles();
+            // calculate area of triangle built on first unit verticle and pair of other unit verticles, 
+            // if the sum of 4 areas is greater than the area of rectangle, the first unit verticle is not inside other unit
+            // to do, skip if distance between verticles is greater than unit rectangle diagonal
+            auto areasSum = 0.0;
 
-            auto otherUnitVerticles = otherUnit->GetVerticles();
-
-            auto unitTooFar = true;
-
-            for (auto & v : unitVerticles)
+            for (int i = 0; i < 4; ++i)
             {
-                // if distance to every verticle of other unit is greater than unit rectangle diagonal, skip checks
-                for (auto & ov : otherUnitVerticles)
-                    if (ov.x != v.x && GetDistanceToPoint(v, ov) <= std::sqrt(UNIT_SIZE.x*UNIT_SIZE.x + UNIT_SIZE.y*UNIT_SIZE.y))
-                        unitTooFar = false;
+                auto a = 0.0;
+                auto b = 0.0;
+                auto c = 0.0;
 
-                if (unitTooFar)
-                    continue;
-
-                // calculate area of triangle built on first unit verticle and pair of other unit verticles, 
-                // if the sum of 4 areas is greater than the area of rectangle, the first unit verticle is not inside other unit
-                // to do, skip if distance between verticles is greater than unit rectangle diagonal
-                auto areasSum = 0.0;
-
-                for (int i = 0; i < 4; ++i)
+                if (i < 3)
                 {
-                    auto a = 0.0;
-                    auto b = 0.0;
-                    auto c = 0.0;
-
-                    if (i < 3)
-                    {
-                        a = GetDistanceToPoint(v, otherUnitVerticles[i]);
-                        b = GetDistanceToPoint(v, otherUnitVerticles[i + 1]);
-                        c = GetDistanceToPoint(otherUnitVerticles[i], otherUnitVerticles[i + 1]);
-                    }
-                    else
-                    {
-                        a = GetDistanceToPoint(v, otherUnitVerticles[i]);
-                        b = GetDistanceToPoint(v, otherUnitVerticles[0]);
-                        c = GetDistanceToPoint(otherUnitVerticles[i], otherUnitVerticles[0]);
-                    }
-
-                    areasSum += GetTriangleArea(a, b, c);
+                    a = GetDistanceToPoint(v, otherUnitVerticles[i]);
+                    b = GetDistanceToPoint(v, otherUnitVerticles[i + 1]);
+                    c = GetDistanceToPoint(otherUnitVerticles[i], otherUnitVerticles[i + 1]);
+                }
+                else
+                {
+                    a = GetDistanceToPoint(v, otherUnitVerticles[i]);
+                    b = GetDistanceToPoint(v, otherUnitVerticles[0]);
+                    c = GetDistanceToPoint(otherUnitVerticles[i], otherUnitVerticles[0]);
                 }
 
-                if (static_cast<int>(areasSum) <= UNIT_SIZE.x * UNIT_SIZE.y)
-                    collision = Collision::ENEMY_UNIT;
+                areasSum += GetTriangleArea(a, b, c);
             }
 
-            otherUnit->SetPosition(originalPositionOther);
-            //otherUnit->CalculateVerticles();
-
+            if (static_cast<int>(areasSum) <= UNIT_SIZE.x * UNIT_SIZE.y)
+            {
+                collision.SetType(CollisionType::FRIENDLY_UNIT);
+                collision.SetId_1(unit->GetId());
+                collision.SetId_2(otherUnit->GetId());
+            }
         }
 
-        unit->SetPosition(originalPosition);
-        //unit->CalculateVerticles();
+        otherUnit->SetPosition(originalPositionOther);
+        //otherUnit->CalculateVerticles();
+
     }
+
+    unit->SetPosition(originalPosition);
+    //unit->CalculateVerticles();
 
     return collision;
 }
