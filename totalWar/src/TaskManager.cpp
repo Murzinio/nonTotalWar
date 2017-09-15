@@ -127,6 +127,8 @@ void TaskManager::Rotate(std::shared_ptr<nonTotalWar::Unit> unit)
     destination.y += UNIT_SIZE.y / 2;
 
     auto targetAngle = nonTotalWar::GetAngleToPoint(unitCenter, destination);
+    if (targetAngle < 0)
+        targetAngle = 360.0 + targetAngle;
 
     if (unit->GetTurnedBack())
     {
@@ -146,16 +148,51 @@ void TaskManager::Rotate(std::shared_ptr<nonTotalWar::Unit> unit)
     {
         auto& tasks = unit->GetTasks();
         tasks.pop();
+        m_rotationDirections.erase(unit->GetId());
         return;
     }
     else if (std::abs(absoluteDiffNormalised) > 1.0 && std::abs(absoluteDiffNormalised) < speed / 60.0)
     {
         angleToSet = targetAngle;
     }
-    else if (absoluteDiffNormalised > 0)
-        angleToSet = currentAngle + speed / 60.0;
-    else if (absoluteDiffNormalised < 0)
-        angleToSet = currentAngle - speed / 60.0;
+    
+    // find if it's closer to rotate clockwise or counter clockwise
+    auto rotationDirection = m_rotationDirections.find(unit->GetId());
+
+    if (rotationDirection == m_rotationDirections.end())
+        if (currentAngle < targetAngle)
+        {
+            auto clockwiseDistance = targetAngle - currentAngle;
+            auto counterClockwiseDistance = currentAngle + (360 - targetAngle);
+
+            if (clockwiseDistance < counterClockwiseDistance)
+                m_rotationDirections[unit->GetId()] = RotationDirection::CLOCKWISE;
+            else
+                m_rotationDirections[unit->GetId()] = RotationDirection::COUNTER_CLOCKWISE;
+        }
+        else
+        {
+            auto clockwiseDistance = targetAngle + (360 - currentAngle);
+            auto counterClockwiseDistance = currentAngle - targetAngle;
+
+            if (clockwiseDistance < counterClockwiseDistance)
+                m_rotationDirections[unit->GetId()] = RotationDirection::CLOCKWISE;
+            else
+                m_rotationDirections[unit->GetId()] = RotationDirection::COUNTER_CLOCKWISE;
+        }
+    
+    if (rotationDirection == m_rotationDirections.end())
+        rotationDirection = m_rotationDirections.find(unit->GetId());
+
+    if (rotationDirection->second == RotationDirection::CLOCKWISE)
+        angleToSet = currentAngle + static_cast<double>(speed) / 60.0;
+    else
+        angleToSet = currentAngle - static_cast<double>(speed) / 60.0;
+            
+    if (angleToSet < 0)
+        angleToSet = 360 + angleToSet;
+    else if (angleToSet > 360)
+        angleToSet = angleToSet - 360;
 
     unit->SetAngle(angleToSet);
 }

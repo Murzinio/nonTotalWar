@@ -24,7 +24,7 @@ void GameplayManager::CreateUnits()
         Vector2D positionAi{ static_cast<float>((i * 180) + 300), static_cast<float>(600) };
 
         m_playerUnits["Hoplites" + std::to_string(i) + "_Player"] = std::make_unique<Hoplites>(i, positionPlayer, 0.0);
-        m_aiUnits["Hoplites" + std::to_string(i) + "_AI"] = std::make_unique<Hoplites>(i * -1, positionAi, 180.0);
+       // m_aiUnits["Hoplites" + std::to_string(i) + "_AI"] = std::make_unique<Hoplites>(i * -1, positionAi, 180.0);
     }
 }
 
