@@ -6,7 +6,7 @@ Input::Input()
 {
 }
 
-void Input::HandleEvents()
+void Input::handleEvents()
 {
     SDL_Event e;
 
@@ -26,7 +26,7 @@ void Input::HandleEvents()
             {
                 m_mousePositionMotion.x = e.motion.x;
                 m_mousePositionMotion.y = e.motion.y;
-                CreateSelectionRectangle();
+                createSelectionRectangle();
             }
         }
         else if (e.type == SDL_MOUSEBUTTONDOWN)
@@ -74,12 +74,12 @@ void Input::HandleEvents()
     }
 }
 
-void Input::CreateSelectionRectangle()
+void Input::createSelectionRectangle()
 {
     m_selectionRectangle = {m_mousePositionClick.x, m_mousePositionClick.y, m_mousePositionMotion.x - m_mousePositionClick.x, m_mousePositionMotion.y - m_mousePositionClick.y};
 }
 
-bool Input::GetMouseLBWasReleased()
+bool Input::getMouseLBWasReleased()
 {
     if (m_mouseLBWasReleased)
     {
@@ -90,7 +90,7 @@ bool Input::GetMouseLBWasReleased()
     return false;
 }
 
-bool Input::GetMouseLBClick()
+bool Input::getMouseLBClick()
 {
     if (m_mouseLBClick)
     {
@@ -101,7 +101,7 @@ bool Input::GetMouseLBClick()
     return false;
 }
 
-bool Input::GetKeyUp()
+bool Input::getKeyUp()
 {
     if (m_keyUp)
     {

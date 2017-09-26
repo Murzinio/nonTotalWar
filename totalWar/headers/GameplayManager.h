@@ -35,10 +35,10 @@ namespace nonTotalWar
 
         TaskManager m_taskManager;
 
-        void CreateUnits();
-        void GameLoop();
-        bool IsValidUnitName(const std::string name);
-        bool UnitExists(const std::string name);
+        void createUnits();
+        void gameLoop();
+        bool isValidUnitName(const std::string name) const;
+        bool unitExists(const std::string name) const;
 
         const std::array<const std::string, 1> m_validUnitNames
         { "Hoplites" };
@@ -50,10 +50,10 @@ namespace nonTotalWar
         static constexpr float m_updateInterval{ 1000.0f / 1200.0f };
 
         std::shared_ptr<Unit> m_chosenUnit;
-        bool IsMouseOverFriendlyUnit(SDL_Point mousePosition);
-        bool IsMouseOverEnemyUnit(SDL_Point mousePosition);
+        bool isMouseOverFriendlyUnit(const SDL_Point mousePosition);
+        bool IsMouseOverEnemyUnit(const SDL_Point mousePosition);
 
-        void RemoveDestroyedUnits();
+        void removeDestroyedUnits();
 
     public:
         GameplayManager(Graphics& graphics);

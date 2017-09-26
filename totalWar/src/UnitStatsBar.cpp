@@ -9,11 +9,11 @@ UnitStatsBar::UnitStatsBar(Graphics& graphics, std::map<std::string,
 {
 }
 
-void UnitStatsBar::Draw()
+void UnitStatsBar::draw()
 {
     SDL_Rect srcRect{ 0, 0, 240, 270 };
     SDL_Rect dstRect{ 0, m_size.y * 3, m_size.x, m_size.y};
-    m_graphics.AddToQueue("ui\\unitStatsBar", srcRect, dstRect, 0, { 0, 0 }, SDL_FLIP_NONE);
+    m_graphics.addToQueue("ui\\unitStatsBar", srcRect, dstRect, 0, { 0, 0 }, SDL_FLIP_NONE);
 
     SDL_Point position{ 0, dstRect.y };
     position.y += dstRect.h / 10;
@@ -40,19 +40,19 @@ void UnitStatsBar::Draw()
 
     m_debugTextFields.clear();
     auto unitPosition = unit->GetPosition();
-    AddDebugTextField("Position x", std::to_string(unitPosition.x));
-    AddDebugTextField("Position y", std::to_string(unitPosition.y));
-    AddDebugTextField("Angle", std::to_string(unit->GetAngle()));
-    DrawTextFields();
-    DrawDebugTextFields();
+    addDebugTextField("Position x", std::to_string(unitPosition.x));
+    addDebugTextField("Position y", std::to_string(unitPosition.y));
+    addDebugTextField("Angle", std::to_string(unit->GetAngle()));
+    drawTextFields();
+    drawDebugTextFields();
 }
 
-void UnitStatsBar::AddDebugTextField(std::string name, std::string text)
+void UnitStatsBar::addDebugTextField(const std::string name, const std::string text)
 {
     m_debugTextFields.insert({ name, text });
 }
 
-void UnitStatsBar::DrawTextFields()
+void UnitStatsBar::drawTextFields()
 {
     SDL_Point position{ 0, m_size.y * 3 };
     bool first = true;
@@ -60,28 +60,28 @@ void UnitStatsBar::DrawTextFields()
     {
         if (first)
         {
-            m_graphics.AddTextToQueue(position, field.first + ": " + field.second, { 255, 0, 0 }, 14);
+            m_graphics.addTextToQueue(position, field.first + ": " + field.second, { 255, 0, 0 }, 14);
             first = false;
         }
         else
         {
             position.y += 14;
-            m_graphics.AddTextToQueue(position, field.first + ": " + field.second, { 255, 0, 0 }, 14);
+            m_graphics.addTextToQueue(position, field.first + ": " + field.second, { 255, 0, 0 }, 14);
         }
     }
 }
 
-void UnitStatsBar::DrawDebugTextFields()
+void UnitStatsBar::drawDebugTextFields()
 {
 #ifdef _DEBUG
     SDL_Point position{ 0, (m_size.y * 3) + static_cast<int>((m_textFields.size() + 1) * 14) };
 
-    m_graphics.AddTextToQueue(position, "DEBUG", { 255, 0, 0 }, 14);
+    m_graphics.addTextToQueue(position, "DEBUG", { 255, 0, 0 }, 14);
 
     for (auto & field : m_debugTextFields)
     {
         position.y += 14;
-        m_graphics.AddTextToQueue(position, field.first + ": " + field.second, { 255, 0, 0 }, 14);
+        m_graphics.addTextToQueue(position, field.first + ": " + field.second, { 255, 0, 0 }, 14);
     }
 #endif
 }

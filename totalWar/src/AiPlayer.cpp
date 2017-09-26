@@ -4,13 +4,14 @@ using nonTotalWar::AiPlayer;
 using nonTotalWar::AiApproach;
 using nonTotalWar::Unit;
 
-AiPlayer::AiPlayer(std::map<std::string, std::shared_ptr<Unit>>& enemyUnits, std::map<std::string, std::shared_ptr<Unit>>& units) : m_enemyUnits(const_cast<std::map<std::string, std::shared_ptr<Unit>>&>(enemyUnits)),
-    m_units(units)
+AiPlayer::AiPlayer(std::map<std::string, std::shared_ptr<Unit>>& enemyUnits, std::map<std::string, std::shared_ptr<Unit>>& aiUnits) 
+    : m_enemyUnits(const_cast<std::map<std::string, std::shared_ptr<Unit>>&>(enemyUnits)),
+        m_units(aiUnits)
 {
     
 }
 
-AiApproach AiPlayer::DecideApproach()
+AiApproach AiPlayer::decideApproach() const
 {
     if (m_enemyUnits.size() < m_units.size())
         return AiApproach::FLANK;
@@ -20,19 +21,19 @@ AiApproach AiPlayer::DecideApproach()
         return AiApproach::DEFEND;
 }
 
-void AiPlayer::Flank()
+void AiPlayer::flank() const
 {
 
 }
 
-void AiPlayer::EngageAllUnits()
+void AiPlayer::engageAllUnits() const
 {
     using namespace nonTotalWar::settings;
 
     for (const auto & x : m_units)
     {
         auto unit = x.second;
-        auto closestEnemy = FindClosestEnemyUnit(unit);
+        auto closestEnemy = findClosestEnemyUnit(unit);
         unit->ClearTasks();
         unit->AddTask(UnitTask::ROTATE);
         unit->AddTask(UnitTask::ATTACK);
@@ -46,7 +47,7 @@ void AiPlayer::EngageAllUnits()
     }
 }
 
-std::shared_ptr<Unit> AiPlayer::FindClosestEnemyUnit(const std::shared_ptr<Unit>& unit)
+std::shared_ptr<Unit> AiPlayer::findClosestEnemyUnit(const std::shared_ptr<Unit>& unit) const
 {
     using namespace nonTotalWar::settings;
 
@@ -71,7 +72,7 @@ std::shared_ptr<Unit> AiPlayer::FindClosestEnemyUnit(const std::shared_ptr<Unit>
         center.x += UNIT_SIZE.x;
         center.y += UNIT_SIZE.y;
 
-        distances.emplace(x.first, GetDistanceToPoint(enemyCenter, center));
+        distances.emplace(x.first, getDistanceToPoint(enemyCenter, center));
     }
 
     auto min = WINDOW_WIDTH * 10.0;
@@ -96,31 +97,31 @@ std::shared_ptr<Unit> AiPlayer::FindClosestEnemyUnit(const std::shared_ptr<Unit>
     return nullptr;
 }
 
-void AiPlayer::CreateCombatPlan()
+void AiPlayer::createCombatPlan() const
 {
-    auto approach = DecideApproach();
+    auto approach = decideApproach();
 
     switch (approach)
     {
     case nonTotalWar::AiApproach::FLANK:
-        Flank();
+        flank();
         break;
     case nonTotalWar::AiApproach::ENGAGE:
-        EngageAllUnits();
+        engageAllUnits();
         break;
     default:
         break;
     }
 }
 
-void AiPlayer::UpdateEnemyPositions()
+void AiPlayer::updateEnemyPositions() const
 {
     using namespace nonTotalWar::settings;
 
     for (const auto & x : m_units)
     {
         auto unit = x.second;
-        auto closestEnemy = FindClosestEnemyUnit(unit);
+        auto closestEnemy = findClosestEnemyUnit(unit);
         /*unit->ClearTasks();
         unit->AddTask(UnitTask::ROTATE);
         unit->AddTask(UnitTask::ATTACK);*/

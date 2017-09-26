@@ -17,22 +17,22 @@ namespace nonTotalWar
         SDL_Point m_mousePositionClick;
         SDL_Rect m_selectionRectangle;
 
-        void CreateSelectionRectangle();
+        void createSelectionRectangle();
         bool m_keyUp;
         SDL_Keycode m_key;
 
     public:
         Input();
 
-        void HandleEvents();
+        void handleEvents();
 
-        bool GetQuitRequested() { return m_quit; };
-        bool GetMouseLBPressed() { return m_mouseLBPressed; };
-        bool GetMouseLBWasReleased();
-        SDL_Rect GetSelectionRectangle() { return m_selectionRectangle; };
-        void ClearSelectionRectangle() { m_selectionRectangle = { 0, 0, 0, 0 }; };
-        bool GetMouseLBClick();
-        bool GetMouseRBClicked()
+        bool getQuitRequested() const { return m_quit; }
+        bool getMouseLBPressed() const { return m_mouseLBPressed; }
+        bool getMouseLBWasReleased();
+        SDL_Rect getSelectionRectangle() const { return m_selectionRectangle; }
+        void clearSelectionRectangle() { m_selectionRectangle = { 0, 0, 0, 0 }; }
+        bool getMouseLBClick();
+        bool getMouseRBClicked()
         {
             if (m_mouseRBClick)
             {
@@ -41,11 +41,11 @@ namespace nonTotalWar
             }
 
             return false;
-        };
+        }
 
-        SDL_Point GetMousePositionClick() { return m_mousePositionClick; };
-        bool GetKeyUp();
-        SDL_Keycode GetKey() { return m_key; };
+        SDL_Point getMousePositionClick() const { return m_mousePositionClick; }
+        bool getKeyUp();
+        SDL_Keycode getKey() const { return m_key; }
     };
 }
 

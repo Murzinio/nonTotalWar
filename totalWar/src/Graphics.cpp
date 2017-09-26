@@ -37,7 +37,7 @@ Graphics::Graphics()
 
     if (success)
     {
-        LoadTextures();
+        loadTextures();
         m_texturesLoaded = true;
     }
 }
@@ -53,7 +53,7 @@ Graphics::~Graphics()
     m_font = nullptr;
 }
 
-void Graphics::LoadTextures()
+void Graphics::loadTextures()
 {
     namespace filesystem = std::experimental::filesystem;
 
@@ -63,7 +63,7 @@ void Graphics::LoadTextures()
         if(x.path().string().find("png") != std::string::npos)
             paths.push_back(x.path().string());
 
-    std::string exePath = GetExePath();
+    std::string exePath = getExePath();
 
     for (auto & x : paths)
     {
@@ -79,19 +79,24 @@ void Graphics::LoadTextures()
     }
 }
 
-void Graphics::AddToQueue(std::string texture, SDL_Rect srcRect, SDL_Rect dstRect, double angle, SDL_Point center, SDL_RendererFlip flip, bool isText)
+void Graphics::addToQueue(const std::string texture, 
+    const SDL_Rect srcRect, const SDL_Rect dstRect, 
+    const double angle, 
+    const SDL_Point center, 
+    const SDL_RendererFlip flip, 
+    const bool isText)
 {
-    const auto it = m_textures.find(GetTexturePath(texture));
+    const auto it = m_textures.find(getTexturePath(texture));
     if (it != m_textures.cend())
         m_renderQueue.push({ it->second, srcRect, dstRect, angle, center, flip, isText });
 }
 
-void Graphics::AddToQueue(std::string texture, SDL_Rect srcRect, SDL_Rect dstRect, double angle, SDL_Point center, SDL_RendererFlip flip)
+void Graphics::addToQueue(std::string texture, SDL_Rect srcRect, SDL_Rect dstRect, double angle, SDL_Point center, SDL_RendererFlip flip)
 {
-    AddToQueue(texture, srcRect, dstRect, angle, center, flip, false);
+    addToQueue(texture, srcRect, dstRect, angle, center, flip, false);
 }
 
-void Graphics::RenderFrame()
+void Graphics::renderFrame()
 {
     SDL_RenderClear(m_renderer);
     while (m_renderQueue.size() > 0)
@@ -148,7 +153,7 @@ void Graphics::RenderFrame()
     SDL_RenderPresent(m_renderer);
 }
 
-std::string Graphics::GetExePath()
+std::string Graphics::getExePath()
 {
     HMODULE hModule = GetModuleHandleW(NULL);
     WCHAR path[MAX_PATH];
@@ -177,13 +182,13 @@ std::string Graphics::GetExePath()
     return finalPath;
 }
 
-void Graphics::AddSelectionRectToQueue(SDL_Rect dstRect)
+void Graphics::addSelectionRectToQueue(const SDL_Rect dstRect)
 {
     m_drawSelectionRect = true;
     m_selectionRect = dstRect;
 }
 
-void Graphics::DebugDrawPoint(SDL_Point position)
+void Graphics::debugDrawPoint(SDL_Point position)
 {
 #ifdef _DEBUG
     m_drawDebugPoints = true;
@@ -191,7 +196,10 @@ void Graphics::DebugDrawPoint(SDL_Point position)
 #endif
 }
 
-void Graphics::AddTextToQueue(SDL_Point position, std::string text, SDL_Color color, int size)
+void Graphics::addTextToQueue(const SDL_Point position,
+    const std::string text,
+    SDL_Color color,
+    const int size)
 {
     if (m_fontSize != size)
     {

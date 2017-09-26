@@ -7,15 +7,15 @@ using nonTotalWar::settings::UNIT_SIZE;
 
 GameplayManager::GameplayManager(Graphics& graphics) : m_graphics(graphics), m_taskManager(m_playerUnits, m_aiUnits), m_aiPlayer(m_playerUnits, m_aiUnits)
 {
-    if (graphics.GetTexturesLoaded())
+    if (graphics.getTexturesLoaded())
     {
-        CreateUnits();
-        m_aiPlayer.CreateCombatPlan();
-        GameLoop();
+        createUnits();
+        m_aiPlayer.createCombatPlan();
+        gameLoop();
     }
 }
 
-void GameplayManager::CreateUnits()
+void GameplayManager::createUnits()
 {
     //TODO
     for (int i = 1; i < 3; i++)
@@ -28,14 +28,14 @@ void GameplayManager::CreateUnits()
     }
 }
 
-void GameplayManager::GameLoop()
+void GameplayManager::gameLoop()
 {
     //TODO
     bool initialPosition = true;
     auto counter = 0;
     SDL_Rect selectionRect{ 0, 0, 0, 0 };
 
-    while (!m_input.GetQuitRequested())
+    while (!m_input.getQuitRequested())
     {
         namespace chrono = std::chrono;
         auto now = chrono::high_resolution_clock::now();
@@ -44,12 +44,12 @@ void GameplayManager::GameLoop()
         if (lastUpdateInterval < m_updateInterval)
             continue;
 
-        RemoveDestroyedUnits();
+        removeDestroyedUnits();
 
-        m_input.HandleEvents();
-        if (m_input.GetKeyUp())
+        m_input.handleEvents();
+        if (m_input.getKeyUp())
         {
-            if (m_input.GetKey() == SDLK_b)
+            if (m_input.getKey() == SDLK_b)
                 if (m_selectedUnits.size() > 0)
                 {
                     Unit* previousUnit = nullptr;
@@ -67,9 +67,9 @@ void GameplayManager::GameLoop()
 
         auto selectionRectCreated{ false };
 
-        if (m_input.GetMouseLBPressed())
+        if (m_input.getMouseLBPressed())
         {
-            selectionRect = m_input.GetSelectionRectangle();
+            selectionRect = m_input.getSelectionRectangle();
             selectionRectCreated = true;
 
             if (selectionRect.w < 0)
@@ -85,7 +85,7 @@ void GameplayManager::GameLoop()
             }
         }
 
-        if (m_input.GetMouseLBWasReleased())
+        if (m_input.getMouseLBWasReleased())
         {
             auto anyUnitSelected{ false };
             for (auto & x : m_playerUnits)
@@ -108,7 +108,7 @@ void GameplayManager::GameLoop()
 
             }
 
-            if (!anyUnitSelected && !IsMouseOverFriendlyUnit(m_input.GetMousePositionClick()))
+            if (!anyUnitSelected && !isMouseOverFriendlyUnit(m_input.getMousePositionClick()))
             {
                 for (auto & x : m_playerUnits)
                     x.second->SetSelected(false);
@@ -118,11 +118,11 @@ void GameplayManager::GameLoop()
                 
 
             selectionRect = { 0, 0, 0, 0 };
-            m_input.ClearSelectionRectangle();
+            m_input.clearSelectionRectangle();
         }
 
-        if (m_input.GetMouseLBClick()) 
-            if (IsMouseOverFriendlyUnit(m_input.GetMousePositionClick()))
+        if (m_input.getMouseLBClick()) 
+            if (isMouseOverFriendlyUnit(m_input.getMousePositionClick()))
             {
                 m_chosenUnit->SetSelected(true);
                 m_selectedUnits.clear();
@@ -137,8 +137,8 @@ void GameplayManager::GameLoop()
                 for (auto & x : m_playerUnits)
                     x.second->SetSelected(false);
 
-        if (m_input.GetMouseRBClicked())
-        if (IsMouseOverEnemyUnit(m_input.GetMousePositionClick()))
+        if (m_input.getMouseRBClicked())
+        if (IsMouseOverEnemyUnit(m_input.getMousePositionClick()))
         {
             for (auto & x : m_selectedUnits)
             {
@@ -146,13 +146,13 @@ void GameplayManager::GameLoop()
                 unit->ClearTasks();
                 unit->AddTask(UnitTask::ROTATE);
                 unit->AddTask(UnitTask::ATTACK);
-                unit->SetMoveDestination(m_input.GetMousePositionClick()); //TODO handle required tasks in taskmanager
+                unit->SetMoveDestination(m_input.getMousePositionClick()); //TODO handle required tasks in taskmanager
                 unit->SetAttackTarget(m_chosenUnit);
             }
 
             m_chosenUnit = nullptr;
         }
-        else if (!IsMouseOverFriendlyUnit(m_input.GetMousePositionClick()))
+        else if (!isMouseOverFriendlyUnit(m_input.getMousePositionClick()))
         {
             using nonTotalWar::UnitTask;
 
@@ -163,15 +163,15 @@ void GameplayManager::GameLoop()
                 unit->ClearTasks();
                 unit->AddTask(UnitTask::ROTATE);
                 unit->AddTask(UnitTask::MOVE);
-                unit->SetMoveDestination(m_input.GetMousePositionClick());
+                unit->SetMoveDestination(m_input.getMousePositionClick());
             }
         }
 
-        m_taskManager.HandleTasks();
+        m_taskManager.handleTasks();
 
         m_lastUpdate = now;
 
-        m_graphics.AddToQueue("background\\background", { 0, 0, settings::WINDOW_WIDTH, settings::WINDOW_HEIGHT }, { 0, 0, settings::WINDOW_WIDTH, settings::WINDOW_HEIGHT }, 0, { 0, 0 }, SDL_FLIP_NONE);
+        m_graphics.addToQueue("background\\background", { 0, 0, settings::WINDOW_WIDTH, settings::WINDOW_HEIGHT }, { 0, 0, settings::WINDOW_WIDTH, settings::WINDOW_HEIGHT }, 0, { 0, 0 }, SDL_FLIP_NONE);
 
         for (auto & x : m_playerUnits)
         {
@@ -189,11 +189,11 @@ void GameplayManager::GameLoop()
             if (x.second->GetTurnedBack())
                 flip = SDL_FLIP_VERTICAL;
 
-            m_graphics.AddToQueue("units\\placeholderPlayer", srcRect, dstRect, x.second->GetAngle(), center, flip);
-            m_graphics.AddToQueue("units\\hoplites", srcRect, dstRect, 0.0, center, SDL_FLIP_NONE);
+            m_graphics.addToQueue("units\\placeholderPlayer", srcRect, dstRect, x.second->GetAngle(), center, flip);
+            m_graphics.addToQueue("units\\hoplites", srcRect, dstRect, 0.0, center, SDL_FLIP_NONE);
 
             if (x.second->IsSelected())
-                m_graphics.AddToQueue("units\\placeholderSelected", srcRect, dstRect, x.second->GetAngle(), center, SDL_FLIP_NONE);
+                m_graphics.addToQueue("units\\placeholderSelected", srcRect, dstRect, x.second->GetAngle(), center, SDL_FLIP_NONE);
         }
 
         for (auto & x : m_aiUnits)
@@ -208,33 +208,33 @@ void GameplayManager::GameLoop()
             SDL_Rect srcRect{ 0, 0, 512, 256 };
             SDL_Rect dstRect{ static_cast<int>(position.x), static_cast<int>(position.y), UNIT_SIZE.x, UNIT_SIZE.y };
 
-            m_graphics.AddToQueue("units\\placeholderAI", srcRect, dstRect, angle, center, SDL_FLIP_NONE);
-            m_graphics.AddToQueue("units\\hoplites", srcRect, dstRect, 0, center, SDL_FLIP_NONE);
+            m_graphics.addToQueue("units\\placeholderAI", srcRect, dstRect, angle, center, SDL_FLIP_NONE);
+            m_graphics.addToQueue("units\\hoplites", srcRect, dstRect, 0, center, SDL_FLIP_NONE);
 
             if (x.second->IsSelected())
-                m_graphics.AddToQueue("units\\placeholderSelected", srcRect, dstRect, angle, center, SDL_FLIP_NONE);
+                m_graphics.addToQueue("units\\placeholderSelected", srcRect, dstRect, angle, center, SDL_FLIP_NONE);
         }
 
         if (selectionRectCreated)
         {
-            m_graphics.AddSelectionRectToQueue(selectionRect);
+            m_graphics.addSelectionRectToQueue(selectionRect);
         }
 
         if (m_selectedUnits.size() == 1)
-            m_unitStatsBar.Draw();
+            m_unitStatsBar.draw();
 
 #ifdef _DEBUG
-        m_graphics.AddTextToQueue({ 0, 0 }, "DEBUG", { 255, 0, 0 }, 14);
+        m_graphics.addTextToQueue({ 0, 0 }, "DEBUG", { 255, 0, 0 }, 14);
 
 #endif // _DEBUG
 
-        m_aiPlayer.UpdateEnemyPositions();
+        m_aiPlayer.updateEnemyPositions();
 
-        m_graphics.RenderFrame();
+        m_graphics.renderFrame();
     }
 }
 
-bool GameplayManager::IsValidUnitName(const std::string name)
+bool GameplayManager::isValidUnitName(const std::string name) const
 {
     auto splittedName = nonTotalWar::SplitString(name, '_');
 
@@ -249,7 +249,7 @@ bool GameplayManager::IsValidUnitName(const std::string name)
     return true;
 }
 
-bool GameplayManager::UnitExists(const std::string name)
+bool GameplayManager::unitExists(const std::string name) const
 {
     auto it{ m_playerUnits.find(name) };
     if (it == m_playerUnits.cend())
@@ -262,7 +262,7 @@ bool GameplayManager::UnitExists(const std::string name)
     return true;
 }
 
-bool GameplayManager::IsMouseOverFriendlyUnit(SDL_Point mousePosition)
+bool GameplayManager::isMouseOverFriendlyUnit(const SDL_Point mousePosition)
 {
     for (auto & unit : m_playerUnits)
     {
@@ -278,7 +278,7 @@ bool GameplayManager::IsMouseOverFriendlyUnit(SDL_Point mousePosition)
     return false;
 }
 
-bool GameplayManager::IsMouseOverEnemyUnit(SDL_Point mousePosition)
+bool GameplayManager::IsMouseOverEnemyUnit(const SDL_Point mousePosition)
 {
     for (auto & unit : m_aiUnits)
     {
@@ -294,7 +294,7 @@ bool GameplayManager::IsMouseOverEnemyUnit(SDL_Point mousePosition)
     return false;
 }
 
-void GameplayManager::RemoveDestroyedUnits()
+void GameplayManager::removeDestroyedUnits()
 {
     auto it = m_playerUnits.begin();
     while (it != m_playerUnits.end())

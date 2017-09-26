@@ -21,7 +21,7 @@ Unit::Unit(int id, int attack, int defence, int range, int speed, int soldiers, 
 
 Unit::~Unit() {};
 
-Vector2D Unit::GetPosition()
+Vector2D Unit::GetPosition() const
 {
     if (this == nullptr)
         return { 0, 0 };

@@ -3,13 +3,14 @@
 using nonTotalWar::CollisionManager;
 using nonTotalWar::settings::UNIT_SIZE;
 
-CollisionManager::CollisionManager(std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& units, std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& unitsAi) : m_units(units), m_unitsAi(unitsAi)
+CollisionManager::CollisionManager(const std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& units, 
+    const std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& unitsAi) : m_units(units), m_unitsAi(unitsAi)
 {
 
 }
 
 
-nonTotalWar::Vector2D CollisionManager::GetFuturePosition(std::shared_ptr<nonTotalWar::Unit> unit, int movesForward)
+nonTotalWar::Vector2D CollisionManager::getFuturePosition(const std::shared_ptr<nonTotalWar::Unit> unit, const int movesForward) const
 {
     auto position = unit->GetPosition();
     auto destination = unit->GetMoveDestination();
@@ -53,23 +54,23 @@ nonTotalWar::Vector2D CollisionManager::GetFuturePosition(std::shared_ptr<nonTot
             --futurePosition.y;
         }
 
-    nonTotalWar::Graphics::DebugDrawPoint(futurePosition);
+    nonTotalWar::Graphics::debugDrawPoint(futurePosition);
     //nonTotalWar::Graphics::DebugDrawPoint({ static_cast<int>(futurePosition.x + 1), static_cast<int>(futurePosition.y + 1) });
 
     return futurePosition;
 }
 
-nonTotalWar::CollisionManager::Collision CollisionManager::CheckForCollisions(std::shared_ptr<nonTotalWar::Unit> unit, int range)
+nonTotalWar::CollisionManager::Collision CollisionManager::checkForCollisions(const std::shared_ptr<nonTotalWar::Unit> unit, const int range) const
 {
     if (unit->GetId() < 0)
-        return CheckForCollisionsPlayer(unit, range);
+        return checkForCollisionsPlayer(unit, range);
     else if (unit->GetId() > 0)
-        return CheckForCollisionsAi(unit, range);
+        return checkForCollisionsAi(unit, range);
     else
         return Collision(nonTotalWar::CollisionType::NONE, 0, 0);
 }
 
-nonTotalWar::CollisionManager::Collision CollisionManager::CheckForCollisionsPlayer(std::shared_ptr<nonTotalWar::Unit> unit, int range)
+nonTotalWar::CollisionManager::Collision CollisionManager::checkForCollisionsPlayer(const std::shared_ptr<nonTotalWar::Unit> unit, const int range) const
 {
     using nonTotalWar::CollisionManager;
 
@@ -79,7 +80,7 @@ nonTotalWar::CollisionManager::Collision CollisionManager::CheckForCollisionsPla
 
     auto originalPosition = unit->GetPosition();
 
-    unit->SetPosition(GetFuturePosition(unit, range));
+    unit->SetPosition(getFuturePosition(unit, range));
     unit->CalculateVerticles();
 
     auto unitVerticles = unit->GetVerticles();
@@ -92,7 +93,7 @@ nonTotalWar::CollisionManager::Collision CollisionManager::CheckForCollisionsPla
         auto otherUnit = y.second;
 
         auto originalPositionOther = otherUnit->GetPosition();
-        otherUnit->SetPosition(GetFuturePosition(otherUnit, 10));
+        otherUnit->SetPosition(getFuturePosition(otherUnit, 10));
         otherUnit->CalculateVerticles();
 
         auto otherUnitVerticles = otherUnit->GetVerticles();
@@ -103,7 +104,7 @@ nonTotalWar::CollisionManager::Collision CollisionManager::CheckForCollisionsPla
         {
             // if distance to every verticle of other unit is greater than unit rectangle diagonal, skip checks
             for (auto & ov : otherUnitVerticles)
-                if (ov.x != v.x && GetDistanceToPoint(v, ov) <= std::sqrt(UNIT_SIZE.x * UNIT_SIZE.x + UNIT_SIZE.y * UNIT_SIZE.y))
+                if (ov.x != v.x && getDistanceToPoint(v, ov) <= std::sqrt(UNIT_SIZE.x * UNIT_SIZE.x + UNIT_SIZE.y * UNIT_SIZE.y))
                     unitTooFar = false;
 
             if (unitTooFar)
@@ -122,25 +123,25 @@ nonTotalWar::CollisionManager::Collision CollisionManager::CheckForCollisionsPla
 
                 if (i < 3)
                 {
-                    a = GetDistanceToPoint(v, otherUnitVerticles[i]);
-                    b = GetDistanceToPoint(v, otherUnitVerticles[i + 1]);
-                    c = GetDistanceToPoint(otherUnitVerticles[i], otherUnitVerticles[i + 1]);
+                    a = getDistanceToPoint(v, otherUnitVerticles[i]);
+                    b = getDistanceToPoint(v, otherUnitVerticles[i + 1]);
+                    c = getDistanceToPoint(otherUnitVerticles[i], otherUnitVerticles[i + 1]);
                 }
                 else
                 {
-                    a = GetDistanceToPoint(v, otherUnitVerticles[i]);
-                    b = GetDistanceToPoint(v, otherUnitVerticles[0]);
-                    c = GetDistanceToPoint(otherUnitVerticles[i], otherUnitVerticles[0]);
+                    a = getDistanceToPoint(v, otherUnitVerticles[i]);
+                    b = getDistanceToPoint(v, otherUnitVerticles[0]);
+                    c = getDistanceToPoint(otherUnitVerticles[i], otherUnitVerticles[0]);
                 }
 
-                areasSum += GetTriangleArea(a, b, c);
+                areasSum += getTriangleArea(a, b, c);
             }
 
             if (static_cast<int>(areasSum) <= UNIT_SIZE.x * UNIT_SIZE.y)
             {
-                collision.SetType(CollisionType::ENEMY_UNIT);
-                collision.SetId_1(unit->GetId());
-                collision.SetId_2(otherUnit->GetId());
+                collision.setType(CollisionType::ENEMY_UNIT);
+                collision.setId_1(unit->GetId());
+                collision.setId_2(otherUnit->GetId());
             }
         }
 
@@ -156,7 +157,7 @@ nonTotalWar::CollisionManager::Collision CollisionManager::CheckForCollisionsPla
 
 }
 
-nonTotalWar::CollisionManager::Collision CollisionManager::CheckForCollisionsAi(std::shared_ptr<nonTotalWar::Unit> unit, int range)
+nonTotalWar::CollisionManager::Collision CollisionManager::checkForCollisionsAi(const std::shared_ptr<nonTotalWar::Unit> unit, const int range) const
 {
     using nonTotalWar::CollisionManager;
 
@@ -166,7 +167,7 @@ nonTotalWar::CollisionManager::Collision CollisionManager::CheckForCollisionsAi(
 
     auto originalPosition = unit->GetPosition();
 
-    unit->SetPosition(GetFuturePosition(unit, range));
+    unit->SetPosition(getFuturePosition(unit, range));
     unit->CalculateVerticles();
 
     auto unitVerticles = unit->GetVerticles();
@@ -176,7 +177,7 @@ nonTotalWar::CollisionManager::Collision CollisionManager::CheckForCollisionsAi(
         auto otherUnit = y.second;
 
         auto originalPositionOther = otherUnit->GetPosition();
-        otherUnit->SetPosition(GetFuturePosition(otherUnit, range));
+        otherUnit->SetPosition(getFuturePosition(otherUnit, range));
         otherUnit->CalculateVerticles();
 
         auto otherUnitVerticles = otherUnit->GetVerticles();
@@ -187,7 +188,7 @@ nonTotalWar::CollisionManager::Collision CollisionManager::CheckForCollisionsAi(
         {
             // if distance to every verticle of other unit is greater than unit rectangle diagonal, skip checks
             for (auto & ov : otherUnitVerticles)
-                if (ov.x != v.x && GetDistanceToPoint(v, ov) <= std::sqrt(UNIT_SIZE.x*UNIT_SIZE.x + UNIT_SIZE.y*UNIT_SIZE.y))
+                if (ov.x != v.x && getDistanceToPoint(v, ov) <= std::sqrt(UNIT_SIZE.x*UNIT_SIZE.x + UNIT_SIZE.y*UNIT_SIZE.y))
                     unitTooFar = false;
 
             if (unitTooFar)
@@ -206,25 +207,25 @@ nonTotalWar::CollisionManager::Collision CollisionManager::CheckForCollisionsAi(
 
                 if (i < 3)
                 {
-                    a = GetDistanceToPoint(v, otherUnitVerticles[i]);
-                    b = GetDistanceToPoint(v, otherUnitVerticles[i + 1]);
-                    c = GetDistanceToPoint(otherUnitVerticles[i], otherUnitVerticles[i + 1]);
+                    a = getDistanceToPoint(v, otherUnitVerticles[i]);
+                    b = getDistanceToPoint(v, otherUnitVerticles[i + 1]);
+                    c = getDistanceToPoint(otherUnitVerticles[i], otherUnitVerticles[i + 1]);
                 }
                 else
                 {
-                    a = GetDistanceToPoint(v, otherUnitVerticles[i]);
-                    b = GetDistanceToPoint(v, otherUnitVerticles[0]);
-                    c = GetDistanceToPoint(otherUnitVerticles[i], otherUnitVerticles[0]);
+                    a = getDistanceToPoint(v, otherUnitVerticles[i]);
+                    b = getDistanceToPoint(v, otherUnitVerticles[0]);
+                    c = getDistanceToPoint(otherUnitVerticles[i], otherUnitVerticles[0]);
                 }
 
-                areasSum += GetTriangleArea(a, b, c);
+                areasSum += getTriangleArea(a, b, c);
             }
 
             if (static_cast<int>(areasSum) <= UNIT_SIZE.x * UNIT_SIZE.y)
             {
-                collision.SetType(CollisionType::FRIENDLY_UNIT);
-                collision.SetId_1(unit->GetId());
-                collision.SetId_2(otherUnit->GetId());
+                collision.setType(CollisionType::FRIENDLY_UNIT);
+                collision.setId_1(unit->GetId());
+                collision.setId_2(otherUnit->GetId());
             }
         }
 

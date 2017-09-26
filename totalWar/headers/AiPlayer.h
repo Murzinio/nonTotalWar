@@ -28,15 +28,17 @@ namespace nonTotalWar
         const std::map<std::string, std::shared_ptr<Unit>>& m_enemyUnits;
         std::map<std::string, std::shared_ptr<Unit>>& m_units;
 
-        std::shared_ptr<Unit> FindClosestEnemyUnit(const std::shared_ptr<Unit> & unit); //TODO change to finding closest ai unit for each player unit
+        std::shared_ptr<Unit> findClosestEnemyUnit(const std::shared_ptr<Unit>& unit) const; //TODO change to finding closest ai unit for each player unit
         
-        AiApproach DecideApproach();
-        void Flank(); // attack from left and right
-        void EngageAllUnits(); // engage closest enemy unit
+        AiApproach decideApproach() const;
+        void flank() const; // attack from left and right
+        void engageAllUnits() const; // engage closest enemy unit
 
     public:
-        AiPlayer(std::map<std::string, std::shared_ptr<Unit>>& enemyUnits, std::map<std::string, std::shared_ptr<Unit>>& units);
-        void CreateCombatPlan();
-        void UpdateEnemyPositions();
+        AiPlayer(std::map<std::string, std::shared_ptr<Unit>>& enemyUnits,
+            std::map<std::string, std::shared_ptr<Unit>>& aiUnits);
+
+        void createCombatPlan() const;
+        void updateEnemyPositions() const;
     };
 }

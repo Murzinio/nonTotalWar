@@ -9,7 +9,7 @@ TaskManager::TaskManager(std::map<std::string, std::shared_ptr<nonTotalWar::Unit
 
 }
 
-void TaskManager::HandleTasks()
+void TaskManager::handleTasks()
 {
     for (auto & x : m_units)
     {
@@ -23,7 +23,7 @@ void TaskManager::HandleTasks()
             for (int i = 0; i < 3; i++)
                 for (int j = 0; j < 3; j++)
                 {
-                    Graphics::DebugDrawPoint({ point.x + j, point.y + i });
+                    Graphics::debugDrawPoint({ point.x + j, point.y + i });
                 }
         }
 
@@ -73,7 +73,7 @@ void TaskManager::HandleTasks()
             for (int i = 0; i < 3; i++)
                 for (int j = 0; j < 3; j++)
                 {
-                    Graphics::DebugDrawPoint({ point.x + j, point.y + i });
+                    Graphics::debugDrawPoint({ point.x + j, point.y + i });
                 }
         }
 
@@ -112,7 +112,7 @@ void TaskManager::HandleTasks()
     }
 }
 
-void TaskManager::Rotate(std::shared_ptr<nonTotalWar::Unit> unit)
+void TaskManager::Rotate(const std::shared_ptr<nonTotalWar::Unit> unit)
 {
     auto unitPos = unit->GetPosition();
     auto unitCenter = unitPos;
@@ -126,7 +126,7 @@ void TaskManager::Rotate(std::shared_ptr<nonTotalWar::Unit> unit)
     destination.x += UNIT_SIZE.x / 2;
     destination.y += UNIT_SIZE.y / 2;
 
-    auto targetAngle = nonTotalWar::GetAngleToPoint(unitCenter, destination);
+    auto targetAngle = nonTotalWar::getAngleToPoint(unitCenter, destination);
     if (targetAngle < 0)
         targetAngle = 360.0 + targetAngle;
 
@@ -197,7 +197,7 @@ void TaskManager::Rotate(std::shared_ptr<nonTotalWar::Unit> unit)
     unit->SetAngle(angleToSet);
 }
 
-void TaskManager::Flip(std::shared_ptr<nonTotalWar::Unit> unit)
+void TaskManager::Flip(const std::shared_ptr<nonTotalWar::Unit> unit)
 {
     auto speed = unit->GetSpeed();
     auto counter = unit->GetMoveCounter();
@@ -231,7 +231,7 @@ void TaskManager::Move(std::shared_ptr<nonTotalWar::Unit> unit)
     auto position = unit->GetPosition();
     auto destination = unit->GetMoveDestination();
 
-    auto distance = static_cast<float>(GetDistanceToPoint(position, destination));
+    auto distance = static_cast<float>(getDistanceToPoint(position, destination));
         
     float valToAddX{ (destination.x - position.x) / distance };
     float valToAddY{ (destination.y - position.y) / distance };
@@ -252,7 +252,7 @@ void TaskManager::Move(std::shared_ptr<nonTotalWar::Unit> unit)
         return;
     }
 
-    auto collision = m_collisionManager.CheckForCollisions(unit, 10);
+    auto collision = m_collisionManager.checkForCollisions(unit, 10);
 
     /*if (collision == nonTotalWar::Collision::FRIENDLY_UNIT)
     {
@@ -294,7 +294,7 @@ void TaskManager::Attack(std::shared_ptr<nonTotalWar::Unit> unit)
     auto position = unit->GetPosition();
     auto range = unit->GetRange();
 
-    if (m_collisionManager.CheckForCollisions(unit, range).GetType() != CollisionType::ENEMY_UNIT)
+    if (m_collisionManager.checkForCollisions(unit, range).getType() != CollisionType::ENEMY_UNIT)
     {
         Move(unit);
     }

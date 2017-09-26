@@ -15,11 +15,10 @@ namespace nonTotalWar
     class CollisionManager
     {
     private:
-        std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& m_units;
-        std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& m_unitsAi;
+        const std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& m_units;
+        const std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& m_unitsAi;
 
-        Vector2D GetFuturePosition(std::shared_ptr<nonTotalWar::Unit> unit, int movesForward);
-        
+        Vector2D getFuturePosition(std::shared_ptr<nonTotalWar::Unit> unit, int movesForward) const;
 
         class Collision
         {
@@ -38,22 +37,23 @@ namespace nonTotalWar
                 m_unitId_2 = id_2;
             }
 
-            void SetType(CollisionType type) { m_type = type; };
-            void SetId_1(int id) { m_unitId_1 = id; };
-            void SetId_2(int id) { m_unitId_2 = id; };
+            void setType(const CollisionType type) { m_type = type; }
+            void setId_1(const int id) { m_unitId_1 = id; }
+            void setId_2(const int id) { m_unitId_2 = id; }
 
-            CollisionType GetType() { return m_type; };
-            int GetId_1() { return  m_unitId_1; };
-            int GetId_2() { return  m_unitId_2; };
+            CollisionType getType() const { return m_type; }
+            int getId_1() const { return  m_unitId_1; }
+            int getId_2() const { return  m_unitId_2; }
         };
 
-        Collision CheckForCollisionsPlayer(std::shared_ptr<nonTotalWar::Unit> unit, int range);
-        Collision CheckForCollisionsAi(std::shared_ptr<nonTotalWar::Unit> unit, int range);
+        Collision checkForCollisionsPlayer(const std::shared_ptr<nonTotalWar::Unit> unit, const int range) const;
+        Collision checkForCollisionsAi(const std::shared_ptr<nonTotalWar::Unit> unit, const int range) const;
 
     public:
-        CollisionManager(std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& units, std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& unitsAi);
+        CollisionManager(const std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& units, 
+            const std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& unitsAi);
 
-        Collision CheckForCollisions(std::shared_ptr<nonTotalWar::Unit> unit, int range);
+        Collision checkForCollisions(const std::shared_ptr<nonTotalWar::Unit> unit, const int range) const;
         
     };
 }

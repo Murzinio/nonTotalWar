@@ -35,14 +35,14 @@ namespace nonTotalWar
         TaskManager(std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& units, 
             std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& unitsAi);
 
-        void HandleTasks();
+        void handleTasks();
 
-        void Rotate(std::shared_ptr<nonTotalWar::Unit> unit);
-        void Flip(std::shared_ptr<nonTotalWar::Unit> unit);
-        void Move(std::shared_ptr<nonTotalWar::Unit> unit);
-        void Attack(std::shared_ptr<nonTotalWar::Unit> unit);
-        void ProcessFighting(std::shared_ptr<nonTotalWar::Unit> unit, 
-            std::shared_ptr<nonTotalWar::Unit> enemyUnit);
+        void Rotate(const std::shared_ptr<nonTotalWar::Unit> unit);
+        void Flip(const std::shared_ptr<nonTotalWar::Unit> unit);
+        void Move(const std::shared_ptr<nonTotalWar::Unit> unit);
+        void Attack(const std::shared_ptr<nonTotalWar::Unit> unit);
+        void ProcessFighting(const std::shared_ptr<nonTotalWar::Unit> unit, 
+            const std::shared_ptr<nonTotalWar::Unit> enemyUnit);
     };
 }
 

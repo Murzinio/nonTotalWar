@@ -32,9 +32,9 @@ namespace nonTotalWar
         int m_fontSize{ 0 };
         std::map<std::string, SDL_Texture*> m_textTextures;
 
-        void LoadTextures();
+        void loadTextures(); //TODO see why can't be set to const
         bool m_texturesLoaded{ false };
-        std::string GetTexturePath(std::string textureName);
+        std::string getTexturePath(const std::string textureName) const;
 
         struct RenderQueueItem
         {
@@ -54,22 +54,38 @@ namespace nonTotalWar
         static bool m_drawDebugPoints;
         static std::vector<SDL_Point> m_debugPoints;
 
-        std::string GetExePath();
+        std::string getExePath();
 
     public:
         Graphics();
         ~Graphics();
 
-        void AddToQueue(std::string texture, SDL_Rect srcRect, SDL_Rect dstRect, double angle, SDL_Point center, SDL_RendererFlip flip, bool isText);
-        void AddToQueue(std::string texture, SDL_Rect srcRect, SDL_Rect dstRect, double angle, SDL_Point center, SDL_RendererFlip flip);
-        void AddSelectionRectToQueue(SDL_Rect dstRect);
-        void AddTextToQueue(SDL_Point position, std::string text, SDL_Color color, int size);
-        static void DebugDrawPoint(SDL_Point position);
-        void RenderFrame();
-        bool GetTexturesLoaded() { return m_texturesLoaded; };
+        //TODO use default parameters instead of overloading
+        void addToQueue(const std::string texture,
+            const SDL_Rect srcRect, const SDL_Rect dstRect,
+            const double angle,
+            const SDL_Point center,
+            const SDL_RendererFlip flip,
+            const bool isText); 
+
+        void addToQueue(const std::string texture,
+            const SDL_Rect srcRect, const SDL_Rect dstRect,
+            const double angle,
+            const SDL_Point center,
+            const SDL_RendererFlip flip);
+
+        void addSelectionRectToQueue(const SDL_Rect dstRect);
+        void addTextToQueue(const SDL_Point position, 
+            const std::string text, 
+            SDL_Color color, 
+            const int size);
+
+        static void debugDrawPoint(const SDL_Point position);
+        void renderFrame();
+        bool getTexturesLoaded() const { return m_texturesLoaded; };
     };
 
-    inline std::string Graphics::GetTexturePath(std::string textureName)
+    inline std::string Graphics::getTexturePath(const std::string textureName) const
     {
         return "resources\\" + textureName + ".png";
     };

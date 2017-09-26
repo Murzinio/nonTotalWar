@@ -11,7 +11,7 @@ namespace nonTotalWar
     private:
         Graphics& m_graphics;
         std::map<std::string, std::shared_ptr<Unit >>& m_selectedUnits;
-        const SDL_Point m_size{ settings::WINDOW_WIDTH / 8, settings::WINDOW_HEIGHT / 4};
+        static constexpr SDL_Point m_size{ settings::WINDOW_WIDTH / 8, settings::WINDOW_HEIGHT / 4};
 
         std::map<std::string, std::string> m_textFields
         { { "State", ""},
@@ -19,14 +19,14 @@ namespace nonTotalWar
         };
         std::map<std::string, std::string> m_debugTextFields;
 
-        void DrawTextFields();
-        void DrawDebugTextFields();
+        void drawTextFields();
+        void drawDebugTextFields();
     public:
         UnitStatsBar(Graphics& graphics, 
             std::map<std::string, std::shared_ptr<Unit>>& selectedUnits);
-        void Draw();
+        void draw();
         
-        void AddDebugTextField(std::string name, std::string text);
+        void addDebugTextField(const std::string name, const std::string text);
     };
 }
 

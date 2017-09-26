@@ -10,7 +10,7 @@
 
 namespace nonTotalWar
 {
-    inline std::vector<std::string> SplitString(std::string input, char splitter)
+    inline std::vector<std::string> SplitString(const std::string input, const char splitter)
     {
         std::stringstream strStream(input);
         std::string segment;
@@ -24,17 +24,17 @@ namespace nonTotalWar
         return seglist;
     }
 
-    inline double GetAngleToPoint(SDL_Point first, SDL_Point second)
+    inline double getAngleToPoint(const SDL_Point first, const SDL_Point second)
     {
         return std::atan2(second.x - first.x, second.y - first.y) * (180.0 / 3.14159) * - 1.0;
     }
 
-    inline double GetDistanceToPoint(SDL_Point first, SDL_Point second)
+    inline double getDistanceToPoint(const SDL_Point first, const SDL_Point second)
     {
         return std::sqrt(std::pow(second.x - first.x, 2.0) + std::pow(second.y - first.y, 2.0));
     }
 
-    inline double GetTriangleArea(double a, double b, double c)
+    inline double getTriangleArea(const double a, const double b, const double c)
     {
         // using Heron's formula
         auto s = (a + b + c) / 2;
