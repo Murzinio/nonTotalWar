@@ -12,12 +12,12 @@ Unit::Unit(int id, int attack, int defence, int range, int speed, int soldiers, 
     m_soldiers = soldiers;
     m_angle = angle;
 
-    CalculateVerticles();
+    calculateVerticles();
 }
 
 Unit::~Unit() {};
 
-Vector2D Unit::GetPosition() const
+Vector2D Unit::getPosition() const
 {
     if (this == nullptr)
         return { 0, 0 };
@@ -25,12 +25,12 @@ Vector2D Unit::GetPosition() const
     return m_position;
 }
 
-void Unit::SetPosition(Vector2D newPosition)
+void Unit::setPosition(Vector2D newPosition)
 {
     m_position = newPosition;
 }
 
-SDL_Point Unit::GetMoveDestination()
+SDL_Point Unit::getMoveDestination()
 {
     if (m_tasks.size() > 0)
         return m_moveDestination;
@@ -39,7 +39,7 @@ SDL_Point Unit::GetMoveDestination()
     return nullPoint;
 }
 
-void Unit::CalculateVerticles()
+void Unit::calculateVerticles()
 {
     auto radians = m_angle * (3.14159265 / 180);
     using namespace settings;
@@ -102,7 +102,7 @@ void Unit::CalculateVerticles()
     m_verticles[3] = { static_cast<int>(newX), static_cast<int>(newY) };
 }
 
-void Unit::SetMoveDestination(SDL_Point destination)
+void Unit::setMoveDestination(SDL_Point destination)
 {
     using namespace settings;
 
@@ -112,7 +112,7 @@ void Unit::SetMoveDestination(SDL_Point destination)
     m_moveCounter = 0;
 }
 
-void Unit::SetMoveDestination(SDL_Point destination, bool dontResetMoveCounter)
+void Unit::setMoveDestination(SDL_Point destination, bool dontResetMoveCounter)
 {
     using namespace settings;
 

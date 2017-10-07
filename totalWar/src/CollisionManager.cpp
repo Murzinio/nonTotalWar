@@ -9,8 +9,8 @@ CollisionManager::CollisionManager(const std::map<std::string, std::shared_ptr<U
 
 Vector2D CollisionManager::getFuturePosition(const std::shared_ptr<Unit> unit, const int movesForward) const
 {
-    auto position = unit->GetPosition();
-    auto destination = unit->GetMoveDestination();
+    auto position = unit->getPosition();
+    auto destination = unit->getMoveDestination();
 
     if (destination.x == 0 && destination.y == 0)
         return position;
@@ -59,9 +59,9 @@ Vector2D CollisionManager::getFuturePosition(const std::shared_ptr<Unit> unit, c
 
 CollisionManager::Collision CollisionManager::checkForCollisions(const std::shared_ptr<Unit> unit, const int range) const
 {
-    if (unit->GetId() < 0)
+    if (unit->getId() < 0)
         return checkForCollisionsPlayer(unit, range);
-    else if (unit->GetId() > 0)
+    else if (unit->getId() > 0)
         return checkForCollisionsAi(unit, range);
     else
         return Collision(CollisionType::NONE, 0, 0);
@@ -73,27 +73,27 @@ CollisionManager::Collision CollisionManager::checkForCollisionsPlayer(const std
 
     auto collision = Collision(CollisionType::NONE, 0, 0);
 
-    auto moveDestination = unit->GetMoveDestination();
+    auto moveDestination = unit->getMoveDestination();
 
-    auto originalPosition = unit->GetPosition();
+    auto originalPosition = unit->getPosition();
 
-    unit->SetPosition(getFuturePosition(unit, range));
-    unit->CalculateVerticles();
+    unit->setPosition(getFuturePosition(unit, range));
+    unit->calculateVerticles();
 
-    auto unitVerticles = unit->GetVerticles();
+    auto unitVerticles = unit->getVerticles();
 
     for (auto & y : m_units)
     {
-        if (unit->GetId() == y.second->GetId())
+        if (unit->getId() == y.second->getId())
             continue;
 
         auto otherUnit = y.second;
 
-        auto originalPositionOther = otherUnit->GetPosition();
-        otherUnit->SetPosition(getFuturePosition(otherUnit, 10));
-        otherUnit->CalculateVerticles();
+        auto originalPositionOther = otherUnit->getPosition();
+        otherUnit->setPosition(getFuturePosition(otherUnit, 10));
+        otherUnit->calculateVerticles();
 
-        auto otherUnitVerticles = otherUnit->GetVerticles();
+        auto otherUnitVerticles = otherUnit->getVerticles();
 
         auto unitTooFar = true;
 
@@ -137,18 +137,18 @@ CollisionManager::Collision CollisionManager::checkForCollisionsPlayer(const std
             if (static_cast<int>(areasSum) <= UNIT_SIZE.x * UNIT_SIZE.y)
             {
                 collision.setType(CollisionType::ENEMY_UNIT);
-                collision.setId_1(unit->GetId());
-                collision.setId_2(otherUnit->GetId());
+                collision.setId_1(unit->getId());
+                collision.setId_2(otherUnit->getId());
             }
         }
 
-        otherUnit->SetPosition(originalPositionOther);
-        //otherUnit->CalculateVerticles();
+        otherUnit->setPosition(originalPositionOther);
+        //otherUnit->calculateVerticles();
 
     }
 
-    unit->SetPosition(originalPosition);
-    //unit->CalculateVerticles();
+    unit->setPosition(originalPosition);
+    //unit->calculateVerticles();
 
     return collision;
 
@@ -160,24 +160,24 @@ CollisionManager::Collision CollisionManager::checkForCollisionsAi(const std::sh
 
     auto collision = Collision(CollisionType::NONE, 0, 0);
 
-    auto moveDestination = unit->GetMoveDestination();
+    auto moveDestination = unit->getMoveDestination();
 
-    auto originalPosition = unit->GetPosition();
+    auto originalPosition = unit->getPosition();
 
-    unit->SetPosition(getFuturePosition(unit, range));
-    unit->CalculateVerticles();
+    unit->setPosition(getFuturePosition(unit, range));
+    unit->calculateVerticles();
 
-    auto unitVerticles = unit->GetVerticles();
+    auto unitVerticles = unit->getVerticles();
 
     for (auto & y : m_unitsAi)
     {
         auto otherUnit = y.second;
 
-        auto originalPositionOther = otherUnit->GetPosition();
-        otherUnit->SetPosition(getFuturePosition(otherUnit, range));
-        otherUnit->CalculateVerticles();
+        auto originalPositionOther = otherUnit->getPosition();
+        otherUnit->setPosition(getFuturePosition(otherUnit, range));
+        otherUnit->calculateVerticles();
 
-        auto otherUnitVerticles = otherUnit->GetVerticles();
+        auto otherUnitVerticles = otherUnit->getVerticles();
 
         auto unitTooFar = true;
 
@@ -221,18 +221,18 @@ CollisionManager::Collision CollisionManager::checkForCollisionsAi(const std::sh
             if (static_cast<int>(areasSum) <= UNIT_SIZE.x * UNIT_SIZE.y)
             {
                 collision.setType(CollisionType::FRIENDLY_UNIT);
-                collision.setId_1(unit->GetId());
-                collision.setId_2(otherUnit->GetId());
+                collision.setId_1(unit->getId());
+                collision.setId_2(otherUnit->getId());
             }
         }
 
-        otherUnit->SetPosition(originalPositionOther);
-        //otherUnit->CalculateVerticles();
+        otherUnit->setPosition(originalPositionOther);
+        //otherUnit->calculateVerticles();
 
     }
 
-    unit->SetPosition(originalPosition);
-    //unit->CalculateVerticles();
+    unit->setPosition(originalPosition);
+    //unit->calculateVerticles();
 
     return collision;
 }

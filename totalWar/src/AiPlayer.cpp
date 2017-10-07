@@ -31,16 +31,16 @@ void AiPlayer::engageAllUnits() const
     {
         auto unit = x.second;
         auto closestEnemy = findClosestEnemyUnit(unit);
-        unit->ClearTasks();
-        unit->AddTask(UnitTask::ROTATE);
-        unit->AddTask(UnitTask::ATTACK);
+        unit->clearTasks();
+        unit->addTask(UnitTask::ROTATE);
+        unit->addTask(UnitTask::ATTACK);
 
-        auto enemyPosition = closestEnemy->GetPosition();
+        auto enemyPosition = closestEnemy->getPosition();
         enemyPosition.x += UNIT_SIZE.x / 2;
         enemyPosition.y += UNIT_SIZE.y / 2;
 
-        unit->SetMoveDestination(enemyPosition, true);
-        unit->SetAttackTarget(closestEnemy);
+        unit->setMoveDestination(enemyPosition, true);
+        unit->setAttackTarget(closestEnemy);
     }
 }
 
@@ -56,7 +56,7 @@ std::shared_ptr<Unit> AiPlayer::findClosestEnemyUnit(const std::shared_ptr<Unit>
         if (enemyUnit == nullptr)
             continue;
 
-        auto enemyPosition = enemyUnit->GetPosition();
+        auto enemyPosition = enemyUnit->getPosition();
         auto enemyCenter = enemyPosition;
         enemyCenter.x += UNIT_SIZE.x;
         enemyCenter.y += UNIT_SIZE.y;
@@ -64,7 +64,7 @@ std::shared_ptr<Unit> AiPlayer::findClosestEnemyUnit(const std::shared_ptr<Unit>
         if (unit == nullptr)
             continue;
 
-        auto position = unit->GetPosition();
+        auto position = unit->getPosition();
         auto center = position;
         center.x += UNIT_SIZE.x;
         center.y += UNIT_SIZE.y;
@@ -119,14 +119,14 @@ void AiPlayer::updateEnemyPositions() const
     {
         auto unit = x.second;
         auto closestEnemy = findClosestEnemyUnit(unit);
-        /*unit->ClearTasks();
-        unit->AddTask(UnitTask::ROTATE);
-        unit->AddTask(UnitTask::ATTACK);*/
-        auto enemyPosition = closestEnemy->GetPosition();
+        /*unit->clearTasks();
+        unit->addTask(UnitTask::ROTATE);
+        unit->addTask(UnitTask::ATTACK);*/
+        auto enemyPosition = closestEnemy->getPosition();
         enemyPosition.x += UNIT_SIZE.x / 2;
         enemyPosition.y += UNIT_SIZE.y / 2;
 
-        unit->SetMoveDestination(enemyPosition, true);
-        unit->SetAttackTarget(closestEnemy);
+        unit->setMoveDestination(enemyPosition, true);
+        unit->setAttackTarget(closestEnemy);
     }
 }

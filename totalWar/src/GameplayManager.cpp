@@ -56,7 +56,7 @@ void GameplayManager::gameLoop()
                         if (unit.get() != previousUnit)
                         {
                             previousUnit = unit.get();
-                            unit->AddTask(UnitTask::FLIP);
+                            unit->addTask(UnitTask::FLIP);
                         }
                     }
                 }
@@ -87,28 +87,28 @@ void GameplayManager::gameLoop()
             auto anyUnitSelected{ false };
             for (auto & x : m_playerUnits)
             {
-                auto position = x.second->GetPosition();
+                auto position = x.second->getPosition();
                 position.x += UNIT_SIZE.x / 2;
                 position.y += UNIT_SIZE.y / 2;
 
                 if ((position.x >= selectionRect.x && position.x <= selectionRect.x + selectionRect.w)
                     & (position.y >= selectionRect.y && position.y <= selectionRect.y + selectionRect.h))
                 {
-                    x.second->SetSelected(true);
+                    x.second->setSelected(true);
                     if (!anyUnitSelected)
                         anyUnitSelected = true;
 
                     m_selectedUnits.emplace(x);
                 }
                 else
-                    x.second->SetSelected(false);
+                    x.second->setSelected(false);
 
             }
 
             if (!anyUnitSelected && !isMouseOverFriendlyUnit(m_input.getMousePositionClick()))
             {
                 for (auto & x : m_playerUnits)
-                    x.second->SetSelected(false);
+                    x.second->setSelected(false);
 
                 m_selectedUnits.clear();
             }
@@ -121,7 +121,7 @@ void GameplayManager::gameLoop()
         if (m_input.getMouseLBClick()) 
             if (isMouseOverFriendlyUnit(m_input.getMousePositionClick()))
             {
-                m_chosenUnit->SetSelected(true);
+                m_chosenUnit->setSelected(true);
                 m_selectedUnits.clear();
                 
                 for (auto & x : m_playerUnits)
@@ -132,7 +132,7 @@ void GameplayManager::gameLoop()
             }
             else
                 for (auto & x : m_playerUnits)
-                    x.second->SetSelected(false);
+                    x.second->setSelected(false);
 
         if (m_input.getMouseRBClicked())
         if (IsMouseOverEnemyUnit(m_input.getMousePositionClick()))
@@ -140,11 +140,11 @@ void GameplayManager::gameLoop()
             for (auto & x : m_selectedUnits)
             {
                 auto unit = x.second;
-                unit->ClearTasks();
-                unit->AddTask(UnitTask::ROTATE);
-                unit->AddTask(UnitTask::ATTACK);
-                unit->SetMoveDestination(m_input.getMousePositionClick()); //TODO handle required tasks in taskmanager
-                unit->SetAttackTarget(m_chosenUnit);
+                unit->clearTasks();
+                unit->addTask(UnitTask::ROTATE);
+                unit->addTask(UnitTask::ATTACK);
+                unit->setMoveDestination(m_input.getMousePositionClick()); //TODO handle required tasks in taskmanager
+                unit->setAttackTarget(m_chosenUnit);
             }
 
             m_chosenUnit = nullptr;
@@ -155,10 +155,10 @@ void GameplayManager::gameLoop()
             {
                 auto unit = x.second;
 
-                unit->ClearTasks();
-                unit->AddTask(UnitTask::ROTATE);
-                unit->AddTask(UnitTask::MOVE);
-                unit->SetMoveDestination(m_input.getMousePositionClick());
+                unit->clearTasks();
+                unit->addTask(UnitTask::ROTATE);
+                unit->addTask(UnitTask::MOVE);
+                unit->setMoveDestination(m_input.getMousePositionClick());
             }
         }
 
@@ -170,7 +170,7 @@ void GameplayManager::gameLoop()
 
         for (auto & x : m_playerUnits)
         {
-            auto position = x.second->GetPosition();
+            auto position = x.second->getPosition();
 
             SDL_Point center = { UNIT_SIZE.x / 2, UNIT_SIZE.y / 2 };
 
@@ -181,20 +181,20 @@ void GameplayManager::gameLoop()
 
             auto flip = SDL_FLIP_NONE;
 
-            if (x.second->GetTurnedBack())
+            if (x.second->getTurnedBack())
                 flip = SDL_FLIP_VERTICAL;
 
-            m_graphics.addToQueue("units\\placeholderPlayer", srcRect, dstRect, x.second->GetAngle(), center, flip);
+            m_graphics.addToQueue("units\\placeholderPlayer", srcRect, dstRect, x.second->getAngle(), center, flip);
             m_graphics.addToQueue("units\\hoplites", srcRect, dstRect, 0.0, center, SDL_FLIP_NONE);
 
-            if (x.second->IsSelected())
-                m_graphics.addToQueue("units\\placeholderSelected", srcRect, dstRect, x.second->GetAngle(), center, SDL_FLIP_NONE);
+            if (x.second->isSelected())
+                m_graphics.addToQueue("units\\placeholderSelected", srcRect, dstRect, x.second->getAngle(), center, SDL_FLIP_NONE);
         }
 
         for (auto & x : m_aiUnits)
         {
-            auto position = x.second->GetPosition();
-            auto angle = x.second->GetAngle();
+            auto position = x.second->getPosition();
+            auto angle = x.second->getAngle();
 
             SDL_Point center = { UNIT_SIZE.x / 2, UNIT_SIZE.y / 2 };
 
@@ -206,7 +206,7 @@ void GameplayManager::gameLoop()
             m_graphics.addToQueue("units\\placeholderAI", srcRect, dstRect, angle, center, SDL_FLIP_NONE);
             m_graphics.addToQueue("units\\hoplites", srcRect, dstRect, 0, center, SDL_FLIP_NONE);
 
-            if (x.second->IsSelected())
+            if (x.second->isSelected())
                 m_graphics.addToQueue("units\\placeholderSelected", srcRect, dstRect, angle, center, SDL_FLIP_NONE);
         }
 
@@ -263,7 +263,7 @@ bool GameplayManager::isMouseOverFriendlyUnit(const SDL_Point mousePosition)
 
     for (auto & unit : m_playerUnits)
     {
-        auto position = unit.second->GetPosition();
+        auto position = unit.second->getPosition();
         if (mousePosition.x >= position.x && mousePosition.x <= position.x + UNIT_SIZE.x
             && mousePosition.y >= position.y && mousePosition.y <= position.y + UNIT_SIZE.y)
         {
@@ -281,7 +281,7 @@ bool GameplayManager::IsMouseOverEnemyUnit(const SDL_Point mousePosition)
 
     for (auto & unit : m_aiUnits)
     {
-        auto position = unit.second->GetPosition();
+        auto position = unit.second->getPosition();
         if (mousePosition.x >= position.x && mousePosition.x <= position.x + UNIT_SIZE.x
             && mousePosition.y >= position.y && mousePosition.y <= position.y + UNIT_SIZE.y)
         {
@@ -298,7 +298,7 @@ void GameplayManager::removeDestroyedUnits()
     auto it = m_playerUnits.begin();
     while (it != m_playerUnits.end())
     {
-        if (it->second->GetToDestroy())
+        if (it->second->getToDestroy())
         {
 
             it->second == nullptr;
@@ -313,7 +313,7 @@ void GameplayManager::removeDestroyedUnits()
     it = m_selectedUnits.begin();
     while (it != m_selectedUnits.end()) 
     {
-        if (it->second->GetToDestroy()) 
+        if (it->second->getToDestroy()) 
         {
             it->second == nullptr;
             it = m_selectedUnits.erase(it);
@@ -327,7 +327,7 @@ void GameplayManager::removeDestroyedUnits()
     it = m_aiUnits.begin();
     while (it != m_aiUnits.end())
     {
-        if (it->second->GetToDestroy())
+        if (it->second->getToDestroy())
         {
             it->second == nullptr;
             it = m_aiUnits.erase(it);

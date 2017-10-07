@@ -10,9 +10,9 @@ void TaskManager::handleTasks()
     for (auto & x : m_units)
     {
         auto unit = x.second;
-        auto& tasks = unit->GetTasks();
+        auto& tasks = unit->getTasks();
 
-        auto verticles = unit->GetVerticles();
+        auto verticles = unit->getVerticles();
 
         for (auto & point : verticles)
         {
@@ -23,7 +23,7 @@ void TaskManager::handleTasks()
                 }
         }
 
-        unit->CalculateVerticles();
+        unit->calculateVerticles();
 
         if (tasks.size() == 0)
             continue;
@@ -53,15 +53,15 @@ void TaskManager::handleTasks()
                 break;
         }
 
-        //Graphics::DebugDrawPoint(unit->GetMoveDestination());
+        //Graphics::DebugDrawPoint(unit->getMoveDestination());
     }
 
     for (auto & x : m_unitsAi)
     {
         auto unit = x.second;
-        auto& tasks = unit->GetTasks();
+        auto& tasks = unit->getTasks();
 
-        auto verticles = unit->GetVerticles();
+        auto verticles = unit->getVerticles();
 
         for (auto & point : verticles)
         {
@@ -72,7 +72,7 @@ void TaskManager::handleTasks()
                 }
         }
 
-        unit->CalculateVerticles();
+        unit->calculateVerticles();
 
         if (tasks.size() == 0)
             continue;
@@ -101,7 +101,7 @@ void TaskManager::handleTasks()
             break;
         }
 
-        //Graphics::DebugDrawPoint(unit->GetMoveDestination());
+        //Graphics::DebugDrawPoint(unit->getMoveDestination());
     }
 }
 
@@ -109,14 +109,14 @@ void TaskManager::Rotate(const std::shared_ptr<Unit> unit)
 {
     using namespace settings;
 
-    auto unitPos = unit->GetPosition();
+    auto unitPos = unit->getPosition();
     auto unitCenter = unitPos;
 
     unitCenter.x += UNIT_SIZE.x / 2;
     unitCenter.y += UNIT_SIZE.y / 2;
 
-    auto speed = unit->GetSpeed();
-    auto destination = unit->GetMoveDestination();
+    auto speed = unit->getSpeed();
+    auto destination = unit->getMoveDestination();
 
     destination.x += UNIT_SIZE.x / 2;
     destination.y += UNIT_SIZE.y / 2;
@@ -125,14 +125,14 @@ void TaskManager::Rotate(const std::shared_ptr<Unit> unit)
     if (targetAngle < 0)
         targetAngle = 360.0 + targetAngle;
 
-    if (unit->GetTurnedBack())
+    if (unit->getTurnedBack())
     {
         if (targetAngle > 0)
             targetAngle -= 180;
         else
             targetAngle += 180;
     }
-    auto currentAngle = unit->GetAngle();
+    auto currentAngle = unit->getAngle();
     auto angleToSet = 0.0;
 
     auto normalised = std::fmod((targetAngle - currentAngle), 360);
@@ -141,9 +141,9 @@ void TaskManager::Rotate(const std::shared_ptr<Unit> unit)
 
     if (std::abs(absoluteDiffNormalised) <= std::abs(1.0))
     {
-        auto& tasks = unit->GetTasks();
+        auto& tasks = unit->getTasks();
         tasks.pop();
-        m_rotationDirections.erase(unit->GetId());
+        m_rotationDirections.erase(unit->getId());
         return;
     }
     else if (std::abs(absoluteDiffNormalised) > 1.0 && std::abs(absoluteDiffNormalised) < speed / 60.0)
@@ -152,7 +152,7 @@ void TaskManager::Rotate(const std::shared_ptr<Unit> unit)
     }
     
     // find if it's closer to rotate clockwise or counter clockwise
-    auto rotationDirection = m_rotationDirections.find(unit->GetId());
+    auto rotationDirection = m_rotationDirections.find(unit->getId());
 
     if (rotationDirection == m_rotationDirections.end())
         if (currentAngle < targetAngle)
@@ -161,9 +161,9 @@ void TaskManager::Rotate(const std::shared_ptr<Unit> unit)
             auto counterClockwiseDistance = currentAngle + (360 - targetAngle);
 
             if (clockwiseDistance < counterClockwiseDistance)
-                m_rotationDirections[unit->GetId()] = RotationDirection::CLOCKWISE;
+                m_rotationDirections[unit->getId()] = RotationDirection::CLOCKWISE;
             else
-                m_rotationDirections[unit->GetId()] = RotationDirection::COUNTER_CLOCKWISE;
+                m_rotationDirections[unit->getId()] = RotationDirection::COUNTER_CLOCKWISE;
         }
         else
         {
@@ -171,13 +171,13 @@ void TaskManager::Rotate(const std::shared_ptr<Unit> unit)
             auto counterClockwiseDistance = currentAngle - targetAngle;
 
             if (clockwiseDistance < counterClockwiseDistance)
-                m_rotationDirections[unit->GetId()] = RotationDirection::CLOCKWISE;
+                m_rotationDirections[unit->getId()] = RotationDirection::CLOCKWISE;
             else
-                m_rotationDirections[unit->GetId()] = RotationDirection::COUNTER_CLOCKWISE;
+                m_rotationDirections[unit->getId()] = RotationDirection::COUNTER_CLOCKWISE;
         }
     
     if (rotationDirection == m_rotationDirections.end())
-        rotationDirection = m_rotationDirections.find(unit->GetId());
+        rotationDirection = m_rotationDirections.find(unit->getId());
 
     if (rotationDirection->second == RotationDirection::CLOCKWISE)
         angleToSet = currentAngle + static_cast<double>(speed) / 60.0;
@@ -189,42 +189,42 @@ void TaskManager::Rotate(const std::shared_ptr<Unit> unit)
     else if (angleToSet > 360)
         angleToSet = angleToSet - 360;
 
-    unit->SetAngle(angleToSet);
+    unit->setAngle(angleToSet);
 }
 
 void TaskManager::Flip(const std::shared_ptr<Unit> unit)
 {
-    auto speed = unit->GetSpeed();
-    auto counter = unit->GetMoveCounter();
+    auto speed = unit->getSpeed();
+    auto counter = unit->getMoveCounter();
 
     if (counter != 25 - speed)
     {
-        unit->SetMoveCounter(counter + 1);
+        unit->setMoveCounter(counter + 1);
         return;
     }
     else
-        unit->SetMoveCounter(0);
+        unit->setMoveCounter(0);
 
-    unit->SetTurnedBack(!unit->GetTurnedBack());
-    auto& tasks = unit->GetTasks();
+    unit->setTurnedBack(!unit->getTurnedBack());
+    auto& tasks = unit->getTasks();
     tasks.pop();
 }
 
 void TaskManager::Move(std::shared_ptr<Unit> unit)
 {
-    auto speed = unit->GetSpeed();
-    auto counter = unit->GetMoveCounter();
+    auto speed = unit->getSpeed();
+    auto counter = unit->getMoveCounter();
 
     if (counter != 25 - speed)
     {
-        unit->SetMoveCounter(counter + 1);
+        unit->setMoveCounter(counter + 1);
         return;
     }
     else
-        unit->SetMoveCounter(0);
+        unit->setMoveCounter(0);
 
-    auto position = unit->GetPosition();
-    auto destination = unit->GetMoveDestination();
+    auto position = unit->getPosition();
+    auto destination = unit->getMoveDestination();
 
     auto distance = static_cast<float>(getDistanceToPoint(position, destination));
         
@@ -242,7 +242,7 @@ void TaskManager::Move(std::shared_ptr<Unit> unit)
     if (std::abs(position.x - destination.x) < 2.0
         && std::abs(position.y - destination.y) < 2.0)
     {
-        auto& tasks = unit->GetTasks();
+        auto& tasks = unit->getTasks();
         tasks.pop();
         return;
     }
@@ -251,43 +251,43 @@ void TaskManager::Move(std::shared_ptr<Unit> unit)
 
     /*if (collision == Collision::FRIENDLY_UNIT)
     {
-        auto& tasks = unit->GetTasks();
+        auto& tasks = unit->getTasks();
         tasks.pop();
         return;
     }*/
 
-    unit->SetPosition(position);
+    unit->setPosition(position);
 
 }
 
 void TaskManager::Attack(std::shared_ptr<Unit> unit)
 {
-    auto target = unit->GetAttackTarget();
+    auto target = unit->getAttackTarget();
 
-    if (unit->GetToDestroy())
+    if (unit->getToDestroy())
     {
-        target->SetIsFighting(false);
-        target->ClearTasks();
+        target->setIsFighting(false);
+        target->clearTasks();
 
         return;
     }
-    if (target->GetToDestroy())
+    if (target->getToDestroy())
     {
-        unit->SetIsFighting(false);
-        unit->ClearTasks();
+        unit->setIsFighting(false);
+        unit->clearTasks();
 
         return;
     }
 
-    if (unit->GetIsFighting())
+    if (unit->getIsFighting())
     {
         ProcessFighting(unit, target);
         return;
     }
 
-    auto targetPosition = target->GetPosition();
-    auto position = unit->GetPosition();
-    auto range = unit->GetRange();
+    auto targetPosition = target->getPosition();
+    auto position = unit->getPosition();
+    auto range = unit->getRange();
 
     if (m_collisionManager.checkForCollisions(unit, range).getType() != CollisionType::ENEMY_UNIT)
     {
@@ -295,11 +295,11 @@ void TaskManager::Attack(std::shared_ptr<Unit> unit)
     }
     else
     {
-        target->SetIsFighting(true);
-        unit->SetIsFighting(true);
+        target->setIsFighting(true);
+        unit->setIsFighting(true);
     }
 
-    if (unit->GetIsFighting() && target->GetIsFighting())
+    if (unit->getIsFighting() && target->getIsFighting())
         ProcessFighting(unit, target);
 }
 
@@ -307,20 +307,20 @@ void TaskManager::ProcessFighting(std::shared_ptr<Unit> unit, std::shared_ptr<Un
 {
     using namespace settings;
 
-    if (enemyUnit->GetTasks().size() > 0)
-        enemyUnit->ClearTasks();
+    if (enemyUnit->getTasks().size() > 0)
+        enemyUnit->clearTasks();
 
-    if (unit->GetToDestroy())
+    if (unit->getToDestroy())
     {
-        enemyUnit->SetIsFighting(false);
-        enemyUnit->ClearTasks();
+        enemyUnit->setIsFighting(false);
+        enemyUnit->clearTasks();
 
         return;
     }
-    if (enemyUnit->GetToDestroy())
+    if (enemyUnit->getToDestroy())
     {
-        unit->SetIsFighting(false);
-        unit->ClearTasks();
+        unit->setIsFighting(false);
+        unit->clearTasks();
 
         return;
     }
@@ -329,20 +329,20 @@ void TaskManager::ProcessFighting(std::shared_ptr<Unit> unit, std::shared_ptr<Un
     //bool attackedFromFlank{ false };
     
     // chance of killing enemy soldier every frame = (attack stat/100) * combat speed defined in settings (0.5 by default)
-    auto attack = unit->GetAttack();
-    auto soldiers = unit->GetSoldiers();
+    auto attack = unit->getAttack();
+    auto soldiers = unit->getSoldiers();
 
-    if (unit->GetSoldiers() > 0 && intDistribution(mt19937) <= attack * settings::COMBAT_SPEED)
-        unit->KillSoldiers(1);
+    if (unit->getSoldiers() > 0 && intDistribution(mt19937) <= attack * settings::COMBAT_SPEED)
+        unit->killSoldiers(1);
     else if (soldiers == 0)
-        unit->SetToDestroy();
+        unit->setToDestroy();
 
-    //auto enemyAttack = enemyUnit->GetAttack();
-    auto enemySoldiers = enemyUnit->GetSoldiers();
+    //auto enemyAttack = enemyUnit->getAttack();
+    auto enemySoldiers = enemyUnit->getSoldiers();
 
-    if (enemyUnit->GetSoldiers() > 0 && intDistribution(mt19937) <= attack * COMBAT_SPEED)
-        enemyUnit->KillSoldiers(1);
+    if (enemyUnit->getSoldiers() > 0 && intDistribution(mt19937) <= attack * COMBAT_SPEED)
+        enemyUnit->killSoldiers(1);
     else if (enemySoldiers == 0)
-        enemyUnit->SetToDestroy();
+        enemyUnit->setToDestroy();
 
 }

@@ -15,30 +15,30 @@ void UnitStatsBar::draw()
     position.y += dstRect.h / 10;
 
     auto unit = m_selectedUnits.begin()->second;
-    if (unit->GetToDestroy())
+    if (unit->getToDestroy())
         return;
 
     auto& stateField = m_textFields.find("State")->second;
-    auto tasks = unit->GetTasks();
-    if (tasks.size() == 0 && !unit->GetIsFighting())
+    auto tasks = unit->getTasks();
+    if (tasks.size() == 0 && !unit->getIsFighting())
         stateField = "Idle";
-    else if (unit->GetIsFighting())
+    else if (unit->getIsFighting())
         stateField = "Fighting";
     else
         stateField = "Moving";
 
     position.y += dstRect.h / 8;
     auto& soldiersField = m_textFields.find("Soldiers")->second;
-    soldiersField = std::to_string(unit->GetSoldiers());
+    soldiersField = std::to_string(unit->getSoldiers());
 
-    auto angle = unit->GetAngle();
+    auto angle = unit->getAngle();
     auto anglec = std::to_string(angle);
 
     m_debugTextFields.clear();
-    auto unitPosition = unit->GetPosition();
+    auto unitPosition = unit->getPosition();
     addDebugTextField("Position x", std::to_string(unitPosition.x));
     addDebugTextField("Position y", std::to_string(unitPosition.y));
-    addDebugTextField("Angle", std::to_string(unit->GetAngle()));
+    addDebugTextField("Angle", std::to_string(unit->getAngle()));
     drawTextFields();
     drawDebugTextFields();
 }
