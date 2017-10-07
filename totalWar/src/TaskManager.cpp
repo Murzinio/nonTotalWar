@@ -1,4 +1,4 @@
-#include "..\headers\TaskManager.h"
+#include "TaskManager.h"
 
 using nonTotalWar::TaskManager;
 using nonTotalWar::settings::UNIT_SIZE;
@@ -328,8 +328,8 @@ void TaskManager::ProcessFighting(std::shared_ptr<nonTotalWar::Unit> unit, std::
         return;
     }
 
-    bool attackedFromBehind{ false };
-    bool attackedFromFlank{ false };
+    //bool attackedFromBehind{ false };
+    //bool attackedFromFlank{ false };
     
     // chance of killing enemy soldier every frame = (attack stat/100) * combat speed defined in settings (0.5 by default)
     auto attack = unit->GetAttack();
@@ -340,7 +340,7 @@ void TaskManager::ProcessFighting(std::shared_ptr<nonTotalWar::Unit> unit, std::
     else if (soldiers == 0)
         unit->SetToDestroy();
 
-    auto enemyAttack = enemyUnit->GetAttack();
+    //auto enemyAttack = enemyUnit->GetAttack();
     auto enemySoldiers = enemyUnit->GetSoldiers();
 
     if (enemyUnit->GetSoldiers() > 0 && intDistribution(mt19937) <= attack * COMBAT_SPEED)

@@ -1,4 +1,4 @@
-#include "..\headers\AiPlayer.h"
+#include "AiPlayer.h"
 
 using nonTotalWar::AiPlayer;
 using nonTotalWar::AiApproach;

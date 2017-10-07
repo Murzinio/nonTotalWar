@@ -6,11 +6,11 @@
 
 #include <SDL.h>
 
-#include "..\Settings.h"
+#include "Settings.h"
 
 namespace nonTotalWar
 {
-    inline std::vector<std::string> SplitString(const std::string input, const char splitter)
+    inline std::vector<std::string> splitString(const std::string input, const char splitter)
     {
         std::stringstream strStream(input);
         std::string segment;

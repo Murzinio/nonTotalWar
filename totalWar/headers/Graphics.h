@@ -16,8 +16,8 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 // game
-#include "..\Settings.h"
-#include "..\headers\utils.h"
+#include "Settings.h"
+#include "utils.h"
 
 namespace nonTotalWar
 {

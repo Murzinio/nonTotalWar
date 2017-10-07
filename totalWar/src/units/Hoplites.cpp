@@ -1,4 +1,4 @@
-#include "..\..\headers\units\Hoplites.h"
+#include "units\Hoplites.h"
 
 using nonTotalWar::Hoplites;
 using nonTotalWar::Vector2D;

@@ -5,7 +5,7 @@
 #include <math.h>
 #include <memory>
 
-#include "..\utils.h"
+#include "utils.h"
 #include "SDL.h"
 
 namespace nonTotalWar

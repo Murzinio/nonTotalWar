@@ -1,4 +1,4 @@
-#include "..\headers\Graphics.h"
+#include "Graphics.h"
 
 using nonTotalWar::Graphics;
 

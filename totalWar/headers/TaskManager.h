@@ -6,7 +6,7 @@
 
 #include "units\Unit.h"
 #include "Input.h"
-#include "..\settings.h"
+#include "Settings.h"
 #include "Graphics.h"
 #include "CollisionManager.h"
 namespace nonTotalWar

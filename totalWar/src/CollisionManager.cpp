@@ -1,4 +1,4 @@
-#include "..\headers\CollisionManager.h"
+#include "CollisionManager.h"
 
 using nonTotalWar::CollisionManager;
 using nonTotalWar::settings::UNIT_SIZE;

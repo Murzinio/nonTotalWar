@@ -1,4 +1,4 @@
-#include "..\headers\Input.h"
+#include "Input.h"
 
 using nonTotalWar::Input;
 
@@ -40,7 +40,7 @@ void Input::handleEvents()
             m_mousePositionClick.y = e.button.y;
 
         }
-        else if (e.type = SDL_MOUSEBUTTONUP)
+        else if (e.type == SDL_MOUSEBUTTONUP)
         {
             if (e.button.button == SDL_BUTTON_LEFT && e.button.state == SDL_RELEASED && e.button.clicks == 1)
             {
@@ -66,7 +66,7 @@ void Input::handleEvents()
 
         }
 
-        if (e.type = SDL_KEYUP)
+        if (e.type == SDL_KEYUP)
         {
             m_keyUp = true;
             m_key = e.key.keysym.sym;

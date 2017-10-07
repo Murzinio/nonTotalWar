@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Graphics.h"
-#include "..\settings.h"
+#include "settings.h"
 #include "units\unit.h"
 
 namespace nonTotalWar

@@ -1,4 +1,4 @@
-#include "..\headers\GameplayManager.h"
+#include "GameplayManager.h"
 
 using nonTotalWar::GameplayManager;
 using nonTotalWar::Graphics;
@@ -31,7 +31,7 @@ void GameplayManager::createUnits()
 void GameplayManager::gameLoop()
 {
     //TODO
-    bool initialPosition = true;
+    //bool initialPosition = true;
     auto counter = 0;
     SDL_Rect selectionRect{ 0, 0, 0, 0 };
 
@@ -236,7 +236,7 @@ void GameplayManager::gameLoop()
 
 bool GameplayManager::isValidUnitName(const std::string name) const
 {
-    auto splittedName = nonTotalWar::SplitString(name, '_');
+    auto splittedName = nonTotalWar::splitString(name, '_');
 
     for (auto & x : m_validUnitNames)
         if (std::find(splittedName.cbegin(), splittedName.cend(), x) == splittedName.cend())

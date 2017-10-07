@@ -3,8 +3,8 @@
 #include <SDL.h>
 
 // game
-#include "..\headers\Graphics.h"
-#include "..\headers\GameplayManager.h"
+#include "Graphics.h"
+#include "GameplayManager.h"
 
 namespace nonTotalWar
 {
