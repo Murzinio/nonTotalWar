@@ -1,7 +1,5 @@
 #include "Input.h"
 
-using nonTotalWar::Input;
-
 Input::Input()
 {
 }

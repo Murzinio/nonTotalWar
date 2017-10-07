@@ -1,16 +1,13 @@
 #include "CollisionManager.h"
 
-using nonTotalWar::CollisionManager;
-using nonTotalWar::settings::UNIT_SIZE;
-
-CollisionManager::CollisionManager(const std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& units, 
-    const std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& unitsAi) : m_units(units), m_unitsAi(unitsAi)
+CollisionManager::CollisionManager(const std::map<std::string, std::shared_ptr<Unit>>& units, 
+    const std::map<std::string, std::shared_ptr<Unit>>& unitsAi) : m_units(units), m_unitsAi(unitsAi)
 {
 
 }
 
 
-nonTotalWar::Vector2D CollisionManager::getFuturePosition(const std::shared_ptr<nonTotalWar::Unit> unit, const int movesForward) const
+Vector2D CollisionManager::getFuturePosition(const std::shared_ptr<Unit> unit, const int movesForward) const
 {
     auto position = unit->GetPosition();
     auto destination = unit->GetMoveDestination();
@@ -54,25 +51,25 @@ nonTotalWar::Vector2D CollisionManager::getFuturePosition(const std::shared_ptr<
             --futurePosition.y;
         }
 
-    nonTotalWar::Graphics::debugDrawPoint(futurePosition);
-    //nonTotalWar::Graphics::DebugDrawPoint({ static_cast<int>(futurePosition.x + 1), static_cast<int>(futurePosition.y + 1) });
+    Graphics::debugDrawPoint(futurePosition);
+    //Graphics::DebugDrawPoint({ static_cast<int>(futurePosition.x + 1), static_cast<int>(futurePosition.y + 1) });
 
     return futurePosition;
 }
 
-nonTotalWar::CollisionManager::Collision CollisionManager::checkForCollisions(const std::shared_ptr<nonTotalWar::Unit> unit, const int range) const
+CollisionManager::Collision CollisionManager::checkForCollisions(const std::shared_ptr<Unit> unit, const int range) const
 {
     if (unit->GetId() < 0)
         return checkForCollisionsPlayer(unit, range);
     else if (unit->GetId() > 0)
         return checkForCollisionsAi(unit, range);
     else
-        return Collision(nonTotalWar::CollisionType::NONE, 0, 0);
+        return Collision(CollisionType::NONE, 0, 0);
 }
 
-nonTotalWar::CollisionManager::Collision CollisionManager::checkForCollisionsPlayer(const std::shared_ptr<nonTotalWar::Unit> unit, const int range) const
+CollisionManager::Collision CollisionManager::checkForCollisionsPlayer(const std::shared_ptr<Unit> unit, const int range) const
 {
-    using nonTotalWar::CollisionManager;
+    using namespace settings;
 
     auto collision = Collision(CollisionType::NONE, 0, 0);
 
@@ -157,9 +154,9 @@ nonTotalWar::CollisionManager::Collision CollisionManager::checkForCollisionsPla
 
 }
 
-nonTotalWar::CollisionManager::Collision CollisionManager::checkForCollisionsAi(const std::shared_ptr<nonTotalWar::Unit> unit, const int range) const
+CollisionManager::Collision CollisionManager::checkForCollisionsAi(const std::shared_ptr<Unit> unit, const int range) const
 {
-    using nonTotalWar::CollisionManager;
+    using namespace settings;
 
     auto collision = Collision(CollisionType::NONE, 0, 0);
 

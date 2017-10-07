@@ -189,7 +189,6 @@ xcopy "$(SolutionDir)libs\dlls" "$(TargetDir)" /s /e /Y</Command>
     <ClInclude Include="headers\units\Hoplites.h" />
     <ClInclude Include="headers\units\Unit.h" />
     <ClInclude Include="headers\utils.h" />
-    <ClInclude Include="Settings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AiPlayer.cpp" />

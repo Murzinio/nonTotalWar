@@ -1,8 +1,5 @@
 #include "AiPlayer.h"
 
-using nonTotalWar::AiPlayer;
-using nonTotalWar::AiApproach;
-using nonTotalWar::Unit;
 
 AiPlayer::AiPlayer(std::map<std::string, std::shared_ptr<Unit>>& enemyUnits, std::map<std::string, std::shared_ptr<Unit>>& aiUnits) 
     : m_enemyUnits(const_cast<std::map<std::string, std::shared_ptr<Unit>>&>(enemyUnits)),
@@ -28,7 +25,7 @@ void AiPlayer::flank() const
 
 void AiPlayer::engageAllUnits() const
 {
-    using namespace nonTotalWar::settings;
+    using namespace settings;
 
     for (const auto & x : m_units)
     {
@@ -49,7 +46,7 @@ void AiPlayer::engageAllUnits() const
 
 std::shared_ptr<Unit> AiPlayer::findClosestEnemyUnit(const std::shared_ptr<Unit>& unit) const
 {
-    using namespace nonTotalWar::settings;
+    using namespace settings;
 
     std::map<std::string, double> distances;
 
@@ -103,10 +100,10 @@ void AiPlayer::createCombatPlan() const
 
     switch (approach)
     {
-    case nonTotalWar::AiApproach::FLANK:
+    case AiApproach::FLANK:
         flank();
         break;
-    case nonTotalWar::AiApproach::ENGAGE:
+    case AiApproach::ENGAGE:
         engageAllUnits();
         break;
     default:
@@ -116,7 +113,7 @@ void AiPlayer::createCombatPlan() const
 
 void AiPlayer::updateEnemyPositions() const
 {
-    using namespace nonTotalWar::settings;
+    using namespace settings;
 
     for (const auto & x : m_units)
     {

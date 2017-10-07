@@ -1,10 +1,5 @@
 #include "GameplayManager.h"
 
-using nonTotalWar::GameplayManager;
-using nonTotalWar::Graphics;
-using nonTotalWar::Vector2D;
-using nonTotalWar::settings::UNIT_SIZE;
-
 GameplayManager::GameplayManager(Graphics& graphics) : m_graphics(graphics), m_taskManager(m_playerUnits, m_aiUnits), m_aiPlayer(m_playerUnits, m_aiUnits)
 {
     if (graphics.getTexturesLoaded())
@@ -37,6 +32,8 @@ void GameplayManager::gameLoop()
 
     while (!m_input.getQuitRequested())
     {
+        using namespace settings;
+
         namespace chrono = std::chrono;
         auto now = chrono::high_resolution_clock::now();
         auto lastUpdateInterval = chrono::duration_cast<chrono::milliseconds>(now - m_lastUpdate).count();
@@ -154,8 +151,6 @@ void GameplayManager::gameLoop()
         }
         else if (!isMouseOverFriendlyUnit(m_input.getMousePositionClick()))
         {
-            using nonTotalWar::UnitTask;
-
             for (auto & x : m_selectedUnits)
             {
                 auto unit = x.second;
@@ -236,7 +231,7 @@ void GameplayManager::gameLoop()
 
 bool GameplayManager::isValidUnitName(const std::string name) const
 {
-    auto splittedName = nonTotalWar::splitString(name, '_');
+    auto splittedName = splitString(name, '_');
 
     for (auto & x : m_validUnitNames)
         if (std::find(splittedName.cbegin(), splittedName.cend(), x) == splittedName.cend())
@@ -264,6 +259,8 @@ bool GameplayManager::unitExists(const std::string name) const
 
 bool GameplayManager::isMouseOverFriendlyUnit(const SDL_Point mousePosition)
 {
+    using namespace settings;
+
     for (auto & unit : m_playerUnits)
     {
         auto position = unit.second->GetPosition();
@@ -280,6 +277,8 @@ bool GameplayManager::isMouseOverFriendlyUnit(const SDL_Point mousePosition)
 
 bool GameplayManager::IsMouseOverEnemyUnit(const SDL_Point mousePosition)
 {
+    using namespace settings;
+
     for (auto & unit : m_aiUnits)
     {
         auto position = unit.second->GetPosition();

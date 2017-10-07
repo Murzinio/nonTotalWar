@@ -1,9 +1,5 @@
 #include "UnitStatsBar.h"
 
-using nonTotalWar::UnitStatsBar;
-using nonTotalWar::Graphics;
-using nonTotalWar::Unit;
-
 UnitStatsBar::UnitStatsBar(Graphics& graphics, std::map<std::string, 
     std::shared_ptr<Unit>>& selectedUnits) : m_graphics(graphics), m_selectedUnits(selectedUnits)
 {

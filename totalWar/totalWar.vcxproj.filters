@@ -21,9 +21,6 @@
     <ClInclude Include="headers\Graphics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Settings.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="headers\units\Unit.h">
       <Filter>Header Files</Filter>
     </ClInclude>

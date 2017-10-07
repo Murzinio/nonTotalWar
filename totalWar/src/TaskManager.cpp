@@ -1,10 +1,6 @@
 #include "TaskManager.h"
 
-using nonTotalWar::TaskManager;
-using nonTotalWar::settings::UNIT_SIZE;
-using nonTotalWar::settings::COMBAT_SPEED;
-
-TaskManager::TaskManager(std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& units, std::map<std::string, std::shared_ptr<nonTotalWar::Unit>>& unitsAi) : m_units(units), m_unitsAi(unitsAi), m_collisionManager(units, unitsAi)
+TaskManager::TaskManager(std::map<std::string, std::shared_ptr<Unit>>& units, std::map<std::string, std::shared_ptr<Unit>>& unitsAi) : m_units(units), m_unitsAi(unitsAi), m_collisionManager(units, unitsAi)
 {
 
 }
@@ -33,8 +29,7 @@ void TaskManager::handleTasks()
             continue;
 
         auto task = tasks.front();
-        
-        using nonTotalWar::UnitTask;
+       
 
         switch (task)
         {
@@ -84,8 +79,6 @@ void TaskManager::handleTasks()
 
         auto task = tasks.front();
 
-        using nonTotalWar::UnitTask;
-
         switch (task)
         {
         case UnitTask::ROTATE:
@@ -112,8 +105,10 @@ void TaskManager::handleTasks()
     }
 }
 
-void TaskManager::Rotate(const std::shared_ptr<nonTotalWar::Unit> unit)
+void TaskManager::Rotate(const std::shared_ptr<Unit> unit)
 {
+    using namespace settings;
+
     auto unitPos = unit->GetPosition();
     auto unitCenter = unitPos;
 
@@ -126,7 +121,7 @@ void TaskManager::Rotate(const std::shared_ptr<nonTotalWar::Unit> unit)
     destination.x += UNIT_SIZE.x / 2;
     destination.y += UNIT_SIZE.y / 2;
 
-    auto targetAngle = nonTotalWar::getAngleToPoint(unitCenter, destination);
+    auto targetAngle = getAngleToPoint(unitCenter, destination);
     if (targetAngle < 0)
         targetAngle = 360.0 + targetAngle;
 
@@ -197,7 +192,7 @@ void TaskManager::Rotate(const std::shared_ptr<nonTotalWar::Unit> unit)
     unit->SetAngle(angleToSet);
 }
 
-void TaskManager::Flip(const std::shared_ptr<nonTotalWar::Unit> unit)
+void TaskManager::Flip(const std::shared_ptr<Unit> unit)
 {
     auto speed = unit->GetSpeed();
     auto counter = unit->GetMoveCounter();
@@ -215,7 +210,7 @@ void TaskManager::Flip(const std::shared_ptr<nonTotalWar::Unit> unit)
     tasks.pop();
 }
 
-void TaskManager::Move(std::shared_ptr<nonTotalWar::Unit> unit)
+void TaskManager::Move(std::shared_ptr<Unit> unit)
 {
     auto speed = unit->GetSpeed();
     auto counter = unit->GetMoveCounter();
@@ -254,7 +249,7 @@ void TaskManager::Move(std::shared_ptr<nonTotalWar::Unit> unit)
 
     auto collision = m_collisionManager.checkForCollisions(unit, 10);
 
-    /*if (collision == nonTotalWar::Collision::FRIENDLY_UNIT)
+    /*if (collision == Collision::FRIENDLY_UNIT)
     {
         auto& tasks = unit->GetTasks();
         tasks.pop();
@@ -265,7 +260,7 @@ void TaskManager::Move(std::shared_ptr<nonTotalWar::Unit> unit)
 
 }
 
-void TaskManager::Attack(std::shared_ptr<nonTotalWar::Unit> unit)
+void TaskManager::Attack(std::shared_ptr<Unit> unit)
 {
     auto target = unit->GetAttackTarget();
 
@@ -308,8 +303,10 @@ void TaskManager::Attack(std::shared_ptr<nonTotalWar::Unit> unit)
         ProcessFighting(unit, target);
 }
 
-void TaskManager::ProcessFighting(std::shared_ptr<nonTotalWar::Unit> unit, std::shared_ptr<nonTotalWar::Unit> enemyUnit)
+void TaskManager::ProcessFighting(std::shared_ptr<Unit> unit, std::shared_ptr<Unit> enemyUnit)
 {
+    using namespace settings;
+
     if (enemyUnit->GetTasks().size() > 0)
         enemyUnit->ClearTasks();
 
@@ -335,7 +332,7 @@ void TaskManager::ProcessFighting(std::shared_ptr<nonTotalWar::Unit> unit, std::
     auto attack = unit->GetAttack();
     auto soldiers = unit->GetSoldiers();
 
-    if (unit->GetSoldiers() > 0 && intDistribution(mt19937) <= attack * COMBAT_SPEED)
+    if (unit->GetSoldiers() > 0 && intDistribution(mt19937) <= attack * settings::COMBAT_SPEED)
         unit->KillSoldiers(1);
     else if (soldiers == 0)
         unit->SetToDestroy();

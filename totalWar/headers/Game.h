@@ -6,15 +6,12 @@
 #include "Graphics.h"
 #include "GameplayManager.h"
 
-namespace nonTotalWar
+class Game
 {
-    class Game
-    {
-    private:
-        Graphics m_graphics;
-        GameplayManager m_gameplayManager{ m_graphics };
-    public:
-        Game();
-        ~Game();
-    };
-}
+private:
+    Graphics m_graphics;
+    GameplayManager m_gameplayManager{ m_graphics };
+public:
+    Game();
+    ~Game();
+};

@@ -1,7 +1,5 @@
 #include "Graphics.h"
 
-using nonTotalWar::Graphics;
-
 bool Graphics::m_drawDebugPoints = true;
 std::vector<SDL_Point> Graphics::m_debugPoints = { { 0, 0 } };
 

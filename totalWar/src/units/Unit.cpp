@@ -1,10 +1,6 @@
 #include "units\Unit.h"
 
-using nonTotalWar::Unit;
-using nonTotalWar::Vector2D;
-using nonTotalWar::settings::UNIT_SIZE;
-
-Unit::Unit(int id, int attack, int defence, int range, int speed, int soldiers, nonTotalWar::Vector2D position, double angle)
+Unit::Unit(int id, int attack, int defence, int range, int speed, int soldiers, Vector2D position, double angle)
 {
     m_id = id;
 
@@ -46,6 +42,7 @@ SDL_Point Unit::GetMoveDestination()
 void Unit::CalculateVerticles()
 {
     auto radians = m_angle * (3.14159265 / 180);
+    using namespace settings;
 
     // TOP LEFT
     double x = UNIT_SIZE.x / - 2;
@@ -107,6 +104,8 @@ void Unit::CalculateVerticles()
 
 void Unit::SetMoveDestination(SDL_Point destination)
 {
+    using namespace settings;
+
     m_moveDestination = destination;
     m_moveDestination.x -= UNIT_SIZE.x / 2;
     m_moveDestination.y -= UNIT_SIZE.y / 2;
@@ -115,6 +114,8 @@ void Unit::SetMoveDestination(SDL_Point destination)
 
 void Unit::SetMoveDestination(SDL_Point destination, bool dontResetMoveCounter)
 {
+    using namespace settings;
+
     m_moveDestination = destination;
     m_moveDestination.x -= UNIT_SIZE.x / 2;
     m_moveDestination.y -= UNIT_SIZE.y / 2;
