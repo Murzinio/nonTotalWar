@@ -10,12 +10,18 @@ enum class CollisionType
     NONE
 };
 
+/**
+    Calculates/predicts collisions.
+*/
 class CollisionManager
 {
 private:
     const std::map<std::string, std::shared_ptr<Unit>>& m_units;
     const std::map<std::string, std::shared_ptr<Unit>>& m_unitsAi;
 
+    /**
+        Returns the position of unit after number of steps in the future.
+    */
     Vector2D getFuturePosition(std::shared_ptr<Unit> unit, int movesForward) const;
 
     class Collision
@@ -27,7 +33,6 @@ private:
         int m_unitId_2{ 0 };
 
     public:
-
         Collision(CollisionType type, int id_1, int id_2)
         {
             m_type = type;
@@ -48,9 +53,13 @@ private:
     Collision checkForCollisionsAi(const std::shared_ptr<Unit> unit, const int range) const;
 
 public:
-    CollisionManager(const std::map<std::string, std::shared_ptr<Unit>>& units, 
-        const std::map<std::string, std::shared_ptr<Unit>>& unitsAi);
+    /**
+        Takes maps of player and AI units by reference, which are used for collision checks, but not modified.
+    */
+    CollisionManager(const UnitMap& units, const UnitMap& unitsAi);
 
+    /**
+        Checks for collisions using unit passed to it as the center point, range specifies how far it should check for collision, returns Collision with default NONE type
+    */
     Collision checkForCollisions(const std::shared_ptr<Unit> unit, const int range) const;
-        
 };

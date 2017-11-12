@@ -22,6 +22,9 @@ private:
 public:
     Input();
 
+    /**
+        Polls SDL events and saves relevant information which can be accessed by getter functions.
+    */
     void handleEvents();
 
     bool getQuitRequested() const { return m_quit; }
@@ -30,16 +33,12 @@ public:
     SDL_Rect getSelectionRectangle() const { return m_selectionRectangle; }
     void clearSelectionRectangle() { m_selectionRectangle = { 0, 0, 0, 0 }; }
     bool getMouseLBClick();
-    bool getMouseRBClicked()
-    {
-        if (m_mouseRBClick)
-        {
-            m_mouseRBClick = false;
-            return true;
-        }
 
-        return false;
-    }
+    /**
+        If mouse right button was clicked, returns true and clears the information 
+        (next call will return false if the mouse click event wasn't polled after previous call)
+    */
+    bool getMouseRBClicked();
 
     SDL_Point getMousePositionClick() const { return m_mousePositionClick; }
     bool getKeyUp();

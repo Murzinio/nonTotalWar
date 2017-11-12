@@ -1,0 +1,59 @@
+\hypertarget{class_graphics}{}\section{Graphics Class Reference}
+\label{class_graphics}\index{Graphics@{Graphics}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{class_graphics_a18057ca5d767018b52783da0f3cd79b0}{add\+To\+Queue} (const std\+::string texture, const S\+D\+L\+\_\+\+Rect src\+Rect, const S\+D\+L\+\_\+\+Rect dst\+Rect, const double angle, const S\+D\+L\+\_\+\+Point center, const S\+D\+L\+\_\+\+Renderer\+Flip flip)
+\item 
+void \hyperlink{class_graphics_a5400b6cca6b12641fc1c3437a188c170}{add\+Selection\+Rect\+To\+Queue} (const S\+D\+L\+\_\+\+Rect dst\+Rect)
+\item 
+void \hyperlink{class_graphics_aea25e7b064572a86896cc952037e2c1d}{add\+Text\+To\+Queue} (const S\+D\+L\+\_\+\+Point position, const std\+::string text, S\+D\+L\+\_\+\+Color color, const int size)
+\item 
+void \hyperlink{class_graphics_a53721226d05dcf492faae8c222a744e0}{render\+Frame} ()
+\item 
+\mbox{\Hypertarget{class_graphics_a6124f0ca5971de8671a0b74fb49d0b52}\label{class_graphics_a6124f0ca5971de8671a0b74fb49d0b52}} 
+bool {\bfseries get\+Textures\+Loaded} () const
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \hyperlink{class_graphics_ae33ea92e808a6e760032272b5d37ffcb}{debug\+Draw\+Point} (const S\+D\+L\+\_\+\+Point position)
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_graphics_a5400b6cca6b12641fc1c3437a188c170}\label{class_graphics_a5400b6cca6b12641fc1c3437a188c170}} 
+\index{Graphics@{Graphics}!add\+Selection\+Rect\+To\+Queue@{add\+Selection\+Rect\+To\+Queue}}
+\index{add\+Selection\+Rect\+To\+Queue@{add\+Selection\+Rect\+To\+Queue}!Graphics@{Graphics}}
+\subsubsection{\texorpdfstring{add\+Selection\+Rect\+To\+Queue()}{addSelectionRectToQueue()}}
+{\footnotesize\ttfamily void Graphics\+::add\+Selection\+Rect\+To\+Queue (\begin{DoxyParamCaption}\item[{const S\+D\+L\+\_\+\+Rect}]{dst\+Rect }\end{DoxyParamCaption})}
+
+Adds selection rectangle to render queue, position and size is specified in S\+D\+L\+\_\+\+Rect passed as argument. \mbox{\Hypertarget{class_graphics_aea25e7b064572a86896cc952037e2c1d}\label{class_graphics_aea25e7b064572a86896cc952037e2c1d}} 
+\index{Graphics@{Graphics}!add\+Text\+To\+Queue@{add\+Text\+To\+Queue}}
+\index{add\+Text\+To\+Queue@{add\+Text\+To\+Queue}!Graphics@{Graphics}}
+\subsubsection{\texorpdfstring{add\+Text\+To\+Queue()}{addTextToQueue()}}
+{\footnotesize\ttfamily void Graphics\+::add\+Text\+To\+Queue (\begin{DoxyParamCaption}\item[{const S\+D\+L\+\_\+\+Point}]{position,  }\item[{const std\+::string}]{text,  }\item[{S\+D\+L\+\_\+\+Color}]{color,  }\item[{const int}]{size }\end{DoxyParamCaption})}
+
+Creates a new Render\+Queue\+Item text item from provided arguments and adds it into render queue. \mbox{\Hypertarget{class_graphics_a18057ca5d767018b52783da0f3cd79b0}\label{class_graphics_a18057ca5d767018b52783da0f3cd79b0}} 
+\index{Graphics@{Graphics}!add\+To\+Queue@{add\+To\+Queue}}
+\index{add\+To\+Queue@{add\+To\+Queue}!Graphics@{Graphics}}
+\subsubsection{\texorpdfstring{add\+To\+Queue()}{addToQueue()}}
+{\footnotesize\ttfamily void Graphics\+::add\+To\+Queue (\begin{DoxyParamCaption}\item[{const std\+::string}]{texture,  }\item[{const S\+D\+L\+\_\+\+Rect}]{src\+Rect,  }\item[{const S\+D\+L\+\_\+\+Rect}]{dst\+Rect,  }\item[{const double}]{angle,  }\item[{const S\+D\+L\+\_\+\+Point}]{center,  }\item[{const S\+D\+L\+\_\+\+Renderer\+Flip}]{flip }\end{DoxyParamCaption})}
+
+Creates a new Render\+Queue\+Item from provided arguments and adds it into render queue. \mbox{\Hypertarget{class_graphics_ae33ea92e808a6e760032272b5d37ffcb}\label{class_graphics_ae33ea92e808a6e760032272b5d37ffcb}} 
+\index{Graphics@{Graphics}!debug\+Draw\+Point@{debug\+Draw\+Point}}
+\index{debug\+Draw\+Point@{debug\+Draw\+Point}!Graphics@{Graphics}}
+\subsubsection{\texorpdfstring{debug\+Draw\+Point()}{debugDrawPoint()}}
+{\footnotesize\ttfamily static void Graphics\+::debug\+Draw\+Point (\begin{DoxyParamCaption}\item[{const S\+D\+L\+\_\+\+Point}]{position }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Adds a point rendered in debug mode at specified position. \mbox{\Hypertarget{class_graphics_a53721226d05dcf492faae8c222a744e0}\label{class_graphics_a53721226d05dcf492faae8c222a744e0}} 
+\index{Graphics@{Graphics}!render\+Frame@{render\+Frame}}
+\index{render\+Frame@{render\+Frame}!Graphics@{Graphics}}
+\subsubsection{\texorpdfstring{render\+Frame()}{renderFrame()}}
+{\footnotesize\ttfamily void Graphics\+::render\+Frame (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Renders all elements from queue and debug point if specified. See debug\+Draw\+Point. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+total\+War/headers/Graphics.\+h\end{DoxyCompactItemize}

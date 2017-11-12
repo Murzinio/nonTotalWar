@@ -1,7 +1,6 @@
 #include "UnitStatsBar.h"
 
-UnitStatsBar::UnitStatsBar(Graphics& graphics, std::map<std::string, 
-    std::shared_ptr<Unit>>& selectedUnits) : m_graphics(graphics), m_selectedUnits(selectedUnits)
+UnitStatsBar::UnitStatsBar(Graphics& graphics, UnitMap& selectedUnits) : m_graphics(graphics), m_selectedUnits(selectedUnits)
 {
 }
 

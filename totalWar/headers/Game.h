@@ -6,6 +6,9 @@
 #include "Graphics.h"
 #include "GameplayManager.h"
 
+/**
+    Initializes SDL, Graphics and GameplayManager.
+*/
 class Game
 {
 private:

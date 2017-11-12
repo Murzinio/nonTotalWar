@@ -1,0 +1,39 @@
+\hypertarget{class_collision_manager}{}\section{Collision\+Manager Class Reference}
+\label{class_collision_manager}\index{Collision\+Manager@{Collision\+Manager}}
+
+
+{\ttfamily \#include $<$Collision\+Manager.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_collision_manager_a1e24ab3b7447545f8f6c8fec6d21c781}{Collision\+Manager} (const Unit\+Map \&units, const Unit\+Map \&units\+Ai)
+\item 
+Collision \hyperlink{class_collision_manager_abb428398c7e6da1d13a68f94b7657741}{check\+For\+Collisions} (const std\+::shared\+\_\+ptr$<$ Unit $>$ unit, const int range) const
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Calculates/predicts collisions. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_collision_manager_a1e24ab3b7447545f8f6c8fec6d21c781}\label{class_collision_manager_a1e24ab3b7447545f8f6c8fec6d21c781}} 
+\index{Collision\+Manager@{Collision\+Manager}!Collision\+Manager@{Collision\+Manager}}
+\index{Collision\+Manager@{Collision\+Manager}!Collision\+Manager@{Collision\+Manager}}
+\subsubsection{\texorpdfstring{Collision\+Manager()}{CollisionManager()}}
+{\footnotesize\ttfamily Collision\+Manager\+::\+Collision\+Manager (\begin{DoxyParamCaption}\item[{const Unit\+Map \&}]{units,  }\item[{const Unit\+Map \&}]{units\+Ai }\end{DoxyParamCaption})}
+
+Takes maps of player and AI units by reference, which are used for collision checks, but not modified. 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_collision_manager_abb428398c7e6da1d13a68f94b7657741}\label{class_collision_manager_abb428398c7e6da1d13a68f94b7657741}} 
+\index{Collision\+Manager@{Collision\+Manager}!check\+For\+Collisions@{check\+For\+Collisions}}
+\index{check\+For\+Collisions@{check\+For\+Collisions}!Collision\+Manager@{Collision\+Manager}}
+\subsubsection{\texorpdfstring{check\+For\+Collisions()}{checkForCollisions()}}
+{\footnotesize\ttfamily Collision Collision\+Manager\+::check\+For\+Collisions (\begin{DoxyParamCaption}\item[{const std\+::shared\+\_\+ptr$<$ Unit $>$}]{unit,  }\item[{const int}]{range }\end{DoxyParamCaption}) const}
+
+Checks for collisions using unit passed to it as the center point, range specifies how far it should check for collision, returns Collision with default N\+O\+NE type 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+total\+War/headers/Collision\+Manager.\+h\end{DoxyCompactItemize}

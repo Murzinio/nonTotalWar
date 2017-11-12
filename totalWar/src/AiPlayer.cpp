@@ -1,7 +1,7 @@
 #include "AiPlayer.h"
 
 
-AiPlayer::AiPlayer(std::map<std::string, std::shared_ptr<Unit>>& enemyUnits, std::map<std::string, std::shared_ptr<Unit>>& aiUnits) 
+AiPlayer::AiPlayer(UnitMap& enemyUnits, UnitMap& aiUnits)
     : m_enemyUnits(const_cast<std::map<std::string, std::shared_ptr<Unit>>&>(enemyUnits)),
         m_units(aiUnits)
 {

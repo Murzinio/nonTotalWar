@@ -1,0 +1,55 @@
+\hypertarget{utils_8h}{}\section{total\+War/headers/utils.h File Reference}
+\label{utils_8h}\index{total\+War/headers/utils.\+h@{total\+War/headers/utils.\+h}}
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$sstream$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$S\+D\+L.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}Settings.\+h\char`\"{}}\newline
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_vector2_d}{Vector2D}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ std\+::string $>$ \hyperlink{utils_8h_a4570f8c297cdf47809e42153612eecbd}{split\+String} (const std\+::string input, const char splitter)
+\item 
+double \hyperlink{utils_8h_a3a1e63ca1ac357327444c30d503c4dc5}{get\+Angle\+To\+Point} (const S\+D\+L\+\_\+\+Point first, const S\+D\+L\+\_\+\+Point second)
+\item 
+double \hyperlink{utils_8h_a95a8839d41b0c3e46fd0fb6e2bc48878}{get\+Distance\+To\+Point} (const S\+D\+L\+\_\+\+Point first, const S\+D\+L\+\_\+\+Point second)
+\item 
+double \hyperlink{utils_8h_a1f94a9f9f747c4474efa771f76905800}{get\+Triangle\+Area} (const double a, const double b, const double c)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Various utility functions such as math formulas or string splitting. 
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{utils_8h_a3a1e63ca1ac357327444c30d503c4dc5}\label{utils_8h_a3a1e63ca1ac357327444c30d503c4dc5}} 
+\index{utils.\+h@{utils.\+h}!get\+Angle\+To\+Point@{get\+Angle\+To\+Point}}
+\index{get\+Angle\+To\+Point@{get\+Angle\+To\+Point}!utils.\+h@{utils.\+h}}
+\subsubsection{\texorpdfstring{get\+Angle\+To\+Point()}{getAngleToPoint()}}
+{\footnotesize\ttfamily double get\+Angle\+To\+Point (\begin{DoxyParamCaption}\item[{const S\+D\+L\+\_\+\+Point}]{first,  }\item[{const S\+D\+L\+\_\+\+Point}]{second }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Returns angle from one S\+D\+L\+\_\+\+Point to another. \mbox{\Hypertarget{utils_8h_a95a8839d41b0c3e46fd0fb6e2bc48878}\label{utils_8h_a95a8839d41b0c3e46fd0fb6e2bc48878}} 
+\index{utils.\+h@{utils.\+h}!get\+Distance\+To\+Point@{get\+Distance\+To\+Point}}
+\index{get\+Distance\+To\+Point@{get\+Distance\+To\+Point}!utils.\+h@{utils.\+h}}
+\subsubsection{\texorpdfstring{get\+Distance\+To\+Point()}{getDistanceToPoint()}}
+{\footnotesize\ttfamily double get\+Distance\+To\+Point (\begin{DoxyParamCaption}\item[{const S\+D\+L\+\_\+\+Point}]{first,  }\item[{const S\+D\+L\+\_\+\+Point}]{second }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Returns distance between two S\+D\+L\+\_\+\+Point arguments. \mbox{\Hypertarget{utils_8h_a1f94a9f9f747c4474efa771f76905800}\label{utils_8h_a1f94a9f9f747c4474efa771f76905800}} 
+\index{utils.\+h@{utils.\+h}!get\+Triangle\+Area@{get\+Triangle\+Area}}
+\index{get\+Triangle\+Area@{get\+Triangle\+Area}!utils.\+h@{utils.\+h}}
+\subsubsection{\texorpdfstring{get\+Triangle\+Area()}{getTriangleArea()}}
+{\footnotesize\ttfamily double get\+Triangle\+Area (\begin{DoxyParamCaption}\item[{const double}]{a,  }\item[{const double}]{b,  }\item[{const double}]{c }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Calculates the area of a triangle using Heron\textquotesingle{}s formula. (only side lengths are needed) \mbox{\Hypertarget{utils_8h_a4570f8c297cdf47809e42153612eecbd}\label{utils_8h_a4570f8c297cdf47809e42153612eecbd}} 
+\index{utils.\+h@{utils.\+h}!split\+String@{split\+String}}
+\index{split\+String@{split\+String}!utils.\+h@{utils.\+h}}
+\subsubsection{\texorpdfstring{split\+String()}{splitString()}}
+{\footnotesize\ttfamily std\+::vector$<$std\+::string$>$ split\+String (\begin{DoxyParamCaption}\item[{const std\+::string}]{input,  }\item[{const char}]{splitter }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Splits string passed to it into a vector of strings, strings are split using char provided as splitter argument. 

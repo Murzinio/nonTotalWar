@@ -20,6 +20,9 @@ public:
     CombatPlan();
 };
 
+/**
+    Manages AI player: sets targets and tasks for AI units.
+*/
 class AiPlayer
 {
 private:
@@ -33,9 +36,19 @@ private:
     void engageAllUnits() const; // engage closest enemy unit
 
 public:
-    AiPlayer(std::map<std::string, std::shared_ptr<Unit>>& enemyUnits,
-        std::map<std::string, std::shared_ptr<Unit>>& aiUnits);
+    /**
+        Takes maps of player and AI by reference as parameters, 
+        only aiUnits should be managed in this class, player units are used to set tasks for AI.
+    */
+    AiPlayer(UnitMap& enemyUnits, UnitMap& aiUnits);
 
+    /**
+        Decides the strategy for AI units based on number of enemy units.
+    */
     void createCombatPlan() const;
+
+    /**
+        Get enemy positions again to ensure AI targets are properly set after enemy moves.
+    */
     void updateEnemyPositions() const;
 };

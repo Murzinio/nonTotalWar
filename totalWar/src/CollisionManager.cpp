@@ -1,7 +1,9 @@
 #include "CollisionManager.h"
 
-CollisionManager::CollisionManager(const std::map<std::string, std::shared_ptr<Unit>>& units, 
-    const std::map<std::string, std::shared_ptr<Unit>>& unitsAi) : m_units(units), m_unitsAi(unitsAi)
+CollisionManager::CollisionManager(const UnitMap& units, const UnitMap& unitsAi)
+    : 
+    m_units(units), 
+    m_unitsAi(unitsAi)
 {
 
 }
@@ -82,7 +84,7 @@ CollisionManager::Collision CollisionManager::checkForCollisionsPlayer(const std
 
     auto unitVerticles = unit->getVerticles();
 
-    for (auto & y : m_units)
+    for (auto& y : m_units)
     {
         if (unit->getId() == y.second->getId())
             continue;

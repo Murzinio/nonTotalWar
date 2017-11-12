@@ -1,0 +1,56 @@
+\hypertarget{class_input}{}\section{Input Class Reference}
+\label{class_input}\index{Input@{Input}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{class_input_a562550a18665e9eaee2a808c95999741}{handle\+Events} ()
+\item 
+\mbox{\Hypertarget{class_input_a3be7291f12bc6a388fffd0ef838b19e8}\label{class_input_a3be7291f12bc6a388fffd0ef838b19e8}} 
+bool {\bfseries get\+Quit\+Requested} () const
+\item 
+\mbox{\Hypertarget{class_input_a72a010d6f96fbc672e376675509766cf}\label{class_input_a72a010d6f96fbc672e376675509766cf}} 
+bool {\bfseries get\+Mouse\+L\+B\+Pressed} () const
+\item 
+\mbox{\Hypertarget{class_input_afb1df1aa2bab914142454d6bf923bcca}\label{class_input_afb1df1aa2bab914142454d6bf923bcca}} 
+bool {\bfseries get\+Mouse\+L\+B\+Was\+Released} ()
+\item 
+\mbox{\Hypertarget{class_input_aade1d077eaacc8521d554287c83ca949}\label{class_input_aade1d077eaacc8521d554287c83ca949}} 
+S\+D\+L\+\_\+\+Rect {\bfseries get\+Selection\+Rectangle} () const
+\item 
+\mbox{\Hypertarget{class_input_a51bad6df89fef28220284320eff4fc6e}\label{class_input_a51bad6df89fef28220284320eff4fc6e}} 
+void {\bfseries clear\+Selection\+Rectangle} ()
+\item 
+\mbox{\Hypertarget{class_input_a60b5e6ce63aaa2095df36e0a6a64bac9}\label{class_input_a60b5e6ce63aaa2095df36e0a6a64bac9}} 
+bool {\bfseries get\+Mouse\+L\+B\+Click} ()
+\item 
+bool \hyperlink{class_input_a024c8cc30eeebab4bc3c81618e96b82b}{get\+Mouse\+R\+B\+Clicked} ()
+\item 
+\mbox{\Hypertarget{class_input_a7dac7998056ac375b851ca996c38e41e}\label{class_input_a7dac7998056ac375b851ca996c38e41e}} 
+S\+D\+L\+\_\+\+Point {\bfseries get\+Mouse\+Position\+Click} () const
+\item 
+\mbox{\Hypertarget{class_input_a7e4e131a9deb4324027119cbd24b9b44}\label{class_input_a7e4e131a9deb4324027119cbd24b9b44}} 
+bool {\bfseries get\+Key\+Up} ()
+\item 
+\mbox{\Hypertarget{class_input_a48c879fea1d32d6ced0d6cef51a99b35}\label{class_input_a48c879fea1d32d6ced0d6cef51a99b35}} 
+S\+D\+L\+\_\+\+Keycode {\bfseries get\+Key} () const
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_input_a024c8cc30eeebab4bc3c81618e96b82b}\label{class_input_a024c8cc30eeebab4bc3c81618e96b82b}} 
+\index{Input@{Input}!get\+Mouse\+R\+B\+Clicked@{get\+Mouse\+R\+B\+Clicked}}
+\index{get\+Mouse\+R\+B\+Clicked@{get\+Mouse\+R\+B\+Clicked}!Input@{Input}}
+\subsubsection{\texorpdfstring{get\+Mouse\+R\+B\+Clicked()}{getMouseRBClicked()}}
+{\footnotesize\ttfamily bool Input\+::get\+Mouse\+R\+B\+Clicked (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+If mouse right button was clicked, returns true and clears the information (next call will return false if the mouse click event wasn\textquotesingle{}t polled after previous call) \mbox{\Hypertarget{class_input_a562550a18665e9eaee2a808c95999741}\label{class_input_a562550a18665e9eaee2a808c95999741}} 
+\index{Input@{Input}!handle\+Events@{handle\+Events}}
+\index{handle\+Events@{handle\+Events}!Input@{Input}}
+\subsubsection{\texorpdfstring{handle\+Events()}{handleEvents()}}
+{\footnotesize\ttfamily void Input\+::handle\+Events (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Polls S\+DL events and saves relevant information which can be accessed by getter functions. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+total\+War/headers/Input.\+h\end{DoxyCompactItemize}

@@ -1,2 +1,5 @@
+/** \file */
 #pragma once
-#define UNIT_TEST true
+
+/** If this is set to true, unit tests are compiled and the game quits after running them.*/
+#define UNIT_TEST (false)

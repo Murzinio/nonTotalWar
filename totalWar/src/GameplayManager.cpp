@@ -43,7 +43,9 @@ void GameplayManager::gameLoop()
         auto lastUpdateInterval = chrono::duration_cast<chrono::milliseconds>(now - m_lastUpdate).count();
 
         if (lastUpdateInterval < m_updateInterval)
+        {
             continue;
+        }
 
         removeDestroyedUnits();
 
@@ -51,12 +53,15 @@ void GameplayManager::gameLoop()
         if (m_input.getKeyUp())
         {
             if (m_input.getKey() == SDLK_b)
+            {
                 if (m_selectedUnits.size() > 0)
                 {
                     Unit* previousUnit = nullptr;
+
                     for (auto & x : m_selectedUnits)
                     {
                         auto unit = x.second;
+
                         if (unit.get() != previousUnit)
                         {
                             previousUnit = unit.get();
@@ -64,6 +69,8 @@ void GameplayManager::gameLoop()
                         }
                     }
                 }
+        
+            }
         }
 
         auto selectionRectCreated{ false };
@@ -112,7 +119,9 @@ void GameplayManager::gameLoop()
             if (!anyUnitSelected && !isMouseOverFriendlyUnit(m_input.getMousePositionClick()))
             {
                 for (auto & x : m_playerUnits)
+                {
                     x.second->setSelected(false);
+                }
 
                 m_selectedUnits.clear();
             }
@@ -122,55 +131,69 @@ void GameplayManager::gameLoop()
             m_input.clearSelectionRectangle();
         }
 
-        if (m_input.getMouseLBClick()) 
+        if (m_input.getMouseLBClick())
+        {
             if (isMouseOverFriendlyUnit(m_input.getMousePositionClick()))
             {
                 m_chosenUnit->setSelected(true);
                 m_selectedUnits.clear();
-                
+
                 for (auto & x : m_playerUnits)
+                {
                     if (x.second.get() == m_chosenUnit.get())
+                    {
                         m_selectedUnits.emplace(x);
+                    }
+                        
+                }
 
                 m_chosenUnit = nullptr;
             }
             else
+            {
                 for (auto & x : m_playerUnits)
+                {
                     x.second->setSelected(false);
+                }
+            }   
+        }  
 
         if (m_input.getMouseRBClicked())
-        if (IsMouseOverEnemyUnit(m_input.getMousePositionClick()))
         {
-            for (auto & x : m_selectedUnits)
+            if (IsMouseOverEnemyUnit(m_input.getMousePositionClick()))
             {
-                auto unit = x.second;
-                unit->clearTasks();
-                unit->addTask(UnitTask::ROTATE);
-                unit->addTask(UnitTask::ATTACK);
-                unit->setMoveDestination(m_input.getMousePositionClick()); //TODO handle required tasks in taskmanager
-                unit->setAttackTarget(m_chosenUnit);
-            }
+                for (auto & x : m_selectedUnits)
+                {
+                    auto unit = x.second;
+                    unit->clearTasks();
+                    unit->addTask(UnitTask::ROTATE);
+                    unit->addTask(UnitTask::ATTACK);
+                    unit->setMoveDestination(m_input.getMousePositionClick()); //TODO handle required tasks in taskmanager
+                    unit->setAttackTarget(m_chosenUnit);
+                }
 
-            m_chosenUnit = nullptr;
-        }
-        else if (!isMouseOverFriendlyUnit(m_input.getMousePositionClick()))
-        {
-            for (auto & x : m_selectedUnits)
+                m_chosenUnit = nullptr;
+            }
+            else if (!isMouseOverFriendlyUnit(m_input.getMousePositionClick()))
             {
-                auto unit = x.second;
+                for (auto & x : m_selectedUnits)
+                {
+                    auto unit = x.second;
 
-                unit->clearTasks();
-                unit->addTask(UnitTask::ROTATE);
-                unit->addTask(UnitTask::MOVE);
-                unit->setMoveDestination(m_input.getMousePositionClick());
+                    unit->clearTasks();
+                    unit->addTask(UnitTask::ROTATE);
+                    unit->addTask(UnitTask::MOVE);
+                    unit->setMoveDestination(m_input.getMousePositionClick());
+                }
             }
         }
+        
 
         m_taskManager.handleTasks();
-
         m_lastUpdate = now;
 
-        m_graphics.addToQueue("background\\background", { 0, 0, settings::WINDOW_WIDTH, settings::WINDOW_HEIGHT }, { 0, 0, settings::WINDOW_WIDTH, settings::WINDOW_HEIGHT }, 0, { 0, 0 }, SDL_FLIP_NONE);
+        m_graphics.addToQueue("background\\background", { 0, 0, settings::WINDOW_WIDTH, settings::WINDOW_HEIGHT }, 
+            { 0, 0, settings::WINDOW_WIDTH, settings::WINDOW_HEIGHT }, 0, { 0, 0 }, SDL_FLIP_NONE);
 
         for (auto & x : m_playerUnits)
         {
@@ -228,7 +251,6 @@ void GameplayManager::gameLoop()
 #endif // _DEBUG
 
         m_aiPlayer.updateEnemyPositions();
-
         m_graphics.renderFrame();
 
 #if UNIT_TEST

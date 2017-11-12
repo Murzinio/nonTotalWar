@@ -81,17 +81,14 @@ void Graphics::addToQueue(const std::string texture,
     const SDL_Rect srcRect, const SDL_Rect dstRect, 
     const double angle, 
     const SDL_Point center, 
-    const SDL_RendererFlip flip, 
-    const bool isText)
+    const SDL_RendererFlip flip)
 {
     const auto it = m_textures.find(getTexturePath(texture));
-    if (it != m_textures.cend())
-        m_renderQueue.push({ it->second, srcRect, dstRect, angle, center, flip, isText });
-}
 
-void Graphics::addToQueue(std::string texture, SDL_Rect srcRect, SDL_Rect dstRect, double angle, SDL_Point center, SDL_RendererFlip flip)
-{
-    addToQueue(texture, srcRect, dstRect, angle, center, flip, false);
+    if (it != m_textures.cend())
+    {
+        m_renderQueue.push({ it->second, srcRect, dstRect, angle, center, flip, false });
+    }
 }
 
 void Graphics::renderFrame()

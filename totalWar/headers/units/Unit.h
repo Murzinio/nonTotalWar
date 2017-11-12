@@ -4,6 +4,7 @@
 #include <array>
 #include <math.h>
 #include <memory>
+#include <map>
 
 #include "utils.h"
 #include "SDL.h"
@@ -98,3 +99,6 @@ public:
 
     int getId() { return m_id; }
 };
+
+
+using UnitMap = std::map<std::string, std::shared_ptr<Unit>>;

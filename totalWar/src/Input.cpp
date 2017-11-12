@@ -109,3 +109,14 @@ bool Input::getKeyUp()
 
     return false;
 }
+
+bool Input::getMouseRBClicked()
+{
+    if (m_mouseRBClick)
+    {
+        m_mouseRBClick = false;
+        return true;
+    }
+
+    return false;
+}

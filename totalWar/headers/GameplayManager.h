@@ -54,7 +54,11 @@ private:
     void removeDestroyedUnits();
 
 public:
+    /** 
+        Accepts reference to Graphics as parameter, which is used to add objects to render queue 
+    */
     GameplayManager(Graphics& graphics);
+
     const auto& getPlayerUnits() const { return m_playerUnits; }
     const auto& getAiUnits() const { return m_aiUnits; }
 };

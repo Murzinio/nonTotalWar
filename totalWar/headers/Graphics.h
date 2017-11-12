@@ -63,27 +63,37 @@ public:
     Graphics();
     ~Graphics();
 
-    //TODO use default parameters instead of overloading
+    /**
+        Creates a new RenderQueueItem from provided arguments and adds it into render queue.
+    */
     void addToQueue(const std::string texture,
         const SDL_Rect srcRect, const SDL_Rect dstRect,
         const double angle,
         const SDL_Point center,
-        const SDL_RendererFlip flip,
-        const bool isText); 
+        const SDL_RendererFlip flip); 
 
-    void addToQueue(const std::string texture,
-        const SDL_Rect srcRect, const SDL_Rect dstRect,
-        const double angle,
-        const SDL_Point center,
-        const SDL_RendererFlip flip);
-
+    /**
+        Adds selection rectangle to render queue, position and size is specified in SDL_Rect passed as argument.
+    */
     void addSelectionRectToQueue(const SDL_Rect dstRect);
+
+    /**
+        Creates a new RenderQueueItem text item from provided arguments and adds it into render queue.
+    */
     void addTextToQueue(const SDL_Point position, 
         const std::string text, 
         SDL_Color color, 
         const int size);
 
+    /**
+        Adds a point rendered in debug mode at specified position.
+    */
     static void debugDrawPoint(const SDL_Point position);
+
+    /**
+        Renders all elements from queue and debug point if specified. See debugDrawPoint.
+    */
     void renderFrame();
+
     bool getTexturesLoaded() const { return m_texturesLoaded; };
 };

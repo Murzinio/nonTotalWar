@@ -10,8 +10,6 @@
 #include "Graphics.h"
 #include "CollisionManager.h"
 
-using UnitMap = std::map<std::string, std::shared_ptr<Unit>>;
-
 enum class RotationDirection
 {
     CLOCKWISE,

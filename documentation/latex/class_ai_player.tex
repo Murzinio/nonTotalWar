@@ -1,0 +1,47 @@
+\hypertarget{class_ai_player}{}\section{Ai\+Player Class Reference}
+\label{class_ai_player}\index{Ai\+Player@{Ai\+Player}}
+
+
+{\ttfamily \#include $<$Ai\+Player.\+h$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_ai_player_a052aeba5fe2de8b30ccee019807bb89a}{Ai\+Player} (Unit\+Map \&enemy\+Units, Unit\+Map \&ai\+Units)
+\item 
+void \hyperlink{class_ai_player_a013d269c314ff5a9158e51ec92633b3c}{create\+Combat\+Plan} () const
+\item 
+void \hyperlink{class_ai_player_aa134aabc87dfad1324823c357430ddec}{update\+Enemy\+Positions} () const
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Manages AI player\+: sets targets and tasks for AI units. 
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_ai_player_a052aeba5fe2de8b30ccee019807bb89a}\label{class_ai_player_a052aeba5fe2de8b30ccee019807bb89a}} 
+\index{Ai\+Player@{Ai\+Player}!Ai\+Player@{Ai\+Player}}
+\index{Ai\+Player@{Ai\+Player}!Ai\+Player@{Ai\+Player}}
+\subsubsection{\texorpdfstring{Ai\+Player()}{AiPlayer()}}
+{\footnotesize\ttfamily Ai\+Player\+::\+Ai\+Player (\begin{DoxyParamCaption}\item[{Unit\+Map \&}]{enemy\+Units,  }\item[{Unit\+Map \&}]{ai\+Units }\end{DoxyParamCaption})}
+
+Takes maps of player and AI by reference as parameters, only ai\+Units should be managed in this class, player units are used to set tasks for AI. 
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_ai_player_a013d269c314ff5a9158e51ec92633b3c}\label{class_ai_player_a013d269c314ff5a9158e51ec92633b3c}} 
+\index{Ai\+Player@{Ai\+Player}!create\+Combat\+Plan@{create\+Combat\+Plan}}
+\index{create\+Combat\+Plan@{create\+Combat\+Plan}!Ai\+Player@{Ai\+Player}}
+\subsubsection{\texorpdfstring{create\+Combat\+Plan()}{createCombatPlan()}}
+{\footnotesize\ttfamily void Ai\+Player\+::create\+Combat\+Plan (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Decides the strategy for AI units based on number of enemy units. \mbox{\Hypertarget{class_ai_player_aa134aabc87dfad1324823c357430ddec}\label{class_ai_player_aa134aabc87dfad1324823c357430ddec}} 
+\index{Ai\+Player@{Ai\+Player}!update\+Enemy\+Positions@{update\+Enemy\+Positions}}
+\index{update\+Enemy\+Positions@{update\+Enemy\+Positions}!Ai\+Player@{Ai\+Player}}
+\subsubsection{\texorpdfstring{update\+Enemy\+Positions()}{updateEnemyPositions()}}
+{\footnotesize\ttfamily void Ai\+Player\+::update\+Enemy\+Positions (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Get enemy positions again to ensure AI targets are properly set after enemy moves. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+total\+War/headers/Ai\+Player.\+h\end{DoxyCompactItemize}
