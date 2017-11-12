@@ -22,17 +22,22 @@
 class Graphics
 {
 private:
-    SDL_Window* m_window{ SDL_CreateWindow("nonTotalWar", 100, 100, settings::WINDOW_WIDTH, settings::WINDOW_HEIGHT, 0) };
-    SDL_Renderer* m_renderer{ SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED) };
+    SDL_Window* m_window{ SDL_CreateWindow("nonTotalWar", 
+        100, 100, settings::WINDOW_WIDTH, settings::WINDOW_HEIGHT, 0) };
+    SDL_Renderer* m_renderer{ SDL_CreateRenderer(m_window, -1, 
+        SDL_RENDERER_ACCELERATED) };
 
     std::map<std::string, SDL_Texture*> m_textures;
     TTF_Font* m_font{ nullptr };
     int m_fontSize{ 0 };
     std::map<std::string, SDL_Texture*> m_textTextures;
 
-    void loadTextures(); //TODO see why can't be set to const
+    void loadTextures();
+
     bool m_texturesLoaded{ false };
-    std::string getTexturePath(const std::string textureName) const;
+    std::string getTexturePath(const std::string textureName) const {
+        return "resources\\" + textureName + ".png";
+    };
 
     struct RenderQueueItem
     {
@@ -81,9 +86,4 @@ public:
     static void debugDrawPoint(const SDL_Point position);
     void renderFrame();
     bool getTexturesLoaded() const { return m_texturesLoaded; };
-};
-
-inline std::string Graphics::getTexturePath(const std::string textureName) const
-{
-    return "resources\\" + textureName + ".png";
 };

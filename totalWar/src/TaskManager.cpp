@@ -1,6 +1,10 @@
 #include "TaskManager.h"
 
-TaskManager::TaskManager(std::map<std::string, std::shared_ptr<Unit>>& units, std::map<std::string, std::shared_ptr<Unit>>& unitsAi) : m_units(units), m_unitsAi(unitsAi), m_collisionManager(units, unitsAi)
+TaskManager::TaskManager(UnitMap& units, UnitMap& unitsAi) 
+    : 
+    m_units(units),
+    m_unitsAi(unitsAi),
+    m_collisionManager(m_units, m_unitsAi)
 {
 
 }

@@ -1,6 +1,10 @@
 #include "GameplayManager.h"
+#include "unit_test.hpp"
 
-GameplayManager::GameplayManager(Graphics& graphics) : m_graphics(graphics), m_taskManager(m_playerUnits, m_aiUnits), m_aiPlayer(m_playerUnits, m_aiUnits)
+GameplayManager::GameplayManager(Graphics& graphics)
+    : m_graphics(graphics), 
+    m_taskManager(m_playerUnits, m_aiUnits), 
+    m_aiPlayer(m_playerUnits, m_aiUnits)
 {
     if (graphics.getTexturesLoaded())
     {
@@ -18,8 +22,8 @@ void GameplayManager::createUnits()
         Vector2D positionPlayer{ static_cast<float>((i * 180) + 300), static_cast<float>(350) };
         Vector2D positionAi{ static_cast<float>((i * 180) + 300), static_cast<float>(600) };
 
-        m_playerUnits["Hoplites" + std::to_string(i) + "_Player"] = std::make_unique<Hoplites>(i, positionPlayer, 0.0);
-       // m_aiUnits["Hoplites" + std::to_string(i) + "_AI"] = std::make_unique<Hoplites>(i * -1, positionAi, 180.0);
+        m_playerUnits["Hoplites" + std::to_string(i) + "_Player"] = std::make_shared<Hoplites>(i, positionPlayer, 0.0);
+        m_aiUnits["Hoplites" + std::to_string(i) + "_AI"] = std::make_shared<Hoplites>(i * -1, positionAi, 180.0);
     }
 }
 
@@ -226,6 +230,11 @@ void GameplayManager::gameLoop()
         m_aiPlayer.updateEnemyPositions();
 
         m_graphics.renderFrame();
+
+#if UNIT_TEST
+            // should only run one iteration when unit testing
+            break;
+#endif // UNIT_TEST
     }
 }
 

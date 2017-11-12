@@ -206,7 +206,7 @@ void Graphics::addTextToQueue(const SDL_Point position,
         m_fontSize = size;
     }
     
-    std::map<std::string, SDL_Texture*>::const_iterator it = m_textTextures.find(text);
+    auto it = m_textTextures.find(text);
     if (it == m_textTextures.cend())
     {
         auto surface = TTF_RenderText_Solid(m_font, text.c_str(), color);

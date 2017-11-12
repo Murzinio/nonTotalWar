@@ -10,11 +10,14 @@
 #include "Graphics.h"
 #include "CollisionManager.h"
 
+using UnitMap = std::map<std::string, std::shared_ptr<Unit>>;
+
 enum class RotationDirection
 {
     CLOCKWISE,
     COUNTER_CLOCKWISE
 };
+
 class TaskManager
 {
 private:
@@ -31,8 +34,7 @@ private:
     std::uniform_int_distribution<int> intDistribution{ 1, 100 };
 
 public:
-    TaskManager(std::map<std::string, std::shared_ptr<Unit>>& units, 
-        std::map<std::string, std::shared_ptr<Unit>>& unitsAi);
+    TaskManager(UnitMap& units, UnitMap& unitsAi);
 
     void handleTasks();
 

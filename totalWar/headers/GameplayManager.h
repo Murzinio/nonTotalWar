@@ -55,4 +55,6 @@ private:
 
 public:
     GameplayManager(Graphics& graphics);
+    const auto& getPlayerUnits() const { return m_playerUnits; }
+    const auto& getAiUnits() const { return m_aiUnits; }
 };

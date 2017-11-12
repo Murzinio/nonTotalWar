@@ -179,6 +179,7 @@ xcopy "$(SolutionDir)libs\dlls" "$(TargetDir)" /s /e /Y</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="headers\AiPlayer.h" />
+    <ClInclude Include="headers\catch.hpp" />
     <ClInclude Include="headers\CollisionManager.h" />
     <ClInclude Include="headers\GameplayManager.h" />
     <ClInclude Include="headers\Game.h" />
@@ -188,20 +189,25 @@ xcopy "$(SolutionDir)libs\dlls" "$(TargetDir)" /s /e /Y</Command>
     <ClInclude Include="headers\UnitStatsBar.h" />
     <ClInclude Include="headers\units\Hoplites.h" />
     <ClInclude Include="headers\units\Unit.h" />
+    <ClInclude Include="headers\unit_test.hpp" />
     <ClInclude Include="headers\utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AiPlayer.cpp" />
     <ClCompile Include="src\CollisionManager.cpp" />
     <ClCompile Include="src\GameplayManager.cpp" />
+    <ClCompile Include="src\GameplayManager_test.cpp" />
+    <ClCompile Include="src\Graphics_test.cpp" />
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\TaskManager.cpp" />
+    <ClCompile Include="src\TaskManager_test.cpp" />
     <ClCompile Include="src\UnitStatsBar.cpp" />
     <ClCompile Include="src\units\Hoplites.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\Graphics.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\units\Unit.cpp" />
+    <ClCompile Include="src\Unit_test.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
