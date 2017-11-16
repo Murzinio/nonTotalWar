@@ -16,13 +16,13 @@ enum class CollisionType
 class CollisionManager
 {
 private:
-    const std::map<std::string, std::shared_ptr<Unit>>& m_units;
-    const std::map<std::string, std::shared_ptr<Unit>>& m_unitsAi;
+    const UnitMap& m_units;
+    const UnitMap& m_unitsAi;
 
     /**
         Returns the position of unit after number of steps in the future.
     */
-    Vector2D getFuturePosition(std::shared_ptr<Unit> unit, int movesForward) const;
+    Vector2D getFuturePosition(const Unit* unit, int movesForward) const;
 
     class Collision
     {
@@ -49,8 +49,8 @@ private:
         int getId_2() const { return  m_unitId_2; }
     };
 
-    Collision checkForCollisionsPlayer(const std::shared_ptr<Unit> unit, const int range) const;
-    Collision checkForCollisionsAi(const std::shared_ptr<Unit> unit, const int range) const;
+    Collision checkForCollisionsPlayer(Unit* unit, const int range) const;
+    Collision checkForCollisionsAi(Unit*unit, const int range) const;
 
 public:
     /**
@@ -61,5 +61,5 @@ public:
     /**
         Checks for collisions using unit passed to it as the center point, range specifies how far it should check for collision, returns Collision with default NONE type
     */
-    Collision checkForCollisions(const std::shared_ptr<Unit> unit, const int range) const;
+    Collision checkForCollisions(Unit* unit, const int range) const;
 };

@@ -1,6 +1,6 @@
 #include "UnitStatsBar.h"
 
-UnitStatsBar::UnitStatsBar(Graphics& graphics, UnitMap& selectedUnits) : m_graphics(graphics), m_selectedUnits(selectedUnits)
+UnitStatsBar::UnitStatsBar(Graphics& graphics, std::vector<Unit*>& selectedUnits) : m_graphics(graphics), m_selectedUnits(selectedUnits)
 {
 }
 
@@ -13,7 +13,7 @@ void UnitStatsBar::draw()
     SDL_Point position{ 0, dstRect.y };
     position.y += dstRect.h / 10;
 
-    auto unit = m_selectedUnits.begin()->second;
+    auto unit = *m_selectedUnits.begin();
     if (unit->getToDestroy())
         return;
 

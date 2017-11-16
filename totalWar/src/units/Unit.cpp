@@ -30,7 +30,7 @@ void Unit::setPosition(Vector2D newPosition)
     m_position = newPosition;
 }
 
-SDL_Point Unit::getMoveDestination()
+SDL_Point Unit::getMoveDestination() const
 {
     if (m_tasks.size() > 0)
         return m_moveDestination;

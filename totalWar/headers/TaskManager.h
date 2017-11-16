@@ -19,27 +19,27 @@ enum class RotationDirection
 class TaskManager
 {
 private:
-    std::map<std::string, std::shared_ptr<Unit>>& m_units;
-    std::map<std::string, std::shared_ptr<Unit>>& m_unitsAi;
+    UnitMap& m_units;
+    UnitMap& m_unitsAi;
     CollisionManager m_collisionManager;
     std::map<int, RotationDirection> m_rotationDirections;
 
     float m_moveCarryX{ 0.0f };
     float m_moveCarryY{ 0.0f };
 
-    std::random_device rDevice;
-    std::mt19937 mt19937{ rDevice() };
-    std::uniform_int_distribution<int> intDistribution{ 1, 100 };
+    std::random_device m_rDevice;
+    std::mt19937 m_mt19937{ m_rDevice() };
+    std::uniform_int_distribution<int> m_intDistribution{ 1, 100 };
 
 public:
     TaskManager(UnitMap& units, UnitMap& unitsAi);
 
     void handleTasks();
 
-    void Rotate(const std::shared_ptr<Unit> unit);
-    void Flip(const std::shared_ptr<Unit> unit);
-    void Move(const std::shared_ptr<Unit> unit);
-    void Attack(const std::shared_ptr<Unit> unit);
-    void ProcessFighting(const std::shared_ptr<Unit> unit, 
-        const std::shared_ptr<Unit> enemyUnit);
+    void Rotate(Unit* unit);
+    void Flip(Unit* unit);
+    void Move(Unit* unit);
+    void Attack(Unit* unit);
+    void ProcessFighting(Unit* unit,
+        Unit* enemyUnit);
 };

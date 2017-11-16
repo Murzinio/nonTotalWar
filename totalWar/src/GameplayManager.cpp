@@ -22,8 +22,8 @@ void GameplayManager::createUnits()
         Vector2D positionPlayer{ static_cast<float>((i * 180) + 300), static_cast<float>(350) };
         Vector2D positionAi{ static_cast<float>((i * 180) + 300), static_cast<float>(600) };
 
-        m_playerUnits["Hoplites" + std::to_string(i) + "_Player"] = std::make_shared<Hoplites>(i, positionPlayer, 0.0);
-        m_aiUnits["Hoplites" + std::to_string(i) + "_AI"] = std::make_shared<Hoplites>(i * -1, positionAi, 180.0);
+        m_playerUnits["Hoplites" + std::to_string(i) + "_Player"] = std::make_unique<Hoplites>(i, positionPlayer, 0.0);
+        m_aiUnits["Hoplites" + std::to_string(i) + "_AI"] = std::make_unique<Hoplites>(i * -1, positionAi, 180.0);
     }
 }
 
@@ -58,18 +58,15 @@ void GameplayManager::gameLoop()
                 {
                     Unit* previousUnit = nullptr;
 
-                    for (auto & x : m_selectedUnits)
+                    for (auto& unit : m_selectedUnits)
                     {
-                        auto unit = x.second;
-
-                        if (unit.get() != previousUnit)
+                        if (unit != previousUnit)
                         {
-                            previousUnit = unit.get();
+                            previousUnit = unit;
                             unit->addTask(UnitTask::FLIP);
                         }
                     }
                 }
-        
             }
         }
 
@@ -95,8 +92,8 @@ void GameplayManager::gameLoop()
 
         if (m_input.getMouseLBWasReleased())
         {
-            auto anyUnitSelected{ false };
-            for (auto & x : m_playerUnits)
+            auto anyUnitSelected = false;
+            for (auto& x : m_playerUnits)
             {
                 auto position = x.second->getPosition();
                 position.x += UNIT_SIZE.x / 2;
@@ -109,23 +106,23 @@ void GameplayManager::gameLoop()
                     if (!anyUnitSelected)
                         anyUnitSelected = true;
 
-                    m_selectedUnits.emplace(x);
+                    m_selectedUnits.emplace_back(x.second.get());
                 }
                 else
+                {
                     x.second->setSelected(false);
-
+                }
             }
 
             if (!anyUnitSelected && !isMouseOverFriendlyUnit(m_input.getMousePositionClick()))
             {
-                for (auto & x : m_playerUnits)
+                for (auto& x : m_playerUnits)
                 {
                     x.second->setSelected(false);
                 }
 
                 m_selectedUnits.clear();
             }
-                
 
             selectionRect = { 0, 0, 0, 0 };
             m_input.clearSelectionRectangle();
@@ -138,20 +135,19 @@ void GameplayManager::gameLoop()
                 m_chosenUnit->setSelected(true);
                 m_selectedUnits.clear();
 
-                for (auto & x : m_playerUnits)
+                for (auto& x : m_playerUnits)
                 {
-                    if (x.second.get() == m_chosenUnit.get())
+                    if (x.second.get() == m_chosenUnit)
                     {
-                        m_selectedUnits.emplace(x);
+                        m_selectedUnits.emplace_back(x.second.get());
                     }
-                        
                 }
 
                 m_chosenUnit = nullptr;
             }
             else
             {
-                for (auto & x : m_playerUnits)
+                for (auto& x : m_playerUnits)
                 {
                     x.second->setSelected(false);
                 }
@@ -162,9 +158,8 @@ void GameplayManager::gameLoop()
         {
             if (IsMouseOverEnemyUnit(m_input.getMousePositionClick()))
             {
-                for (auto & x : m_selectedUnits)
+                for (auto& unit : m_selectedUnits)
                 {
-                    auto unit = x.second;
                     unit->clearTasks();
                     unit->addTask(UnitTask::ROTATE);
                     unit->addTask(UnitTask::ATTACK);
@@ -176,10 +171,8 @@ void GameplayManager::gameLoop()
             }
             else if (!isMouseOverFriendlyUnit(m_input.getMousePositionClick()))
             {
-                for (auto & x : m_selectedUnits)
+                for (auto& unit : m_selectedUnits)
                 {
-                    auto unit = x.second;
-
                     unit->clearTasks();
                     unit->addTask(UnitTask::ROTATE);
                     unit->addTask(UnitTask::MOVE);
@@ -187,7 +180,6 @@ void GameplayManager::gameLoop()
                 }
             }
         }
-        
 
         m_taskManager.handleTasks();
         m_lastUpdate = now;
@@ -195,7 +187,7 @@ void GameplayManager::gameLoop()
         m_graphics.addToQueue("background\\background", { 0, 0, settings::WINDOW_WIDTH, settings::WINDOW_HEIGHT }, 
             { 0, 0, settings::WINDOW_WIDTH, settings::WINDOW_HEIGHT }, 0, { 0, 0 }, SDL_FLIP_NONE);
 
-        for (auto & x : m_playerUnits)
+        for (auto& x : m_playerUnits)
         {
             auto position = x.second->getPosition();
 
@@ -218,7 +210,7 @@ void GameplayManager::gameLoop()
                 m_graphics.addToQueue("units\\placeholderSelected", srcRect, dstRect, x.second->getAngle(), center, SDL_FLIP_NONE);
         }
 
-        for (auto & x : m_aiUnits)
+        for (auto& x : m_aiUnits)
         {
             auto position = x.second->getPosition();
             auto angle = x.second->getAngle();
@@ -264,11 +256,11 @@ bool GameplayManager::isValidUnitName(const std::string name) const
 {
     auto splittedName = splitString(name, '_');
 
-    for (auto & x : m_validUnitNames)
+    for (auto& x : m_validUnitNames)
         if (std::find(splittedName.cbegin(), splittedName.cend(), x) == splittedName.cend())
             return false;
 
-    for (auto & x : m_validUnitOwners)
+    for (auto& x : m_validUnitOwners)
         if (std::find(splittedName.cbegin(), splittedName.cend(), x) == splittedName.cend())
             return false;
 
@@ -277,7 +269,7 @@ bool GameplayManager::isValidUnitName(const std::string name) const
 
 bool GameplayManager::unitExists(const std::string name) const
 {
-    auto it{ m_playerUnits.find(name) };
+    auto it = m_playerUnits.find(name);
     if (it == m_playerUnits.cend())
         return false;
 
@@ -292,13 +284,13 @@ bool GameplayManager::isMouseOverFriendlyUnit(const SDL_Point mousePosition)
 {
     using namespace settings;
 
-    for (auto & unit : m_playerUnits)
+    for (auto& unit : m_playerUnits)
     {
         auto position = unit.second->getPosition();
         if (mousePosition.x >= position.x && mousePosition.x <= position.x + UNIT_SIZE.x
             && mousePosition.y >= position.y && mousePosition.y <= position.y + UNIT_SIZE.y)
         {
-            m_chosenUnit = unit.second;
+            m_chosenUnit = unit.second.get();
             return true;
         }
     }
@@ -310,13 +302,13 @@ bool GameplayManager::IsMouseOverEnemyUnit(const SDL_Point mousePosition)
 {
     using namespace settings;
 
-    for (auto & unit : m_aiUnits)
+    for (auto& unit : m_aiUnits)
     {
         auto position = unit.second->getPosition();
         if (mousePosition.x >= position.x && mousePosition.x <= position.x + UNIT_SIZE.x
             && mousePosition.y >= position.y && mousePosition.y <= position.y + UNIT_SIZE.y)
         {
-            m_chosenUnit = unit.second;
+            m_chosenUnit = unit.second.get();
             return true;
         }
     }
@@ -331,7 +323,6 @@ void GameplayManager::removeDestroyedUnits()
     {
         if (it->second->getToDestroy())
         {
-
             it->second == nullptr;
             it = m_playerUnits.erase(it);
         }
@@ -341,17 +332,17 @@ void GameplayManager::removeDestroyedUnits()
         }
     }
 
-    it = m_selectedUnits.begin();
-    while (it != m_selectedUnits.end()) 
+    auto itSelected = m_selectedUnits.begin();
+    while (itSelected != m_selectedUnits.end())
     {
-        if (it->second->getToDestroy()) 
+        if ((*itSelected)->getToDestroy())
         {
-            it->second == nullptr;
-            it = m_selectedUnits.erase(it);
+            *itSelected = nullptr;
+            itSelected = m_selectedUnits.erase(itSelected);
         }
         else 
         {
-            ++it;
+            ++itSelected;
         }
     }
 

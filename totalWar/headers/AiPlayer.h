@@ -11,14 +11,14 @@ enum class AiApproach
     DEFEND
 };
 
-class CombatPlan
-{
-private:
-    std::vector<std::pair<std::shared_ptr<Unit>,
-        std::shared_ptr<Unit>>> engagePair;
-public:
-    CombatPlan();
-};
+//class CombatPlan
+//{
+//private:
+//    std::vector<std::pair<std::shared_ptr<Unit>,
+//        std::shared_ptr<Unit>>> engagePair;
+//public:
+//    CombatPlan();
+//};
 
 /**
     Manages AI player: sets targets and tasks for AI units.
@@ -26,10 +26,10 @@ public:
 class AiPlayer
 {
 private:
-    const std::map<std::string, std::shared_ptr<Unit>>& m_enemyUnits;
-    std::map<std::string, std::shared_ptr<Unit>>& m_units;
+    const UnitMap& m_enemyUnits;
+    UnitMap& m_units;
 
-    std::shared_ptr<Unit> findClosestEnemyUnit(const std::shared_ptr<Unit>& unit) const; //TODO change to finding closest ai unit for each player unit
+    Unit* findClosestEnemyUnit(const Unit* unit) const; //TODO change to finding closest ai unit for each player unit
         
     AiApproach decideApproach() const;
     void flank() const; // attack from left and right

@@ -13,7 +13,7 @@ void TaskManager::handleTasks()
 {
     for (auto & x : m_units)
     {
-        auto unit = x.second;
+        auto unit = x.second.get();
         auto& tasks = unit->getTasks();
 
         auto verticles = unit->getVerticles();
@@ -62,7 +62,7 @@ void TaskManager::handleTasks()
 
     for (auto & x : m_unitsAi)
     {
-        auto unit = x.second;
+        auto unit = x.second.get();
         auto& tasks = unit->getTasks();
 
         auto verticles = unit->getVerticles();
@@ -109,7 +109,7 @@ void TaskManager::handleTasks()
     }
 }
 
-void TaskManager::Rotate(const std::shared_ptr<Unit> unit)
+void TaskManager::Rotate(Unit* unit)
 {
     using namespace settings;
 
@@ -196,7 +196,7 @@ void TaskManager::Rotate(const std::shared_ptr<Unit> unit)
     unit->setAngle(angleToSet);
 }
 
-void TaskManager::Flip(const std::shared_ptr<Unit> unit)
+void TaskManager::Flip(Unit* unit)
 {
     auto speed = unit->getSpeed();
     auto counter = unit->getMoveCounter();
@@ -214,7 +214,7 @@ void TaskManager::Flip(const std::shared_ptr<Unit> unit)
     tasks.pop();
 }
 
-void TaskManager::Move(std::shared_ptr<Unit> unit)
+void TaskManager::Move(Unit* unit)
 {
     auto speed = unit->getSpeed();
     auto counter = unit->getMoveCounter();
@@ -264,7 +264,7 @@ void TaskManager::Move(std::shared_ptr<Unit> unit)
 
 }
 
-void TaskManager::Attack(std::shared_ptr<Unit> unit)
+void TaskManager::Attack(Unit* unit)
 {
     auto target = unit->getAttackTarget();
 
@@ -307,7 +307,7 @@ void TaskManager::Attack(std::shared_ptr<Unit> unit)
         ProcessFighting(unit, target);
 }
 
-void TaskManager::ProcessFighting(std::shared_ptr<Unit> unit, std::shared_ptr<Unit> enemyUnit)
+void TaskManager::ProcessFighting(Unit* unit, Unit* enemyUnit)
 {
     using namespace settings;
 
@@ -336,7 +336,7 @@ void TaskManager::ProcessFighting(std::shared_ptr<Unit> unit, std::shared_ptr<Un
     auto attack = unit->getAttack();
     auto soldiers = unit->getSoldiers();
 
-    if (unit->getSoldiers() > 0 && intDistribution(mt19937) <= attack * settings::COMBAT_SPEED)
+    if (unit->getSoldiers() > 0 && m_intDistribution(m_mt19937) <= attack * settings::COMBAT_SPEED)
         unit->killSoldiers(1);
     else if (soldiers == 0)
         unit->setToDestroy();
@@ -344,7 +344,7 @@ void TaskManager::ProcessFighting(std::shared_ptr<Unit> unit, std::shared_ptr<Un
     //auto enemyAttack = enemyUnit->getAttack();
     auto enemySoldiers = enemyUnit->getSoldiers();
 
-    if (enemyUnit->getSoldiers() > 0 && intDistribution(mt19937) <= attack * COMBAT_SPEED)
+    if (enemyUnit->getSoldiers() > 0 && m_intDistribution(m_mt19937) <= attack * COMBAT_SPEED)
         enemyUnit->killSoldiers(1);
     else if (enemySoldiers == 0)
         enemyUnit->setToDestroy();

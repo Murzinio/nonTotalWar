@@ -2,7 +2,7 @@
 
 
 AiPlayer::AiPlayer(UnitMap& enemyUnits, UnitMap& aiUnits)
-    : m_enemyUnits(const_cast<std::map<std::string, std::shared_ptr<Unit>>&>(enemyUnits)),
+    : m_enemyUnits(const_cast<UnitMap&>(enemyUnits)),
         m_units(aiUnits)
 {
     
@@ -27,9 +27,9 @@ void AiPlayer::engageAllUnits() const
 {
     using namespace settings;
 
-    for (const auto & x : m_units)
+    for (const auto& x : m_units)
     {
-        auto unit = x.second;
+        auto unit = x.second.get();
         auto closestEnemy = findClosestEnemyUnit(unit);
         unit->clearTasks();
         unit->addTask(UnitTask::ROTATE);
@@ -44,15 +44,15 @@ void AiPlayer::engageAllUnits() const
     }
 }
 
-std::shared_ptr<Unit> AiPlayer::findClosestEnemyUnit(const std::shared_ptr<Unit>& unit) const
+Unit* AiPlayer::findClosestEnemyUnit(const Unit* unit) const
 {
     using namespace settings;
 
     std::map<std::string, double> distances;
 
-    for (const auto & x : m_enemyUnits)
+    for (const auto& x : m_enemyUnits)
     {
-        auto enemyUnit = x.second;
+        auto enemyUnit = x.second.get();
         if (enemyUnit == nullptr)
             continue;
 
@@ -85,10 +85,10 @@ std::shared_ptr<Unit> AiPlayer::findClosestEnemyUnit(const std::shared_ptr<Unit>
         }
     }
 
-    for (const auto & enemyUnit : m_enemyUnits)
+    for (const auto& enemyUnit : m_enemyUnits)
     {
         if (enemyUnit.first == minKey)
-            return enemyUnit.second;
+            return enemyUnit.second.get();
     }
 
     return nullptr;
@@ -117,7 +117,7 @@ void AiPlayer::updateEnemyPositions() const
 
     for (const auto & x : m_units)
     {
-        auto unit = x.second;
+        auto unit = x.second.get();
         auto closestEnemy = findClosestEnemyUnit(unit);
         /*unit->clearTasks();
         unit->addTask(UnitTask::ROTATE);

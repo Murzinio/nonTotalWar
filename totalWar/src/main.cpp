@@ -8,7 +8,6 @@
 #endif // UNIT_TEST
 
 #ifdef CATCH_CONFIG_RUNNER
-
 #include <SDL.h>
 
 int main(int argc, char* argv[])

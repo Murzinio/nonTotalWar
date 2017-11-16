@@ -24,9 +24,9 @@ private:
     UnitStatsBar m_unitStatsBar{ m_graphics, m_selectedUnits };
     Input m_input;
 
-    std::map<std::string, std::shared_ptr<Unit>> m_playerUnits; 
-    std::map<std::string, std::shared_ptr<Unit>> m_aiUnits;
-    std::map<std::string, std::shared_ptr<Unit>> m_selectedUnits;
+    UnitMap m_playerUnits; 
+    UnitMap m_aiUnits;
+    std::vector<Unit*> m_selectedUnits;
     //TODO unit counts by type in std::map
 
     AiPlayer m_aiPlayer; //TODO HumanPlayer class
@@ -47,7 +47,7 @@ private:
     std::chrono::high_resolution_clock::time_point m_lastUpdate = std::chrono::high_resolution_clock::now();
     static constexpr float m_updateInterval{ 1000.0f / 1200.0f };
 
-    std::shared_ptr<Unit> m_chosenUnit;
+    Unit* m_chosenUnit;
     bool isMouseOverFriendlyUnit(const SDL_Point mousePosition);
     bool IsMouseOverEnemyUnit(const SDL_Point mousePosition);
 

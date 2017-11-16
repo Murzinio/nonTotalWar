@@ -41,7 +41,7 @@ private:
     std::queue<UnitTask> m_tasks;
     bool m_taskStarted{ false };
     SDL_Point m_moveDestination;
-    std::shared_ptr<Unit> m_attackTarget{ nullptr };
+    Unit* m_attackTarget{ nullptr };
     int m_moveCounter{ 0 };
     std::array<SDL_Point, 4> m_verticles;
 
@@ -66,17 +66,17 @@ public:
 
     std::queue<UnitTask>& getTasks() { return m_tasks; }
 
-    SDL_Point getMoveDestination();
+    SDL_Point getMoveDestination() const;
     void setMoveDestination(SDL_Point destination);
     void setMoveDestination(SDL_Point destination, bool dontResetMoveCounter);
-    void setAttackTarget(std::shared_ptr<Unit> target) { m_attackTarget = target; };
-    auto getAttackTarget() { return m_attackTarget; }
-    int getAttack() { return m_attack; }
+    void setAttackTarget(Unit* target) { m_attackTarget = target; };
+    Unit* getAttackTarget() const { return m_attackTarget; }
+    int getAttack() const { return m_attack; }
 
-    bool getTaskStarted() { return m_taskStarted; }
-    int getSpeed() { return m_speed; }
-    int getRange() { return m_range; }
-    int getSoldiers() { return m_soldiers; }
+    bool getTaskStarted() const { return m_taskStarted; }
+    int getSpeed() const { return m_speed; }
+    int getRange() const { return m_range; }
+    int getSoldiers() const { return m_soldiers; }
     void killSoldiers(int value) { m_soldiers -= value; }
     void clearTasks() 
     {
@@ -85,20 +85,21 @@ public:
     }
 
     void setMoveCounter(int value) { m_moveCounter = value; }
-    int getMoveCounter() { return m_moveCounter; }
+    int getMoveCounter() const { return m_moveCounter; }
 
     void calculateVerticles();
     std::array<SDL_Point, 4> getVerticles() { return m_verticles; }
-    bool getTurnedBack() { return m_turnedBack; }
+    bool getTurnedBack() const { return m_turnedBack; }
     void setTurnedBack(bool value) { m_turnedBack = value; }
 
     void setIsFighting(bool value) { m_fighting = value; }
-    bool getIsFighting() { return m_fighting; }
+    bool getIsFighting() const { return m_fighting; }
     void setToDestroy() { m_toDestroy = true; }
-    bool getToDestroy() { return m_toDestroy; }
+    bool getToDestroy() const { return m_toDestroy; }
 
-    int getId() { return m_id; }
+    int getId() const { return m_id; }
 };
 
 
-using UnitMap = std::map<std::string, std::shared_ptr<Unit>>;
+using UnitMap = std::map<std::string, std::unique_ptr<Unit>>;
+using UnitMapRaw = std::map<std::string, Unit*>;

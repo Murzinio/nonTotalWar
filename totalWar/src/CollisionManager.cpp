@@ -9,7 +9,7 @@ CollisionManager::CollisionManager(const UnitMap& units, const UnitMap& unitsAi)
 }
 
 
-Vector2D CollisionManager::getFuturePosition(const std::shared_ptr<Unit> unit, const int movesForward) const
+Vector2D CollisionManager::getFuturePosition(const Unit* unit, const int movesForward) const
 {
     auto position = unit->getPosition();
     auto destination = unit->getMoveDestination();
@@ -59,7 +59,7 @@ Vector2D CollisionManager::getFuturePosition(const std::shared_ptr<Unit> unit, c
     return futurePosition;
 }
 
-CollisionManager::Collision CollisionManager::checkForCollisions(const std::shared_ptr<Unit> unit, const int range) const
+CollisionManager::Collision CollisionManager::checkForCollisions(Unit* unit, const int range) const
 {
     if (unit->getId() < 0)
         return checkForCollisionsPlayer(unit, range);
@@ -69,14 +69,13 @@ CollisionManager::Collision CollisionManager::checkForCollisions(const std::shar
         return Collision(CollisionType::NONE, 0, 0);
 }
 
-CollisionManager::Collision CollisionManager::checkForCollisionsPlayer(const std::shared_ptr<Unit> unit, const int range) const
+CollisionManager::Collision CollisionManager::checkForCollisionsPlayer(Unit* unit, const int range) const
 {
     using namespace settings;
 
     auto collision = Collision(CollisionType::NONE, 0, 0);
 
     auto moveDestination = unit->getMoveDestination();
-
     auto originalPosition = unit->getPosition();
 
     unit->setPosition(getFuturePosition(unit, range));
@@ -89,7 +88,7 @@ CollisionManager::Collision CollisionManager::checkForCollisionsPlayer(const std
         if (unit->getId() == y.second->getId())
             continue;
 
-        auto otherUnit = y.second;
+        auto otherUnit = y.second.get();
 
         auto originalPositionOther = otherUnit->getPosition();
         otherUnit->setPosition(getFuturePosition(otherUnit, 10));
@@ -156,7 +155,7 @@ CollisionManager::Collision CollisionManager::checkForCollisionsPlayer(const std
 
 }
 
-CollisionManager::Collision CollisionManager::checkForCollisionsAi(const std::shared_ptr<Unit> unit, const int range) const
+CollisionManager::Collision CollisionManager::checkForCollisionsAi(Unit* unit, const int range) const
 {
     using namespace settings;
 
@@ -171,9 +170,9 @@ CollisionManager::Collision CollisionManager::checkForCollisionsAi(const std::sh
 
     auto unitVerticles = unit->getVerticles();
 
-    for (auto & y : m_unitsAi)
+    for (auto& y : m_unitsAi)
     {
-        auto otherUnit = y.second;
+        auto otherUnit = y.second.get();
 
         auto originalPositionOther = otherUnit->getPosition();
         otherUnit->setPosition(getFuturePosition(otherUnit, range));
